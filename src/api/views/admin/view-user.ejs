@@ -1,0 +1,57 @@
+<div class="container m-5 bg-white">
+  <div class="col-sm-12 col-md-12">
+    <div class="bg-white rounded h-100 p-4">
+      <h3 class="mb-4" style="color: black;">View Users</h3>
+      <form action="/admin/search-users" method="GET" class="m-2" style="float: right;">
+        <input type="text" name="searchQuery" placeholder="Search Users" />
+        <button type="submit">Search</button>
+      </form>
+      <table class="table table-bordered" id="myTable">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Username</th>
+            <th scope="col">Mobile No</th>
+
+            <th scope="col">status</th>
+
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% usersData.forEach((user,index) => { %>
+          <tr>
+            <td><%- index+1 %></td>
+            <td scope="row"><%- user.name %></td>
+            <td scope="row"><%- user.email %></td>
+            <td scope="row"><%- user.username %></td>
+            <td scope="row"><%- user.mobile %></td>
+
+            <td>
+              <% if (user.blocked) { %> Blocked <% } else { %> Active <% } %>
+            </td>
+            <td>
+              <% if (user.blocked) { %>
+              <a href="/admin/unblock-user/<%= user._id %>"
+                ><button>Unblock</button></a
+              >
+              <% } else { %>
+              <a href="/admin/block-user/<%= user._id %>"
+                ><button>Block</button></a
+              >
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- <script>
+    $(document).ready(function () {
+      $("#myTable").DataTable();
+    });
+  </script> -->

@@ -1,0 +1,212 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
+  body {
+    background-color: #eee;
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+  }
+  .cart {
+    height: 100vh;
+  }
+  .progresses {
+    display: flex;
+    align-items: center;
+  }
+  .line {
+    width: 76px;
+    height: 6px;
+    background: #63d19e;
+  }
+  .steps {
+    display: flex;
+    background-color: #63d19e;
+    color: #fff;
+    font-size: 12px;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .check1 {
+    display: flex;
+    background-color: #63d19e;
+    color: #fff;
+    font-size: 17px;
+    width: 60px;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  .invoice-link {
+    font-size: 15px;
+  }
+  .order-button {
+    height: 50px;
+  }
+  .background-muted {
+    background-color: #fafafc;
+  }
+</style>
+<div class="container mt-4 mb-4" style="margin-left: 500px">
+  <div class="row d-flex cart align-items-center justify-content-center">
+    <div class="col-md-10">
+      <div class="card" style="width: 40%">
+        <div class="d-flex border-bottom" style="margin-left: 100px">
+          <div class="p-3">
+            <div class="progresses">
+              <div class="steps">
+                <span><i class="fa fa-check"></i></span>
+              </div>
+              <span class="line"></span>
+              <div class="steps">
+                <span><i class="fa fa-check"></i></span>
+              </div>
+              <span class="line"></span>
+              <div class="steps">
+                <span><i class="fa fa-check"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-0" style="margin-left: 155px">
+          <div class="col-md-6 border-right" style="padding: 20px 0">
+            <div class="text-center order-details">
+              <div
+                class="d-flex justify-content-center mb-5 flex-column align-items-center"
+              >
+                <span class="check1"><i class="fa fa-check"></i></span>
+                <span class="font-weight-bold">Order Confirmed</span>
+                <small class="mt-2"><h4>Thankyou for your Ordering</h4></small>
+                <a href="#" class="text-decoration-none invoice-link"></a>
+              </div>
+              <div class="d-flex" style="gap: 10px">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  onclick="createInvoice()"
+                >
+                  Download Invoice
+                </button>
+                <a href="/users/accounts/#orders"><button type="button" class="btn btn-secondary btn-sm">
+                  Your Orders
+                </button></a>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- address details -->
+<input type="hidden" id="name" value="<%= addressData.name %>" />
+<input type="hidden" id="address1" value="<%= addressData.address1 %>" />
+<input type="hidden" id="address2" value="<%= addressData.address2 %>" />
+<input type="hidden" id="city" value="<%= addressData.city %>" />
+<input type="hidden" id="state" value="<%= addressData.state %>" />
+<input type="hidden" id="mobile" value="<%= addressData.mobile %>" />
+
+<% for(let i = 0; i < productName.length; i++){ %>
+<input type="hidden" class="productName" value="<%- productName[i] %>" />
+<% } %>
+<!-- product details -->
+<% for(let i = 0; i < orderNow1.length; i++){ %>
+<input
+  type="hidden"
+  class="price"
+  id="price"
+  value="<%= orderNow1[i].price %>"
+/>
+<input
+  type="hidden"
+  class="quantity"
+  id="quantity"
+  value="<%= orderNow1[i].quantity %>"
+/>
+<% } %>
+<script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
+<script>
+  function createInvoice() {
+    // Get input values from HTML elements
+    const name = document.getElementById("name").value;
+    const address1 = document.getElementById("address1").value;
+    const address2 = document.getElementById("address2").value;
+    const city = document.getElementById("city").value;
+    const state = document.getElementById("state").value;
+    const mobile = document.getElementById("mobile").value;
+    console.log(name,address1,address2,city,state,mobile)
+    var currentDate = new Date();
+currentDate.setDate(currentDate.getDate() + 15);
+
+
+var newDate = currentDate.toISOString().split('T')[0];
+    // Initialize arrays for products
+    const products = [];
+
+    // Get product details from HTML elements
+    const priceElements = document.getElementsByClassName("price");
+    const quantityElements = document.getElementsByClassName("quantity");
+    const productName = document.getElementsByClassName("productName");
+    console.log(priceElements,quantityElements,productName)
+
+    // Iterate over product elements and add them to the products array
+    for (let i = 0; i < priceElements.length; i++) {
+      const price = parseFloat(priceElements[i].value);
+      const quantity = parseInt(quantityElements[i].value);
+
+      products.push({
+        quantity: quantity,
+        description: productName[i].value,
+        "tax-rate": 0,
+        price: price,
+      });
+    }
+
+    // Create the data object for the invoice
+    const data = {
+      customize: {},
+      images: {
+        logo: "https://p.kindpng.com/picc/s/480-4803541_shopping-cart-hd-png-download.png",
+      },
+      "sender": {
+        "company": "E-Cart",
+        "address": "Muthalakodam-Puthuchira Road",
+        "zip": "Thodupuzha",
+        "city": "Kerala",
+        "country": "India"
+       
+    },
+      "client": {
+        "company": name,
+        "address": address1,
+        "zip": city,
+        "city": state, 
+        "country": mobile
+
+       
+    },
+      
+      information: {
+        "number": '#' + Math.floor(Math.random() * 1000000000),
+        "date": new Date().toLocaleDateString(),
+        "due-date": newDate
+      },
+      products: products,
+      "bottom-notice": "Kindly pay your invoice within 15 days.",
+      settings: {
+        currency: "INR",
+      },
+    };
+
+    // Create the invoice
+    easyinvoice.createInvoice(data, (result) => {
+      easyinvoice.download("invoice.pdf", result.pdf);
+    });
+  }
+  
+</script>

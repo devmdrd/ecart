@@ -1,0 +1,99 @@
+<div class="container m-5 bg-white">
+  <div class="col-sm-12 col-md-12">
+    <div class="bg-white rounded h-100 p-4">
+      <h3 class="mb-4" style="color: black">View Products</h3>
+      <form
+        action="/admin/search-products"
+        method="GET"
+        class="m-2"
+        style="float: right"
+      >
+        <input type="text" name="searchQuery" placeholder="Search Products" />
+        <button type="submit">Search</button>
+      </form>
+      <table class="table table-bordered" id="myTable">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Available Stock</th>
+            <th scope="col">Description</th>
+            <th scope="col">Max.Retail Price</th>
+            <th scope="col">Original Price</th>
+            <th scope="col">Discount Price</th>
+            <th scope="col">Product Offer</th>
+            <th scope="col">Images</th>
+
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% productsData.forEach((product,index)=>{ %>
+          <tr>
+            <td><%- index+1 %></td>
+            <td scope="row"><%- product.name %></td>
+            <td scope="row"><%- product.category.name %></td>
+            <td scope="row"><%- product.brand.name %></td>
+            <td scope="row"><%- product.stock %></td>
+            <td scope="row"><%- product.description %></td>
+            <td scope="row"><%- product.mrp %></td>
+            <td scope="row"><%- product.originalPrice %></td>
+            <td scope="row"><%- product.discountPrice %></td>
+            <td scope="row"><%- product.offer %></td>
+
+            <td scope="row">
+              <div style="display: flex">
+                <img
+                  src="/<%- product.image[0] %>"
+                  style="width: 50px; height: 50px"
+                  alt=""
+                />
+                <img
+                  src="/<%- product.image[1] %>"
+                  style="width: 50px; height: 50px"
+                  alt=""
+                />
+                <img
+                  src="/<%- product.image[2] %>"
+                  style="width: 50px; height: 50px"
+                  alt=""
+                />
+                <img
+                  src="/<%- product.image[3] %>"
+                  style="width: 50px; height: 50px"
+                  alt=""
+                />
+              </div>
+            </td>
+
+            <td class="">
+              <a
+                href="/admin/edit-product/<%= product._id %>"
+                class=""
+                style="font-size: 20px"
+              >
+                <i class="bi bi-pencil-square"></i></a
+              >&nbsp;
+              <a
+                href="/admin/delete-product/<%= product._id %>"
+                class=""
+                style="font-size: 20px"
+              >
+                <i class="fa fa-trash"></i>
+              </a>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- <script>
+    $(document).ready(function () {
+      $("#myTable").DataTable();
+    });
+  </script>
+   -->

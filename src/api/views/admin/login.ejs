@@ -1,0 +1,40 @@
+<div
+  class="d-flex justify-content-center align-middle align-items-center text-center m-5"
+>
+  <div class="card bg-primary">
+    <div class="card-body">
+      <form class="form-signin" action="/admin/login" method="POST">
+        <div class="text-center mb-5">
+          <i
+            class="icon-library2 icon-2x text-slate-300 border-slate-300 border-3 rounded-round p-3 mb-3 mt-1"
+          ></i>
+          <h5 class="mb-0">Admin-Login</h5>
+          <span class="d-block text-muted">Enter your credentials below</span>
+          <p class="text-danger"><%= errorMessage %></p>
+        </div>
+
+        <div class="form-group my-2">
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            placeholder="Username"
+          />
+        </div>
+        <div class="form-group my-3">
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            placeholder="Password"
+          />
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">
+          Sign in
+        </button>
+      </form>
+      
+    </div>
+  </div>
+</div>

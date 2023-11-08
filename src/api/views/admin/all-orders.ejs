@@ -1,0 +1,93 @@
+<h3 style="padding:15px">All-Orders</h3>
+<main>
+   
+    <section class="d-flex justify-content-center align-items-center">
+        <div class="bg-white"style="height:auto;width:100vw">
+            <div class="table-responsive shadow-sm rounded p-3">
+                <div class="d-flex justify-content-between py-4 bg-white bg-dark">
+                    <div class="d-flex justify-content-between">
+                        <!-- Add content here if needed -->
+                    </div>
+                    <!-- <label for="table-search" class="visually-hidden">Search</label>
+                    <div class="position-relative">
+                        <div class="position-absolute top-0 start-0 d-flex align-items-center pl-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-secondary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
+                        </div>
+                        <input id="userSearch" class="form-control rounded-lg w-80 bg-light focus-ring focus-border" placeholder="Search for users">
+                    </div> -->
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-light text-white">
+                            <tr>
+                                <th class="py-3 px-6 text-start">ID</th>
+                                <th class="py-3 px-6 text-start">Order Number</th>
+                                <th class="py-3 px-6 text-start">Total Price</th>
+                                <th class="py-3 px-6 text-start">Customer</th>
+                                <th class="py-3 px-6 text-start">Payment Method</th>
+                                <th class="py-3 px-6 text-start">Order Date</th>
+                                <th class="py-3 px-6 text-start">Phone Number</th>
+                                <th class="py-3 px-6 text-center">Actions</th>
+                                <th class="py-3 px-6 text-start">Products</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% ordersData.forEach((item, index) => { %>
+                            <tr class="table-row">
+                                <td class="py-3 px-6"><%= index + 1 %></td>
+                                <td class="py-3 px-6"><%= item.orderId %></td>
+                                <td class="py-3 px-6"><%= item.totalAmount %></td>
+                                <td class="py-3 px-6"><%= item.userId ? item.userId.name : 'N/A' %></td>
+                                <td class="py-3 px-6"><%= item.paymentMethod %></td>
+                                <td class="py-3 px-6"><%= new Date(item.orderDate).toLocaleDateString() %></td>
+                                <td class="py-3 px-6"><%= item.userId ? item.userId.mobile : 'N/A' %></td>
+
+                                <td class="py-3 px-6 position-relative">
+                                    <div class="position-relative">
+                                        <% if (item.status === 'cancelled') { %>
+                                        <p class="text-primary font-weight-bold">User Cancelled</p>
+                                        <% }else if(item.status === "return-initiated" ||item.status === "return-accepted" ||item.status === "return-pickup" ||item.status === "returned" ||item.status === "return-rejected"){ %>
+                                            <select name="statusDisplay" class="status-select" id="status_id" data-statusId="<%= item.orderId %>"onchange="updateStatus(this)">
+                                                <option value="return-initiated" <% if (item.status === 'return-initiated') { %> selected <% } %>>Return Initiated</option>
+                                                <option value="return-accepted" <% if (item.status === 'return-accepted') { %> selected <% } %>>Accepted</option>
+                                                <option value="return-pickup" <% if (item.status === 'return-pickup') { %> selected <% } %>>out-for-pickup</option>
+                                                <option value="returned" <% if (item.status === 'returned') { %> selected <% } %>>Returned</option>
+                                                <option value="return-rejected" <% if (item.status === 'return-rejected') { %> selected <% } %>>Rejected</option>
+                                            </select>
+
+                                        <% } else { %>
+                                        <select name="statusDisplay" class="status-select" id="status_id" data-statusId="<%= item.orderId %>"onchange="updateStatus(this)">
+                                            <option value="pending" <% if (item.status === 'pending') { %> selected <% } %>>Pending</option>
+                                            <option value="shipped" <% if (item.status === 'shipped') { %> selected <% } %>>shipped</option>
+                                            <option value="out-for-delivery" <% if (item.status === 'out-for-delivery') { %> selected <% } %>>out-for-delivery</option>
+                                            <option value="delivered" <% if (item.status === 'delivered') { %> selected <% } %>>Delivered</option>
+                                            <option value="cancel" <% if (item.status === 'cancel') { %> selected <% } %>>Cancel</option>
+                                        </select>
+                                        <% } %>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-6 position-relative">
+                                    <a href="/admin/all-orders/<%= item.orderId %>"
+                                        class="cursor-pointer btn btn-info">Show More</a>
+                                   
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+  
+</main>
+<script>
+    function updateStatus(selectElement) {
+    const orderId = selectElement.getAttribute('data-statusId');
+    const selectedStatus = selectElement.value;
+    window.location.href = `/admin/update-order-status/${orderId}/${selectedStatus}`; 
+}
+
+</script>

@@ -1,0 +1,167 @@
+<div class="preloder_part">
+  <div class="spinner">
+    <div class="dot1"></div>
+    <div class="dot2"></div>
+  </div>
+</div>
+<!-- preloder end  -->
+
+<!-- back to top start -->
+<div class="progress-wrap">
+  <svg
+    class="progress-circle svg-content"
+    width="100%"
+    height="100%"
+    viewBox="-1 -1 102 102"
+  >
+    <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+  </svg>
+</div>
+<!-- back to top end -->
+
+<!-- header start -->
+<header class="header header__style-two" style="background-color:lightgoldenrodyellow">
+  
+  <div class="container mxw_1530">
+    <div class="header__middle ul_li_between">
+      <div class="header__logo">
+        <a href="#">
+          <h3 style="color: orangered;"><b>E-Cart</b></h3>
+        </a>
+      </div>
+      <div class="header-date">
+        <i class="far fa-calendar-alt"></i><%= new Date().toLocaleDateString() %>
+      </div>
+      <div class="add">
+        <a href="#!">
+          <img src="/assets/client/img/add/img_01.jpg" alt="" />
+        </a>
+      </div>
+      <div class="d-none d-lg-block">
+        <div class="ul_li">
+          <div class="header__language style-2 mr-25">
+            <ul>
+              <li><a href="#!" class="lang-btn"><img
+                    src="/assets/client/img/icon/usd_flag.png"
+                    alt=""
+                  />
+                  English
+                  <i class="far fa-chevron-down"></i></a>
+                <ul class="lang_sub_list">
+                  <li><a href="#">English</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="header__social">
+            <a href="#!"><i class="fab fa-facebook-f"></i></a>
+            <a href="#!"><i class="fab fa-twitter"></i></a>
+            <a href="#!"><i class="fab fa-instagram"></i></a>
+            <a href="#!"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="header__wrap"
+    data-uk-sticky="top: 250; animation: uk-animation-slide-top;"
+  >
+    <div class="container mxw_1530">
+      <div class="header__main ul_li">
+        <div class="header__logo">
+          <a href="index.html">
+            <img src="/assets/img/logo/logo.svg" alt="" />
+          </a>
+        </div>
+      
+        <div class="hamburger_menu d-lg-none">
+          <a href="javascript:void(0);" id="hamburgerIcon" class="active">
+            <div class="icon bar">
+              <span><i class="fal fa-bars"></i></span>
+            </div>
+          </a>
+        </div>
+        <div class="main-menu navbar navbar-expand-lg">
+          <nav class="main-menu__nav collapse navbar-collapse">
+            <ul>
+              <li class="menu-item-has-children has-mega-menu active"><a
+                  href="/"
+                >Home</a>
+              </li>
+             
+              <li><a href="#">Smart Phones</a></li>
+             
+              <li><a href="#">Tablets</a></li>
+              <li><a href="#">Laptops</a></li>
+              <li><a href="#">Head Phones</a></li>
+            
+              <li><a href="#">Accessories</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="header__main-right ul_li">
+         
+          <div class="header__icons ul_li mr-15">
+            
+            
+            
+            <div class="icon">
+              <a href="/users/wishlist" class="cart-link">
+                <i class="fas fa-heart"></i>
+                <!-- <span class="count" style="font-size: 12px;">0</span> -->
+
+              </a>
+            </div>
+                     
+            <div class="icon">
+              <a href="/users/cart" class="cart-link">
+                <i class="fas fa-shopping-cart"></i>
+                <!-- <span class="count" style="font-size: 12px;">0</span> -->
+
+              </a>
+            </div>
+            
+          </div>
+          <% if(user){ %>
+          <div class="icon dropdown">
+            <a href="#" class="user-link" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <!-- Add your profile information and customization here -->
+              <li><a class="dropdown-item" href="/users/accounts">Profile</a></li>
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/users/logout">Logout</a></li>
+            </ul>
+          </div>
+          <% }else{ %>
+          <div class="login-sign-btn">
+            <a class="thm-btn thm-btn__2 text-black" href="/users/login">
+              <span class="btn-wrap">
+               
+                  <span>Login / Sign Up</span>
+                  <span>Login / Sign Up</span>
+             
+               
+              </span>
+            </a>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- header end -->
+
+
+<script>
+  $(document).ready(function() {
+  $('#hamburgerIcon').click(function() {
+    $('#mainMenu').toggle(); // Toggles the visibility of the menu
+  });
+});
+
+</script>

@@ -1,0 +1,284 @@
+<div class="container" style="width: 60%">
+  <h1>Add Product</h1>
+
+  <form
+    class="row"
+    action="/admin/add-product"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <div class="mb-3 col-md-6">
+      <label for="categorySelect" class="form-label">Category</label>
+      <select
+        class="form-select"
+        id="category"
+        name="category"
+        onchange="getBrands(this.value)"
+        required
+      >
+        <option disabled selected value="">Select a category</option>
+        <% categoriesData.forEach((category) => { %>
+        <option value="<%- category._id %>"><%- category.name %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="mb-3 col-md-6">
+      <label for="categorySelect" class="form-label">Brands</label>
+      <select
+        class="form-select"
+        id="subCategory"
+        name="brand"
+        required
+      ></select>
+    </div>
+    <div class="col-md-6">
+      <label for="brandName" class="form-label">Product Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="brandName"
+        name="name"
+        placeholder="Enter Product name"
+        required
+      />
+    </div>
+    <div class="col-md-4">
+      <label for="brandName" class="form-label">Stock</label>
+      <input
+        type="number"
+        class="form-control"
+        id="brandName"
+        name="stock"
+        placeholder="Max. Stock Count"
+        required
+      />
+    </div>
+    <div class="col-md-3 mb-3 mt-3">
+      <label for="brandName" class="form-label">MRP</label>
+      <input
+        type="number"
+        class="form-control"
+        id="mrp"
+        name="mrp"
+        placeholder="Max. Retail Price"
+        oninput="calculateValues()"
+        min="0"
+        required
+      />
+      <span id="priceError" style="color: red;font-size: 15px;"></span>
+    </div>
+    <div class="col-md-3 mb-3 mt-3">
+      <label for="brandName" class="form-label"> Original price</label>
+      <input
+        type="number"
+        class="form-control"
+        id="cp"
+        name="originalPrice"
+        placeholder="original Price"
+        oninput="calculateValues()"
+        min="0"
+        required
+      />
+      <span id="originalError" style="color: red;font-size: 15px;"></span>
+      <span id="priceError2" style="color: red;font-size: 15px;"></span>
+    </div>
+    <div class="col-md-3 mb-3 mt-3">
+      <label for="brandName" class="form-label">Total discount price</label>
+      <input
+        type="text"
+        class="form-control"
+        id="total"
+        name="discountPrice"
+        value="0"
+        readonly
+        required
+      />
+    </div>
+    <div class="col-md-3 mb-3 mt-3">
+      <label for="brandName" class="form-label"
+        ><i class="bi bi-percent"></i>Product offer</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        id="percentage"
+        name="offer"
+        value="0"
+        readonly
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="brandDescription" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="brandDescription"
+        name="description"
+        rows="4"
+        placeholder="Enter Product description"
+        required
+      ></textarea>
+    </div>
+    <input type="file" id="imageInput" name="files" required multiple />
+    <div id="imageContainer"></div>
+
+    <div class="col-12 text-center mt-5">
+      <a class="btn btn-secondary" onclick="history.back()">Cancel</a>
+      <button type="reset" class="btn btn-danger">Reset</button>
+      <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const categoryDropdown = document.getElementById("category");
+  const subCategoryDropdown = document.getElementById("subCategory");
+
+  categoryDropdown.addEventListener("change", () => {
+    const categoryId = categoryDropdown.value;
+    subCategoryDropdown.innerHTML =
+      '<option value="">Select a sub-category</option>';
+    if (categoryId) {
+      // Make an AJAX request to load sub-categories based on the selected category
+      fetch(`/admin/add-product/${categoryId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach((subCategory) => {
+            const option = document.createElement("option");
+            option.value = subCategory._id;
+            option.textContent = subCategory.name;
+            subCategoryDropdown.appendChild(option);
+          });
+
+          subCategoryDropdown.removeAttribute("disabled");
+        })
+        .catch((error) => {
+          console.error("Error loading sub-categories:", error);
+        });
+    } else {
+      subCategoryDropdown.setAttribute("disabled", "true");
+    }
+  });
+  document.addEventListener("DOMContentLoaded", () => {
+    const imageInput = document.getElementById("imageInput");
+    const imageContainer = document.getElementById("imageContainer");
+
+    imageInput.addEventListener("change", (event) => {
+      const files = event.target.files;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          const originalImage = new Image();
+          originalImage.src = e.target.result;
+
+          const originalImageDiv = document.createElement("div");
+          originalImageDiv.classList.add("image-div");
+          originalImageDiv.appendChild(originalImage);
+
+          const cropper = new Cropper(originalImage, {
+            aspectRatio: 1,
+            viewMode: 1,
+          });
+
+          const cropButton = document.createElement("button");
+          cropButton.textContent = "Crop";
+          cropButton.addEventListener("click", () => {
+            const croppedCanvas = cropper.getCroppedCanvas();
+
+            // Create a new image element for the cropped image
+            const croppedImage = new Image();
+            croppedImage.src = croppedCanvas.toDataURL();
+            croppedImage.style.maxWidth = "100px"; // Set the maximum width
+            croppedImage.style.maxHeight = "100px"; // Set the maximum height
+
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", () => {
+              croppedImageDiv.remove();
+            });
+
+            const croppedImageDiv = document.createElement("div");
+            croppedImageDiv.classList.add("image-div");
+            croppedImageDiv.appendChild(croppedImage);
+            croppedImageDiv.appendChild(deleteButton);
+
+            originalImageDiv.remove(); // Remove the original image div
+
+            imageContainer.appendChild(croppedImageDiv);
+          });
+
+          originalImageDiv.appendChild(cropButton);
+          imageContainer.appendChild(originalImageDiv);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+
+  function calculateValues() {
+    const value1 = parseFloat(document.getElementById("mrp").value);
+    const value2 = parseFloat(document.getElementById("cp").value);
+
+    const difference = value1 - value2;
+
+    const percentage = Math.round((difference / value1) * 100);
+
+    document.getElementById("total").value = isNaN(difference)
+      ? ""
+      : difference;
+    document.getElementById("percentage").value = isNaN(percentage)
+      ? ""
+      : percentage;
+  }
+  const priceInput = document.getElementById("mrp");
+   const priceError = document.getElementById("priceError");
+
+   priceInput.addEventListener("input", function() {
+       if (this.value < 0) {
+           priceError.textContent = "Price cannot be negative.";
+           priceInput.setCustomValidity("Price cannot be negative.");
+       } else {
+           priceError.textContent = "";
+           priceInput.setCustomValidity("");
+       }
+   });
+   const priceInput1 = document.getElementById("cp");
+   const priceError1 = document.getElementById("originalError");
+
+   priceInput1.addEventListener("input", function() {
+       if (this.value < 0) {
+           priceError1.textContent = "Price cannot be negative.";
+           priceInput1.setCustomValidity("Price cannot be negative.");
+       } else {
+           priceError1.textContent = "";
+           priceInput1.setCustomValidity("");
+       }
+   });
+   const mrpInput = document.getElementById("mrp");
+   
+   const priceInput2 = document.getElementById("cp");
+   const priceError2 = document.getElementById("priceError2");
+   const total = document.getElementById("total").value;
+   const percentage = document.getElementById("percentage").value;
+
+  
+
+   priceInput2.addEventListener("input", function() {
+       if (parseFloat(mrpInput.value) < parseFloat(this.value)) {
+           priceError2.textContent = "oops! price > MRP.";
+           priceInput2.setCustomValidity("Price should not be greater than the MRP.");
+           total.style.display = "none";
+           percentage.style.display = "none";
+       } else {
+           priceError2.textContent = "";
+           priceInput2.setCustomValidity("");
+           total.style.display = "block";
+            percentage.style.display = "block"; 
+       }
+      });
+</script>

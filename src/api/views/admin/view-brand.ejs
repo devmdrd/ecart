@@ -1,0 +1,102 @@
+<div class="container m-5 bg-white">
+  <div class="col-sm-12 col-md-12">
+    <div class="bg-white rounded h-100 p-4">
+      <h3 class="mb-4" style="color: black">View Brands</h3>
+      <% if (message.length>0) { %>
+        <div
+        id="success-alert"
+        class="alert alert-success alert-dismissible fade show custom-alert"
+        role="alert"
+      >
+          <strong><%= message %></strong>
+          
+        </div>
+       
+        <script>
+          // JavaScript to automatically close the success alert after a delay
+          document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+              var successAlert = document.getElementById('success-alert');
+              if (successAlert) {
+                successAlert.style.display = 'none';
+              }
+            }, 5000); // Adjust the delay (in milliseconds) as needed
+          });
+        </script>
+      <% } %>
+      <form
+        action="/admin/search-brands"
+        method="GET"
+        class="m-2"
+        style="float: right"
+      >
+        <!-- <input type="text" name="searchQuery" placeholder="Search Brands" />
+        <button type="submit">Search</button> -->
+      </form>
+      <div class="mb-3" style="width: 50%">
+        <select
+          class="form-select"
+          id="category"
+          name="category"
+          onchange="getBrandByCategory(this.value)"
+          required
+        >
+          <option value="">Select a category</option>
+          <% categoriesData.forEach((category) => { %>
+          <option value="<%- category._id %>"><%- category.name %></option>
+          <% }); %>
+        </select>
+      </div>
+      <table class="table table-bordered" id="my-table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Category</th>
+            <th scope="col">Description</th>
+            <th scope="col">Offer</th>
+            <th scope="col">Image</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% brandsData.forEach((brand,index) => { %>
+          <tr>
+            <td><%- index+1 %></td>
+            <td scope="row"><%- brand.name %></td>
+            <td scope="row"><%- brand.category.name %></td>
+            <td scope="row"><%- brand.description %></td>
+            <td scope="row"><%- brand.offer %></td>
+            <td scope="row" style="width: 150px; height: 100px">
+              <img
+                src="/<%- brand.image %>"
+                style="width: 150px; height: 100px"
+                alt=""
+              />
+            </td>
+            <td>
+              <a
+                href="/admin/edit-brand/<%= brand._id %>"
+                class="btn btn-warning btn-sm"
+              >
+                <i class="bi bi-pencil-square"></i
+              ></a>
+              <a
+                href="/admin/delete-brand/<%= brand._id %>"
+                class="btn btn-danger btn-sm"
+              >
+                <i class="fa fa-trash"></i>
+              </a>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+  function getBrandByCategory(categoryId) {
+    window.location.href = "/admin/view-brand/" + categoryId;
+  }
+</script>

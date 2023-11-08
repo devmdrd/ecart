@@ -1,0 +1,465 @@
+<style>
+  .price {
+    font-weight: bold;
+    color: #ff5733;
+  }
+
+  .old-price {
+    text-decoration: line-through;
+    font-size: small;
+    margin: 10px;
+    color: #888;
+  }
+
+  .message {
+    background-color: #4caf50; /* Background color for success message */
+    color: #fff; /* Text color */
+    padding: 10px; /* Padding around the message */
+    border: 1px solid #4caf50; /* Border style for the message */
+    margin-top: 10px; /* Add some space between the link and the message */
+    border-radius: 5px; /* Rounded corners for the message */
+  }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".carousel").carousel(); // This line initializes the carousel
+  });
+</script>
+<main>
+  <div id="carouselExampleCaptions" class="carousel slide">
+    <div class="carousel-indicators">
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="Slide 1"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="1"
+        aria-label="Slide 2"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="2"
+        aria-label="Slide 3"
+      ></button>
+    </div>
+    <div
+      class="carousel-inner"
+      style="height: 500px;"
+    >
+      <% bannerData.forEach((bannerItem, index) => { %>
+      <div
+        style="height: 100%"
+        class="carousel-item <%= index === 0 ? 'active' : '' %>"
+      >
+        <img
+          style="height: 100%;"
+          src="/<%- bannerItem.image %>"
+          class="d-block w-100 d-flex justify-content-center align-items-center mx-auto"
+          alt="..."
+        />
+        
+        <div class="carousel-caption d-none d-md-block">
+        
+          <div class="featured__content">
+            <span style="position: absolute; top: 10px;left: 50px;color: black;font-weight: 1000;"><%- bannerItem.title %></span>
+            <h2 style="position: absolute; top: 50px;left: 50px;color: black;font-weight: 1000;"><%- bannerItem.title %></h2>
+            <p style="position: absolute; top: 100px;left: 50px;color: black;font-weight: 1000;"><%- bannerItem.description %></p>
+           
+            <div class="banner__btn mt-30">
+                <a class="thm-btn thm-btn__black" href="#">
+                    <span class="btn-wrap"> 
+                        <span>Shop Now</span>
+                        <span>Shop Now</span>
+                    </span>
+                    <i class="far fa-long-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleCaptions"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleCaptions"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- Ensure you have jQuery included before running the carousel function -->
+
+  <div class="banner-product">
+    <div class="container mxw_1530 pt-45">
+      <div class="row mt-none-30">
+        <% categoryData.forEach(function(category,index){ %>
+        <div class="col-lg-3 col-md-6 mt-30">
+          <div
+            class="banner-product__item ul_li bg_img"
+            style="
+              background-color: lightgoldenrodyellow;
+              height: 125px;
+              padding: 0;
+            "
+          >
+            <div class="banner-product__img" style="height: 125px">
+              <img src="/<%- category.image %>" alt="" style="height: 125px" />
+            </div>
+            <div class="banner-product__content">
+              <span><%- category.name %></span>
+              <div class="upto-offer ul_li mb-10">
+                <span class="upto"
+                  >Up <br />
+                  To</span
+                >
+                <span class="offer-no"
+                  ><%- category.offer %> <span>%</span></span
+                >
+              </div>
+              <a href="/users/all-products/<%- category._id %>"
+                >Shop Now <i class="fas fa-chevron-circle-right"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- tx baner end -->
+  <% categoryData.forEach((category) => { %>
+  <div class="rd-tab-product pt-60">
+    <div class="container mxw_1530">
+      <div class="row mt-none-30">
+        <div class="col-lg-3 mt-30">
+          <div class="add-banner__wrap pr-90">
+            <div
+              class="add-banner bg_img add-banner__2 add-banner__h444"
+              style="background-color: lightgoldenrodyellow"
+            >
+              <span>New</span>
+              <h2><%- category.name %></h2>
+              <div class="upto-offer ul_li mb-35">
+                <span class="upto"
+                  >Up <br />
+                  To</span
+                >
+                <span class="offer-no"
+                  ><%- category.offer %><span>%</span></span
+                >
+              </div>
+              <a
+                class="thm-btn thm-btn__transparent"
+                href="/users/all-products/<%- category._id %>"
+              >
+                <span class="btn-wrap">
+                  <span>Shop Now</span>
+                  <span>Shop Now</span>
+                </span>
+                <i class="far fa-long-arrow-right"></i>
+              </a>
+              <div class="add-banner__img">
+                <img
+                  src="/<%- category.image %>"
+                  alt=""
+                  style="width: 100%; height: 200px"
+                />
+              </div>
+              <div class="add-banner__text-box add-banner__text-box--2">
+                <%- category.offer %>%<br />
+                <span>off</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-9 mt-30">
+          <div class="rd-products__wrap">
+            <div class="rd-products__nav ul_li_between mb-20">
+              <h2 class="section-heading">
+                <span>Best Seller Product</span>
+              </h2>
+            </div>
+            <div class="rd-products">
+              <div class="tab-content tab_has_slider" id="vd-myTabContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="vd-tab4"
+                  role="tabpanel"
+                  aria-labelledby="vd-tab-04"
+                >
+                  <div class="rd-tab-product__slide">
+                    <% category.products.forEach((product) => { %>
+
+                    <div class="tab-product__item tx-product text-center">
+                      <div
+                        class="thumb"
+                        style="width: 200px; height: 200px"
+                        data-stock="<%- product.stock %>"
+                      >
+                        <a href="/users/single-product/<%- product._id %>">
+                          <img
+                            src="/<%- product.image[0] %>"
+                            alt=""
+                            style="width: 200px; height: 200px"
+                          />
+                        </a>
+
+                        <ul class="product__action">
+                          <li>
+                            <a
+                              href=""
+                              class="add-to-cart-link"
+                              data-product-id="<%- product._id %>"
+                              data-count="1"
+                              data-price="<%- product.originalPrice %>"
+                            >
+                              <i class="far fa-shopping-basket"></i>
+                            </a>
+                          </li>
+
+                          <li>
+                            <a
+                              href=""
+                              class="add-to-wishlist-link"
+                              data-product-id="<%- product._id %>"
+                            >
+                              <i class="far fa-heart"></i>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div
+                        class="toast"
+                        role="alert"
+                        style="display: none"
+                        aria-live="assertive"
+                        aria-atomic="true"
+                        data-product-id="<%- product._id %>-cart"
+                      >
+                        <div
+                          class="toast-body"
+                          style="background-color: green; color: white"
+                        >
+                          Product added to cart!
+                        </div>
+                      </div>
+                      <div
+                        class="toast"
+                        role="alert"
+                        style="display: none"
+                        aria-live="assertive"
+                        aria-atomic="true"
+                        data-product-id="<%- product._id %>-wishlist"
+                      >
+                        <div
+                          class="toast-body"
+                          style="background-color: green; color: white"
+                        >
+                          Product added to wishlist!
+                        </div>
+                      </div>
+                      <div class="content mt-2">
+                        <div class="product__review ul_li_center">
+                          <ul class="rating-star ul_li mr-10">
+                            <li><i class="fas fa-star"></i></li>
+                            <li><i class="fas fa-star"></i></li>
+                            <li><i class="fas fa-star"></i></li>
+                            <li><i class="far fa-star"></i></li>
+                            <li><i class="far fa-star"></i></li>
+                          </ul>
+                          <span>(126)</span>
+                        </div>
+                        <h3 class="title">
+                          <a href="#"><%- product.name %></a>
+                        </h3>
+                        <span class="price">
+                          ₹<%- product.originalPrice %>
+                          <span class="old-price">₹<%- product.mrp %></span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <% }) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% }); %>
+
+  <!-- brand start -->
+
+  <div class="brand pt-70 pb-90">
+    <div class="container mxw_1530">
+      <div class="brand__active">
+        <% brandData.forEach((brand)=>{ %>
+
+        <div class="brand__item">
+          <a href="#!">
+            <img
+              src="/<%- brand.image  %>"
+              alt=""
+              style="height: 100px; width: 100px"
+            />
+          </a>
+        </div>
+        <input id="brandId" type="hidden" value="<%- brand._id %>" />
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- start newsletter-popup-area-section -->
+  <section class="newsletter-popup-area-section">
+    <div class="newsletter-popup-area">
+      <div class="newsletter-popup-ineer">
+        <button class="btn newsletter-close-btn">
+          <i class="fal fa-times"></i>
+        </button>
+        <div class="img-holder">
+          <img src="/assets/clientimg/bg/newsletter.jpg" alt />
+        </div>
+        <div class="details">
+          <h4>Get 45% discount shipped to your inbox</h4>
+          <p>
+            Subscribe to the radios eCommerce newsletter to receive timely
+            updates to your favorite products
+          </p>
+          <form>
+            <div>
+              <input type="email" placeholder="Enter your email" />
+              <button type="submit">Subscribe</button>
+            </div>
+            <div>
+              <label class="checkbox-holder">
+                Don't show this popup again!
+                <input type="checkbox" class="show-message" />
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end newsletter-popup-area-section -->
+</main>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // For "Add to Cart" action
+    const handleAddToCart = async (productId, count, price) => {
+      try {
+        const response = await fetch(
+          `/users/add-to-cart/${productId}/${count}/${price}`
+        );
+        if (response.ok) {
+          const toastEl = document.querySelector(
+            `.toast[data-product-id="${productId}-cart"]`
+          );
+          const toast = new bootstrap.Toast(toastEl);
+          toastEl.style.display = "block";
+
+          toast.show();
+          setTimeout(() => {
+            toastEl.style.display = "none"; // Set display property back to 'none' after 3 seconds
+          }, 3000);
+        } else {
+          console.error("Failed to add product to cart");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    };
+
+    // For "Add to Wishlist" action
+    const handleAddToWishlist = async (productId) => {
+      try {
+        const response = await fetch(`/users/add-to-wishlist/${productId}`);
+        if (response.ok) {
+          const toastEl = document.querySelector(
+            `.toast[data-product-id="${productId}-wishlist"]`
+          );
+          const toast = new bootstrap.Toast(toastEl);
+          toastEl.style.display = "block";
+
+          toast.show();
+          setTimeout(() => {
+            toastEl.style.display = "none"; // Set display property back to 'none' after 3 seconds
+          }, 3000);
+        } else {
+          console.error("Failed to add product to wishlist");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    };
+
+    // Rest of the JavaScript code remains unchanged as provided earlier
+
+    const handleProductActions = (link, actionHandler) => {
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const productId = link.getAttribute("data-product-id");
+        if (actionHandler) {
+          actionHandler(productId);
+        }
+      });
+    };
+
+    const addToCartLinks = document.querySelectorAll(".add-to-cart-link");
+    const addToWishlistLinks = document.querySelectorAll(
+      ".add-to-wishlist-link"
+    );
+
+    addToCartLinks.forEach((link) => {
+      handleProductActions(link, (productId) => {
+        const count = link.getAttribute("data-count");
+        const price = link.getAttribute("data-price");
+        handleAddToCart(productId, count, price);
+      });
+    });
+
+    addToWishlistLinks.forEach((link) => {
+      handleProductActions(link, handleAddToWishlist);
+    });
+    const stock = document.querySelectorAll(".thumb");
+    const products = document.querySelectorAll(".tx-product");
+    //  const categories = document.querySelectorAll(".rd-tab-product");
+
+    for (let i = 0; i < stock.length; i++) {
+      if (stock[i].getAttribute("data-stock") == 0) {
+        products[i].style.opacity = "0.5";
+        products[
+          i
+        ].innerHTML += `<div style="color:red" class="out-of-stock-message">Out of Stock</div>`;
+      }
+    }
+  });
+</script>

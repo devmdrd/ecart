@@ -1,0 +1,617 @@
+<style>
+  /* Custom styles can be added here */
+
+  .tab-content {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+
+  .welcome {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+  }
+
+  .welcome p {
+    margin: 0;
+  }
+
+  .referral-code {
+    background-color: #f8d7da;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+  }
+
+  .referral-code p {
+    margin: 0;
+  }
+
+  .referral-code button {
+    background-color: #e44311;
+    color: #fff;
+    border: none;
+  }
+
+  .referral-code button:hover {
+    background-color: #d4370d;
+  }
+
+  .table {
+    background-color: #fff;
+  }
+
+  .table th,
+  .table td {
+    border-top: none;
+  }
+
+  .account-details-form {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .account-details-form label {
+    font-weight: bold;
+  }
+  .circle {
+  width: 100px; 
+  height: 100px; 
+  border-radius: 50%; 
+  overflow: hidden; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  margin-left: 100px;
+}
+
+.profile-pic {
+  max-width: 100%; 
+  max-height: 100%; 
+}
+
+
+</style>
+
+<!-- Breadcrumb area -->
+<% if (message.length > 0) { %>
+  <div class="alert alert-danger" role="alert" id="alertMessage">
+    <%= message %>
+  </div>
+  <script>
+    setTimeout(function () {
+      var alertMessage = document.getElementById("alertMessage");
+      if (alertMessage) {
+        alertMessage.style.display = "none";
+      }
+    }, 5000);
+  </script>
+<% } %>
+
+<!-- My account wrapper -->
+<div class="container m-5 ml-5">
+  <div class="row">
+    <div
+      class="col-lg-3 col-md-4"
+      style="
+        background-color: lightgoldenrodyellow;
+        width: 200px;
+        margin-left: 100px;
+      "
+    >
+      <!-- Tab menu -->
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="#dashboad" data-toggle="tab"
+            ><i class="fa fa-dashboard"></i> <b>Dashboard</b></a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#orders" data-toggle="tab"
+            ><i class="fa fa-cart-arrow-down"></i> Orders</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#wallet" data-toggle="tab"
+            ><i class="fa fa-wallet"></i> Wallet</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#payment-method" data-toggle="tab"
+            ><i class="fa fa-credit-card"></i> Payment Method</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#address-edit" data-toggle="tab"
+            ><i class="fa fa-map-marker"></i> Address</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logOut"
+            ><i class="fa fa-sign-out"></i> Logout</a
+          >
+        </li>
+      </ul>
+    </div>
+    <div class="col-lg-9 col-md-8">
+      <!-- Tab content -->
+      <div class="tab-content" id="myaccountContent">
+        <!-- Dashboard tab content -->
+        <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
+          <div class="container-xl px-4 mt-4">
+            <div class="row">
+              <div class="col-xl-4">
+                <!-- Profile picture card-->
+                <div class="card mb-4 mb-xl-0">
+                  <div class="card-header">Profile Picture</div>
+                  <div class="card-body text-center">
+                    <div class="row">
+                      <div class="small-12 medium-2 large-2 columns">
+                        <div class="circle">
+                          <% if(userData){ %>
+                          <img id="imagePreview" class="profile-pic" src="/<%- userData.image %>" />
+                          <% }else{ %>
+                            <img id="imagePreview" class="profile-pic" src="" />
+                            <% } %>
+                        </div>
+                        <div class="p-image">
+                          <label
+                            for="new-image"
+                            style="
+                              background-color: #007bff;
+                              color: #fff;
+                              padding: 8px 15px;
+                              cursor: pointer;
+                              border-radius: 5px;
+                              display: inline-block;
+                              margin-top: 40px;
+                            "
+                          >
+                            <i
+                              class="fa fa-plus-circle"
+                              style="margin-right: 5px"
+                            ></i>
+                            Add New Image
+                          </label>
+                          <form
+                            action="/users/post-profile"
+                            method="POST"
+                            enctype="multipart/form-data"
+                          >
+                         
+                          
+                            <input
+                              id="new-image"
+                              class="file-upload"
+                              type="file"
+                              accept="image/*"
+                              name="image"
+                              onchange="displayImage(this)"
+                              style="display: none"
+                            />
+                            <button class="btn btn-primary" style="
+                            background-color: #007bff;
+                            color: #fff;
+                            padding: 8px 12px;
+                            margin-top: 2px;
+                            cursor: pointer;
+                            border-radius: 5px;
+                            display: inline-block;
+                          " type="submit">save</button>
+                           
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-8">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                  <div class="card-header">Account Details</div>
+                  <div class="card-body">
+                    <form action="/users/post-details" method="POST">
+                      <!-- Form Group (username)-->
+
+                      <!-- Form Row-->
+                      <div class="row gx-3 mb-3">
+                        <!-- Form Group (first name)-->
+                        <div class="col-md-6">
+                          <label class="small mb-1" for="inputFirstName"
+                            >Full name</label
+                          >
+                          <input
+                            class="form-control"
+                            id="inputFirstName"
+                            type="text"
+                            placeholder="Enter your first name"
+                            name="name"
+                            value="<%= userData.name %>"
+                            required
+                          />
+                        </div>
+                        <!-- Form Group (last name)-->
+                        <div class="col-md-6">
+                          <label class="small mb-1" for="inputLastName"
+                            >Username</label
+                          >
+                          <input
+                            class="form-control"
+                            id="inputLastName"
+                            type="text"
+                            placeholder="Enter your last name"
+                            name="username"
+                            value="<%- userData.username %>"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <!-- Form Row        -->
+
+                      <!-- Form Group (email address)-->
+                      <div class="mb-3">
+                        <label class="small mb-1" for="inputEmailAddress"
+                          >Email address</label
+                        >
+                        <input
+                          class="form-control"
+                          id="inputEmailAddress"
+                          type="email"
+                          placeholder="Enter your email address"
+                          name="email"
+                          value="<%- userData.email %>"
+                          required
+                        />
+                      </div>
+                      <!-- Form Row-->
+                      <div class="row gx-3 mb-3">
+                        <!-- Form Group (phone number)-->
+                        <div class="col-md-6">
+                          <label class="small mb-1" for="inputPhone"
+                            >Phone number</label
+                          >
+                          <input
+                            class="form-control"
+                            id="inputPhone"
+                            type="tel"
+                            placeholder="Enter your phone number"
+                            name="mobile"
+                            value="<%- userData.mobile %>"
+                            pattern="[0-9]{10}"
+                            title="Please enter a valid 10-digit phone number (e.g., 1234567890)"
+                            required
+                          />
+                        </div>
+                        <!--  -->
+                      </div>
+                      <!-- Save changes button-->
+                      <button class="btn btn-primary" type="submit">
+                        Save changes
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="myaccount-content">
+            <h3>Referral Code</h3>
+            <div class="referral-code">
+              <p>
+                Share this code with a new user and get a
+                <i class="bi bi-currency-rupee"></i> 1000 as a referral bonus
+                when they sign up.
+              </p>
+              <span class="border border-danger p-2" id="p1">ABCD123</span>
+              <button
+                class="btn btn-sm ml-2"
+                style="background-color: rgb(228, 67, 17); color: white"
+                onclick="copyToClipboard('#p1')"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders tab content -->
+        <div class="tab-pane fade" id="orders" role="tabpanel">
+          <div class="cart-main-area pt-0 pb-0">
+            <div class="container">
+              <h3 class="cart-page-title">Your Order items</h3>
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                  <form>
+                    <!-- Table for orders -->
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Order Id</th>
+                            <th>Date</th>
+                            <th>Address</th>
+                            <th>Bill Amount</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% orders.forEach((orders)=>{   console.log(orders);%>
+                           
+                            <tr>
+                              <td class="product-name"><a href="#"><%- orders.orderId %></a></td>
+                              <%- console.log(orders.orderId) %>
+                              <td class="product-name text-left"><a href="#"><%- orders.orderDate.toLocaleDateString() %></a></td>
+                              <td class="product-price-cart text-left">
+                                <span>
+                                  <%- orders.billingAddress.name %><br />
+                                  <%- orders.billingAddress.city %><br />
+                                  <%- orders.billingAddress.state %>
+                                </span>
+                              </td>
+                              <td class="product-subtotal"><%- orders.totalAmount %></td>
+                              <td class="product-wishlist-cart">
+                                <a href="/users/all-orders/<%- orders.orderId %>">View Order</a>
+                              </td>
+                            </tr>
+                          <% }) %>
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wallet tab content -->
+        <div class="tab-pane fade" id="wallet" role="tabpanel">
+          <div class="myaccount-content">
+            <div class="row">
+              <h3 class="col-md-9">Wallet</h3>  
+              <h3 class="col-md-3 mr-auto">
+                Balance:<i class="bi bi-currency-rupee"></i> <%- balance %>
+              </h3>
+            </div>
+            <div class="myaccount-table table-responsive">
+              <!-- Table for wallet transactions -->
+              <table class="table table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Transaction</th>
+                    <th scope="col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% wallet.forEach((wallet,i)=>{ %>
+                  <tr>
+                    <th scope="row" class="create_index"><%- i+1 %></th>
+                    <td><%- wallet.date %></td>
+                    <td><%- wallet.person %></td>
+                    <td><%- wallet.type %></td>                  
+                    <td><%- wallet.amount %></td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method tab content -->
+        <div class="tab-pane fade" id="payment-method" role="tabpanel">
+          <div class="myaccount-content">
+            <h3>Payment Method</h3>
+            <p class="saved-message">You Can't Save Your Payment Method yet.</p>
+          </div>
+        </div>
+
+        <!-- Address Edit tab content -->
+        <!-- Address Edit tab content -->
+        <!-- Address Edit tab content -->
+        <div class="tab-pane fade" id="address-edit" role="tabpanel">
+          <div class="myaccount-content">
+            <div class="row">
+              <div class="col-md-6">
+                <h3 style="color: #007bff">Address</h3>
+                <% for(let i=0;i<userData.address.length;i++){ %>
+                <div id="address1" style="padding-top: 10px">
+                  <address>
+                    <p><strong><%- userData.address[i].name %></strong></p>
+                    <p>
+                        <%- userData.address[i].address1 %>, <%- userData.address[i].address2 %>
+                      <br /><%- userData.address[i].city %>, <%- userData.address[i].state %>,
+                      <%- userData.address[i].pincode %>,
+                    </p>
+                    <p><%- userData.address[i].mobile %></p>
+                  </address>
+                  <button onclick="editAddress('<%- userData.address[i]._id %>')" class="btn btn-primary edit-button"><i class="fa fa-edit"></i> Edit Address</button>
+                    
+                  <input type="hidden" id="id" value="<%- userData.address[i]._id %>"/>
+                  <button
+                    class="btn btn-danger"
+                    style="border: none"
+                    onclick="removeAddress('<%- userData.address[i]._id %>')"
+                  >
+                    <i class="bi bi-trash3"></i> Delete
+                  </button>
+                </div>
+                <br />
+                <hr />
+               
+                <% } %>
+            </div>
+
+               
+                <div class="col-md-6">
+                  <!-- Add New Address Form -->
+                  <h3 style="color: #007bff">Add / Edit Address</h3>
+                  <form action="/users/post-address" method="POST">
+                    <input type="hidden" id="id" value=""/>
+                    <div class="form-group">
+                      <label for="fullName">Full Name</label>
+                      <input
+                        style="height: 40px"
+                        type="text"
+                        class="form-control name"
+                        id="name"
+                        required
+                        name="name"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="addressLine1">Address Line 1</label>
+                      <input
+                        style="height: 40px"
+                        type="text"
+                        class="form-control address1"
+                        id="addressLine1"
+                       required
+                        name="address1"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="addressLine2">Address Line 2</label>
+                      <input
+                        style="height: 40px"
+                        type="text"
+                        class="form-control address2"
+                        id="addressLine2"
+                      required
+                        name="address2"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="city">City</label>
+                      <input
+                        style="height: 40px"
+                        type="text"
+                        class="form-control city"
+                        id="city"
+                        name="city"
+                        required
+                       
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="state">State</label>
+                      <input
+                        style="height: 40px"
+                        type="text"
+                        class="form-control state"
+                        id="state"
+                        name="state"
+                        required
+                        
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="pincode">Zip Code</label>
+                      <input
+                        style="height: 40px"
+                        type="text"
+                        class="form-control zip-code"
+                        id="zipCode"
+                        name="pincode"
+                        required
+                        
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="newMobile">Mobile Number</label>
+                      <input
+                        style="height: 40px"
+                        type="tel"
+                        class="form-control mobile"
+                        id="mobile"
+                        name="mobile"
+                        pattern="[0-9]{10}"
+                        title="Please enter a valid 10-digit phone number (e.g., 1234567890)"
+                        required
+                       
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">
+                      Submit
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Bootstrap JS scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+     function displayImage(input) {
+    const imagePreview = document.getElementById("imagePreview");
+    console.log("bvdgc")
+
+
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        imagePreview.src = e.target.result;
+      };
+
+      reader.readAsDataURL(input.files[0]);
+     
+
+    } else {   
+  
+      imagePreview.src = "";
+      
+    }
+  }
+  // var edits = document.querySelectorAll('.edit-buuton')
+async function editAddress(addressId) {
+  try {
+    const response = await fetch(`/users/edit-address/${addressId}`);
+
+    if (!response.ok) {
+      throw new Error('Address not found');
+    }
+
+    const addressData = await response.json();
+    console.log(addressData);
+
+    // Update the form fields with addressData
+    document.querySelector('#name').value = addressData.address.name;
+    document.querySelector('#addressLine1').value = addressData.address.address1;
+    document.querySelector('#addressLine2').value = addressData.address.address2;
+    document.querySelector('#city').value = addressData.address.city;
+    document.querySelector('#state').value = addressData.address.state;
+    document.querySelector('#zipCode').value = addressData.address.pincode;
+    document.querySelector('#mobile').value = addressData.address.mobile;
+    document.querySelector('#id').value = addressData.address.addressId; // Set the addressId here
+
+    // Add more fields as needed
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+function removeAddress(addressId){
+    window.location.href = `/users/delete-address/${addressId}`;
+}
+
+</script>
+

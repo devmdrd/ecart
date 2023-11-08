@@ -1,0 +1,477 @@
+<section class="breadcrumb-area">
+  <div class="container">
+    <div class="radios-breadcrumb breadcrumbs">
+      <ul class="list-unstyled d-flex align-items-center">
+        <li class="radiosbcrumb-item radiosbcrumb-begin">
+          <a href="/users/cart"><span>Home</span></a>
+        </li>
+        <li class="radiosbcrumb-item radiosbcrumb-end">
+          <span>Cart</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- breadcrumb end -->
+
+<!-- start cart-section -->
+<section class="cart-section woocommerce-cart pb-80">
+  <div class="container">
+    <div class="row">
+      <div class="col col-xs-12">
+        <div class="woocommerce">
+          <!-- <form action="" method="post"> -->
+          <table class="shop_table shop_table_responsive cart">
+            <thead>
+              <tr>
+                <th class="product-remove">&nbsp;</th>
+                <th class="product-thumbnail">Image</th>
+                <th class="product-name">Product</th>
+                <th class="product-name">Brand</th>
+                <th class="product-name">Price</th>
+
+                <th class="product-quantity">Quantity</th>
+                <th class="product-subtotal">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% cartData.forEach((cartData)=>{ %>
+              <tr class="cart_single">
+                <td class="product-remove">
+                  <a
+                    href="#!"
+                    class="remove"
+                    title="Remove this item"
+                    data-product="<%- cartData.product._id %>"
+                    data-cart="<%- cartData._id %>"
+                    >&times;</a
+                  >
+                </td>
+                <td class="product-thumbnail">
+                  <a href="#!">
+                    <img
+                      width="57"
+                      height="70"
+                      class="attachment-shop_thumbnail size-shop_thumbnail wp-post-image"
+                      alt="#!"
+                      src="/<%- cartData.product.image[0] %>"
+                    />
+                  </a>
+                </td>
+                <td class="product-name" data-title="Product">
+                  <a href="#!"><%- cartData.product.name%></a>
+                </td>
+                <td class="product-name" data-title="Product">
+                  <a href="#!"><%- cartData.brand.name %></a>
+                </td>
+
+                <td class="product-price" data-title="Price">
+                  <span class="woocommerce-Price-amount amount"
+                    ><span id="some" class="woocommerce-Price-currencySymbol"
+                      >₹ <%- cartData.product.originalPrice %></span
+                    >
+                  </span>
+                </td>
+
+                <td class="product-quantity" data-title="Quantity">
+                  <div
+                    style="
+                      width: 100px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="plus"
+                      style="
+                        width: 25px;
+                        height: 50px;
+                        padding: 0;
+                        font-size: 20px;
+                        background-color: #007bff;
+                        color: #fff;
+                        border: none;
+                        cursor: pointer;
+                      "
+                    >
+                      +
+                    </button>
+                    <span
+                      style="
+                        width: 20px;
+                        height: 50px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 20px;
+                      "
+                      class="counter"
+                      ><%- cartData.quantity%></span
+                    >
+                    <button
+                      type="button"
+                      class="minus"
+                      style="
+                        width: 25px;
+                        height: 50px;
+                        padding: 0;
+                        font-size: 20px;
+                        background-color: #007bff;
+                        color: #fff;
+                        border: none;
+                        cursor: pointer;
+                      "
+                    >
+                      -
+                    </button>
+                  </div>
+                </td>
+
+                <td class="product-subtotal" data-title="Total">
+                  <span class="woocommerce-Price-amount amount"
+                    ><span class="woocommerce-Price-currencySymbol">₹ </span
+                    ><span class="price2"><%- cartData.price %></span></span
+                  >
+                </td>
+              </tr>
+              <input
+                type="hidden"
+                class="hide"
+                name="hide"
+                value="<%= cartData.product.originalPrice %>"
+              />
+              <input
+                type="hidden"
+                class="id"
+                value="<%- cartData.product._id %>"
+              />
+              <input
+                type="hidden"
+                class="stock"
+                data-stock="<%- cartData.product.stock %>"
+                value="<%- cartData.product.stock %>"
+              />
+              <input
+                type="hidden"
+                class="quantity"
+                value="<%- cartData.quantity%>"
+              />
+              <% }) %>
+            </tbody>
+          </table>
+          <!-- </form> -->
+          <form action="">
+            <div
+              class="cart-collaterals"
+              style="
+                float: right;
+                width: 30%;
+                margin-left: 20px;
+                font-size: 14px;
+              "
+            >
+              <div class="cart_totals calculated_shipping">
+                <h2>Cart Totals</h2>
+                <table class="shop_table shop_table_responsive">
+                  <tr class="cart-subtotal">
+                    <th>Subtotal</th>
+                    <td data-title="Subtotal">
+                      <span class="woocommerce-Price-amount amount">
+                        <span
+                          id="total"
+                          class="woocommerce-Price-currencySymbol"
+                        >
+                        </span>
+                      </span>
+                    </td>
+                  </tr>
+
+                  <tr class="shipping">
+                    <th>Shipping Cost</th>
+                    <td data-title="Shipping">
+                      Free Shipping
+                      <input
+                        type="hidden"
+                        name="shipping_method[0]"
+                        data-index="0"
+                        id="shipping_method_0"
+                        value="free_shipping:1"
+                        class="shipping_method"
+                      />
+                      <form
+                        class="woocommerce-shipping-calculator"
+                        action="http://localhost/wp/?page_id=5"
+                        method="post"
+                      >
+                        <p>
+                          <a href="#!" class="shipping-calculator-button">
+                            ₹ 0</a
+                          >
+                        </p>
+                        <section
+                          class="shipping-calculator-form"
+                          style="display: none"
+                        >
+                          <h2 class="hidden">Cart Total</h2>
+
+                          <p
+                            class="form-row form-row-wide"
+                            id="calc_shipping_state_field"
+                          >
+                            <input
+                              type="hidden"
+                              name="calc_shipping_state"
+                              id="calc_shipping_state"
+                            />
+                          </p>
+                          <p
+                            class="form-row form-row-wide"
+                            id="calc_shipping_postcode_field"
+                          >
+                            <input
+                              type="text"
+                              class="input-text"
+                              value=""
+                              placeholder="Postcode / ZIP"
+                              name="calc_shipping_postcode"
+                              id="calc_shipping_postcode"
+                            />
+                          </p>
+                          <p>
+                            <button
+                              type="submit"
+                              name="calc_shipping"
+                              value="1"
+                              class="button"
+                            >
+                              Update Totals
+                            </button>
+                          </p>
+                          <input
+                            type="hidden"
+                            id="_wpnonced"
+                            name="_wpnonce"
+                            value="918724a9c2"
+                          />
+                          <input
+                            type="hidden"
+                            name="_wp_http_referer"
+                            value="/wp/?page_id=5"
+                          />
+                        </section>
+                      </form>
+                    </td>
+                  </tr>
+
+                  <tr class="order-total">
+                    <th>Total</th>
+                    <td data-title="Total">
+                      <strong
+                        >₹ <span
+                          id="total1"
+                          class="woocommerce-Price-amount amount"
+                          ><span class="woocommerce-Price-currencySymbol">
+                            
+                          </span></span
+                        ></strong
+                      >
+                    </td>
+                  </tr>
+                </table>
+
+                <div class="wc-proceed-to-checkout">
+                  <button
+                    type="button"
+                    onclick="getPrice()"
+                    class="checkout-button thm-btn thm-btn__2 no-icon br-0 alt wc-forward"
+                  >
+                    <span class="btn-wrap" id="btn-wrap">
+                      <span>Proceed to Checkout</span>
+                      <span>Proceed to Checkout</span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const counterElements = document.querySelectorAll(".counter");
+  const calcElements = document.querySelectorAll(".price2");
+  const nilElements = document.querySelectorAll(".hide");
+  const incrementButtons = document.querySelectorAll(".plus");
+  const decrementButtons = document.querySelectorAll(".minus");
+  const totalElement = document.getElementById("total");
+  const totalElement1 = document.getElementById("total1");
+  const id = document.querySelectorAll(".id");
+  const stock = document.querySelectorAll(".stock");
+  const cartProducts = document.querySelectorAll(".cart_single");
+  const finalButton = document.getElementById("btn-wrap");
+  const quantity = document.querySelectorAll(".quantity");
+
+  function updateTotal() {
+    let totalPrice = 0;
+
+    for (let i = 0; i < counterElements.length; i++) {
+      const value = parseInt(counterElements[i].innerText);
+      const nilValue = parseInt(nilElements[i].value);
+      totalPrice += value * nilValue;
+    }
+
+    // Update the total price display element
+    totalElement.innerText = `₹ ${totalPrice}`;
+    totalElement1.innerText = `${totalPrice}`;
+  }
+
+  for (let i = 0; i < counterElements.length; i++) {
+    incrementButtons[i].addEventListener("click", () => {
+      incrementCount(i);
+      updateTotal();
+    });
+
+    decrementButtons[i].addEventListener("click", () => {
+      decrementCount(i);
+      updateTotal();
+    });
+
+    function incrementCount(index) {
+      let value = parseInt(counterElements[index].innerText);
+      const nilValue = parseInt(nilElements[index].value);
+      if (value < stock[index].value) {
+        value++;
+        counterElements[index].innerText = value;
+        calcElements[index].innerText = value * nilValue;
+      } else {
+        alert("that product no more in stock");
+      }
+    }
+
+    function decrementCount(index) {
+      let value = parseInt(counterElements[index].innerText);
+      const nilValue = parseInt(nilElements[index].value);
+      if (value > 1) {
+        value--;
+        counterElements[index].innerText = value;
+        calcElements[index].innerText = value * nilValue;
+      }
+    }
+  }
+
+  // Initial total calculation
+  updateTotal();
+
+  
+
+  function getPrice() {
+    const cartData = [];
+    const form = document.createElement("form");
+    form.method = "post";
+    form.action = "/users/buy-now";
+
+    for (let i = 0; i < counterElements.length; i++) {
+      const product = id[i].value;
+      const quantity = parseInt(counterElements[i].innerText);
+      const productTotal = calcElements[i].innerText;
+
+      // Create hidden input fields
+      const productInput = document.createElement("input");
+      productInput.type = "hidden";
+      productInput.name = "product[]";
+      productInput.value = product;
+      form.appendChild(productInput);
+
+      const quantityInput = document.createElement("input");
+      quantityInput.type = "hidden";
+      quantityInput.name = "quantity[]";
+      quantityInput.value = quantity;
+      form.appendChild(quantityInput);
+
+      const productTotalInput = document.createElement("input");
+      productTotalInput.type = "hidden";
+      productTotalInput.name = "productTotal[]";
+      productTotalInput.value = productTotal;
+      form.appendChild(productTotalInput);
+
+      cartData.push({ product, quantity, productTotal });
+    }
+
+    const totalInput = document.createElement("input");
+    totalInput.type = "hidden";
+    totalInput.name = "total";
+    totalInput.value = totalElement.innerText;
+    form.appendChild(totalInput);
+
+    const total1Input = document.createElement("input");
+    total1Input.type = "hidden";
+    total1Input.name = "total1";
+    total1Input.value = totalElement1.innerText;
+    form.appendChild(total1Input);
+
+    let outOfStock = false;
+
+    for (let i = 0; i < stock.length; i++) {
+      if (stock[i].getAttribute("data-stock") === "0") {
+        outOfStock = true;
+        break;
+      }
+    }
+
+    if (outOfStock) {
+      return alert(
+        "Some products in the cart are out of stock!!! Please remove them to proceed."
+      );
+    }
+
+    document.body.appendChild(form); // Append the form to the document body
+    form.submit(); // Submit the form
+  }
+
+  const productRemoveButtons = document.querySelectorAll(".remove");
+  productRemoveButtons.forEach((item) => {
+    item.addEventListener("click", () => {
+      const productId = item.dataset.product;
+      const cartId = item.dataset.cart;
+      removeProduct(productId, cartId);
+    });
+  });
+  async function removeProduct(proId, cartId) {
+    window.location.href = `/users/remove-product/${proId}/${cartId}`;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Assuming cartProducts, incrementButtons, decrementButtons, and stock arrays exist
+
+    for (let i = 0; i < stock.length; i++) {
+      const nilValue = parseInt(nilElements[i].value);
+
+      if (stock[i].value == 0) {
+        counterElements[i].innerText = 1;
+        calcElements[i].innerText = 1 * nilValue;
+        incrementButtons[i].disabled = true; // Disable the increment button
+        decrementButtons[i].disabled = true; // Disable the decrement button
+        cartProducts[i].style.opacity = "0.5"; // Reduce opacity for the product row if it's out of stock
+      } else if (Number(quantity[i].value) > Number(stock[i].value)) {
+        console.log(typeof(quantity[i].value),typeof(stock[i].value))
+        counterElements[i].innerText = stock[i].value;
+        calcElements[i].innerText = stock[i].value * nilValue;
+        incrementButtons[i].disabled = false; // Disable the increment button
+        decrementButtons[i].disabled = false; // Disable the decrement button
+        // Reduce opacity for the product row if it's out of stock
+      } else {
+        counterElements[i].innerText = quantity[i].value;
+        calcElements[i].innerText = quantity[i].value * nilValue;
+        incrementButtons[i].disabled = false; // Disable the increment button
+        decrementButtons[i].disabled = false; // Disable the decrement button
+        // Reduce opacity for the product row if it's out of stock
+      }
+    }
+    updateTotal();
+  });
+</script>

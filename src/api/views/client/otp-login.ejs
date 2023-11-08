@@ -1,0 +1,31 @@
+<% if (message.length > 0) { %>
+<div class="alert alert-danger" role="alert" id="alertMessage">
+  <%= message %>
+</div>
+<script>
+  setTimeout(function () {
+    var alertMessage = document.getElementById("alertMessage");
+    if (alertMessage) {
+      alertMessage.style.display = "none";
+    }
+  }, 5000);
+</script>
+<% } %>
+<div class="container my-5 card text-center" style="width: 300px; height: 300px;">
+  <div class="card-header h5 text-white bg-primary" style="width: 100%;">OTP-Login</div>
+  <div class="card-body d-flex flex-column justify-content-center align-items-center">
+    <div class="form-outline">
+      <form action="/users/otp-form" method="POST">
+        <input
+          type="number"
+          id="typeEmail"
+          name="mobile"
+          class="form-control my-3"
+          placeholder="Mobile No"    
+        />
+        <button type="submit" class="btn btn-primary">Send OTP</button>
+      </form>
+    </div>
+  </div>
+</div>
+

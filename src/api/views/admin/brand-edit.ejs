@@ -1,0 +1,100 @@
+<div class="container mt-5" style="width: 40%">
+  <h1>Edit Brand</h1>
+
+  <!-- Brand Add Form -->
+  <form
+    action="/admin/edit-brand/<%= brandData._id %>"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <div class="mb-3">
+      <label for="categorySelect" class="form-label">Category</label>
+      <select disabled class="form-select" id="categorySelect" name="category" required>
+        <option value="<%- brandData.category %>">
+          <%- brandData.category.name %>
+        </option>
+       
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="brandName" class="form-label">Brand Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="brandName"
+        name="name"
+        placeholder="Enter brand name"
+        value="<%- brandData.name%>"
+        required   
+      />
+    </div>
+    <!-- <div class="mb-3">
+      <label for="brandOffer" class="form-label">Offer</label>
+      <input
+        type="text"
+        class="form-control"
+        id="brandOffer"
+        name="offer"
+        placeholder="Enter brand offer"
+        value=""  
+      />
+    </div> -->
+
+    <div class="mb-3">
+      <label for="brandDescription" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="brandDescription"
+        name="description"
+        rows="4"     
+        placeholder="Enter brand description"
+        required
+      >
+<%- brandData.description%></textarea
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="brandName" class="form-label">Upload Image</label>
+      <input
+        type="file"
+        class="form-control"
+        id="brandDescription"
+        placeholder="upload Image"
+        name="image"
+        accept="image/*"
+        onchange="displayImage(this)"
+        required
+      />
+      <img   
+        id="imagePreview"
+        src="/<%- brandData.image %>"
+        style="width: 150px; height: 100px"
+        alt=""
+      />
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-success">Add</button>
+    <button type="reset" class="btn btn-primary">
+      Reset
+    </button>
+  </form>
+</div>
+<script>
+  function displayImage(input) {
+    const imagePreview = document.getElementById("imagePreview");
+
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        imagePreview.src = e.target.result;
+      };
+
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      imagePreview.src = "";
+    }
+  }
+</script>
