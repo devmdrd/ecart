@@ -293,6 +293,33 @@ const getAllProducts = async (req, res) => {
     categoriesData,
   });
 };
+const addRating = async (req, res) => {
+  try {
+    const { productId,rating } = req.params;
+    
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      res.status(404).send("Product not found");
+      return;
+    }
+
+   const ratingData = await Product.updateOne(
+      { _id: productId },
+      {
+        $set: {
+          rating: rating,
+        },
+      }
+    );
+
+    res.json(ratingData)
+  } catch (error) {
+    console.error("Error adding rating:", error);
+    res.status(500).send("Internal Server Error");
+  }
+}
 module.exports = {
   getAddProduct,
   brandsByCategory,
@@ -304,4 +331,5 @@ module.exports = {
   searchProducts,
   getSingleProduct,
   getAllProducts,
+  addRating,
 };

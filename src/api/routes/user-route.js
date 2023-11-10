@@ -61,6 +61,9 @@ router.post("/buy-now", isUserAuthenticated,userController.getBuyNow);
 router.post('/order-success',orderController.orderSuccess)
 router.get('/order-success1/:total/:addressId/:payment',orderController.orderSuccess1)
 router.get('/order-success2/:orderId/:total/:addressId/:payment/:coupon',orderController.orderSuccess2)
+
+// rating routes
+router.get("/add-rating/:productId/:rating",productController.addRating);
  
 
 // logout route

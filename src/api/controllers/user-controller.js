@@ -116,6 +116,9 @@ const registerNewUser = async (req, res, next) => {
     // Set OTP expiration time (1 minute)
     const otpExpirationTime = new Date(Date.now() + 1 * 60 * 1000);
 
+    console.log(new Date())
+console.log(otpExpirationTime)
+
 
     // Store user data in the session
     req.session.tempUser = {
@@ -127,13 +130,14 @@ const registerNewUser = async (req, res, next) => {
       otp,
       otpExpires: otpExpirationTime,
     };
-
+console.log(req.session.tempUser)
     // Render the page for OTP verification
    
       res.render("client/signup-otp", {
         layout: "layouts/user-layout",
         user: false,
         message: "",
+        isExpires: "",
       });
     
    
@@ -157,11 +161,23 @@ const createUser = async (userData) => {
 // Function to validate OTP
 const isValidOTP = (enteredOTP, sessionOTP, otpExpiration) => {
   console.log(enteredOTP, sessionOTP, otpExpiration);
-  return (
-    enteredOTP.toString().trim().toLowerCase() ===
-    sessionOTP.toString().trim().toLowerCase()
-  );
+  console.log(new Date());
+  console.log(otpExpiration);
+
+  const currentTime = new Date(); // Capture the current time
+
+  if (currentTime > new Date(otpExpiration)) {
+    console.log("OTP expired");
+    return false;
+  } else {
+    console.log("Checking OTP");
+    return (
+      enteredOTP.toString().trim().toLowerCase() ===
+      sessionOTP.toString().trim().toLowerCase()
+    );
+  }
 };
+
 
 // Function for OTP verification during signup
 const otpSignup = async (req, res) => {
@@ -192,6 +208,7 @@ const otpSignup = async (req, res) => {
         layout: "layouts/user-layout",
         user: false,
         message: "Invalid OTP",
+        isExpires: false,
       });
     }
   } catch (error) {

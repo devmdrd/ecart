@@ -537,11 +537,20 @@ const getAllSalesRevenueReport = async (req, res) => {
   console.log("hello");
   try {
     const sales = await Order.find().populate("userId").sort({ orderDate: -1 });
-
-    console.log(sales);
+    const items = sales.map((item)=>item.items)
+    // console.log(items);
+    const items1 = items.map((item)=>item.map((item1)=>item1.productId))
+    // console.log(items1);
+    const items3 = [];
+    for (const innerArray of items1) {
+      const products = await Product.find({ _id: { $in: innerArray } });
+      items3.push(products);
+    }
+    console.log(items3);
     res.render("admin/filter-sales", {
       layout: "layouts/admin-layout",
       salesData: sales,
+      items3,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -563,8 +572,18 @@ const postSalesRevenueReport = async (req, res) => {
       }
     }).populate("userId").sort({ orderDate: -1 });
     
-    console.log(sales);
-    res.json(sales);
+    const items = sales.map((item)=>item.items)
+    // console.log(items);
+    const items1 = items.map((item)=>item.map((item1)=>item1.productId))
+    // console.log(items1);
+    const items3 = [];
+    for (const innerArray of items1) {
+      const products = await Product.find({ _id: { $in: innerArray } });
+      items3.push(products);
+    }
+    console.log(items3);
+    const data = {sales,items3}
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

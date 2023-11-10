@@ -78,7 +78,7 @@ router.get('/logout', adminController.adminLogout);
 // sales and revenue report
 router.get("/sales-revenue-report",isAdminAuthenticated,orderController.getSalesRevenueReport);
 router.get("/all-sales-revenue-report",orderController.getAllSalesRevenueReport);
-router.post("/filter-sales-revenue-report",orderController.postSalesRevenueReport);
+router.post("/filter-sales-revenue-report",orderController.postSalesRevenueReport);    
 
 
          

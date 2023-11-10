@@ -144,8 +144,68 @@
                 >
                   <p class="text-muted mb-0 small">
                     <strong><%- value %></strong>
-                   
                   </p>
+                </div>
+
+                <div
+                  class="rating-star ul_li d-flex align-items-center justify-content-center"
+                  style="background-color: lightgoldenrodyellow"
+                >
+                  <strong style="padding-right: 30px"
+                    >Rate this product:</strong
+                  >
+                  <ul class="rating-stars d-flex" style="list-style: none">
+                    <li>
+                      <i
+                        class="far fa-star"
+                        data-value="1"
+                        onclick="setRating(1)"
+                        style="font-size: 18px; color: orange"
+                      ></i>
+                    </li>
+                    <li>
+                      <i
+                        class="far fa-star"
+                        data-value="2"
+                        onclick="setRating(2)"
+                        style="font-size: 18px; color: orange"
+                      ></i>
+                    </li>
+                    <li>
+                      <i
+                        class="far fa-star"
+                        data-value="3"
+                        onclick="setRating(3)"
+                        style="font-size: 18px; color: orange"
+                      ></i>
+                    </li>
+                    <li>
+                      <i
+                        class="far fa-star"
+                        data-value="4"
+                        onclick="setRating(4)"
+                        style="font-size: 18px; color: orange"
+                      ></i>
+                    </li>
+                    <li>
+                      <i
+                        class="far fa-star"
+                        data-value="5"
+                        onclick="setRating(5)"
+                        style="font-size: 18px; color: orange"
+                      ></i>
+                    </li>
+                  </ul>
+                  <button
+                    onclick="submitRating()"
+                    style="margin-left: 30px; background-color: grey"
+                  >
+                    Rate
+                    <i
+                      class="fa fa-star"
+                      style="color: orange; font-size: 18px; padding: 5px"
+                    ></i>
+                  </button>
                 </div>
               </div>
 
@@ -377,9 +437,7 @@
               </div>
               <h5
                 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0 total-paid"
-              >
-               
-              </h5>
+              ></h5>
             </div>
           </div>
         </div>
@@ -395,8 +453,8 @@
 
 <script>
   const totalPaid = document.getElementById("total-paid").value;
-  document.querySelector(".total-paid").innerHTML = "Total Paid"+ totalPaid 
-   
+  document.querySelector(".total-paid").innerHTML = "Total Paid" + totalPaid;
+
   async function cancelOrder(orderId) {
     try {
       const response = await fetch(`/users/cancel-order/${orderId}`);
@@ -502,5 +560,44 @@
     easyinvoice.createInvoice(data, (result) => {
       easyinvoice.download("invoice.pdf", result.pdf);
     });
+  }
+</script>
+<script>
+  let selectedRating = 0;
+
+  function setRating(rating) {
+    selectedRating = rating;
+    highlightStars(rating);
+  }
+
+  function highlightStars(rating) {
+    const stars = document.querySelectorAll(".rating-stars i");
+    stars.forEach((star) => {
+      if (star.getAttribute("data-value") <= rating) {
+        star.classList.remove("far");
+        star.classList.add("fa");
+        star.style.color = "orange";
+      } else {
+        star.classList.remove("fa");
+        star.classList.add("far");
+      }
+    });
+  }
+
+  async function submitRating() {
+    if (selectedRating === 0) {
+      alert("Please select a rating!");
+    } else {
+      console.log("User's rating is: " + selectedRating);
+      const response = await fetch(`/users/add-rating/${productId}/${selectedRating}`);
+      console.log(response);
+      if (response.ok) {
+        const message = `Rating added successfully!`;
+        alert(message);
+
+        location.reload();
+      }
+      // Perform additional actions (send data to the server, etc.) here
+    }
   }
 </script>
