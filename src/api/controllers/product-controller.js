@@ -294,8 +294,10 @@ const getAllProducts = async (req, res) => {
   });
 };
 const addRating = async (req, res) => {
+  console.log("rating")
   try {
-    const { productId,rating } = req.params;
+    const { productId,rating } = req.body;
+    console.log(productId,rating)
     
 
     const product = await Product.findById(productId);

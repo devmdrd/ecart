@@ -63,7 +63,7 @@ router.get('/order-success1/:total/:addressId/:payment',orderController.orderSuc
 router.get('/order-success2/:orderId/:total/:addressId/:payment/:coupon',orderController.orderSuccess2)
 
 // rating routes
-router.get("/add-rating/:productId/:rating",productController.addRating);
+router.post("/add-rating",productController.addRating);
  
 
 // logout route

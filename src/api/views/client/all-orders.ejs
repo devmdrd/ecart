@@ -86,7 +86,7 @@
               <!-- Product Loop -->
               <% products.forEach((item) => { %>
               <!-- Product Row -->
-              <div class="row">
+              <div class="row rate-product">
                 <!-- Product Details -->
                 <div class="col-md-2">
                   <img
@@ -103,6 +103,11 @@
                     type="hidden"
                     class="productName"
                     value="<%= item.name %>"
+                  />
+                  <input
+                    type="hidden"
+                    class="productId"
+                    value="<%= item._id %>"
                   />
                 </div>
 
@@ -148,64 +153,77 @@
                 </div>
 
                 <div
-                  class="rating-star ul_li d-flex align-items-center justify-content-center"
-                  style="background-color: lightgoldenrodyellow"
+                  class="rating-star-container"
+                  data-product-id="<%- item._id %>"
                 >
-                  <strong style="padding-right: 30px"
-                    >Rate this product:</strong
+                  <div
+                    class="rating-star ul_li d-flex align-items-center justify-content-center"
+                    style="background-color: lightgoldenrodyellow"
                   >
-                  <ul class="rating-stars d-flex" style="list-style: none">
-                    <li>
+                    <strong style="padding-right: 30px"
+                      >Rate this product:</strong
+                    >
+                    <ul class="rating-stars d-flex" style="list-style: none">
+                      <li>
+                        <i
+                          class="far fa-star"
+                          data-value="1"
+                          data-product-id="<%- item._id %>"
+                          onclick="handleStarClick(this)"
+                          style="font-size: 18px; color: orange"
+                        ></i>
+                      </li>
+                      <li>
+                        <i
+                          class="far fa-star"
+                          data-value="2"
+                          data-product-id="<%- item._id %>"
+                          onclick="handleStarClick(this)"
+                          style="font-size: 18px; color: orange"
+                        ></i>
+                      </li>
+                      <li>
+                        <i
+                          class="far fa-star"
+                          data-value="3"
+                          data-product-id="<%- item._id %>"
+                          onclick="handleStarClick(this)"
+                          style="font-size: 18px; color: orange"
+                        ></i>
+                      </li>
+                      <li>
+                        <i
+                          class="far fa-star"
+                          data-value="4"
+                          data-product-id="<%- item._id %>"
+                          onclick="handleStarClick(this)"
+                          style="font-size: 18px; color: orange"
+                        ></i>
+                      </li>
+                      <li>
+                        <i
+                          class="far fa-star"
+                          data-value="5"
+                          data-product-id="<%- item._id %>"
+                          onclick="handleStarClick(this)"
+                          style="font-size: 18px; color: orange"
+                        ></i>
+                      </li>
+                    </ul>
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-sm rating-submit"
+                      data-product-id="<%- item._id %>"
+                      onclick="submitRating(this)"
+                      style="margin-left: 30px; background-color: grey"
+                    >
+                      Rate
                       <i
-                        class="far fa-star"
-                        data-value="1"
-                        onclick="setRating(1)"
-                        style="font-size: 18px; color: orange"
+                        class="fa fa-star"
+                        style="color: orange; font-size: 18px; padding: 5px"
                       ></i>
-                    </li>
-                    <li>
-                      <i
-                        class="far fa-star"
-                        data-value="2"
-                        onclick="setRating(2)"
-                        style="font-size: 18px; color: orange"
-                      ></i>
-                    </li>
-                    <li>
-                      <i
-                        class="far fa-star"
-                        data-value="3"
-                        onclick="setRating(3)"
-                        style="font-size: 18px; color: orange"
-                      ></i>
-                    </li>
-                    <li>
-                      <i
-                        class="far fa-star"
-                        data-value="4"
-                        onclick="setRating(4)"
-                        style="font-size: 18px; color: orange"
-                      ></i>
-                    </li>
-                    <li>
-                      <i
-                        class="far fa-star"
-                        data-value="5"
-                        onclick="setRating(5)"
-                        style="font-size: 18px; color: orange"
-                      ></i>
-                    </li>
-                  </ul>
-                  <button
-                    onclick="submitRating()"
-                    style="margin-left: 30px; background-color: grey"
-                  >
-                    Rate
-                    <i
-                      class="fa fa-star"
-                      style="color: orange; font-size: 18px; padding: 5px"
-                    ></i>
-                  </button>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -563,41 +581,68 @@
   }
 </script>
 <script>
-  let selectedRating = 0;
-
-  function setRating(rating) {
-    selectedRating = rating;
-    highlightStars(rating);
+  function handleStarClick(star) {
+    const productId = star.getAttribute("data-product-id");
+    const value = star.getAttribute("data-value");
+    setRating(parseInt(value), productId);
   }
 
-  function highlightStars(rating) {
-    const stars = document.querySelectorAll(".rating-stars i");
-    stars.forEach((star) => {
-      if (star.getAttribute("data-value") <= rating) {
+  function setRating(value, productId) {
+    const container = document.querySelector(
+      `.rating-star-container[data-product-id="${productId}"]`
+    );
+    const stars = container.querySelectorAll(".rating-stars i");
+
+    stars.forEach((star, index) => {
+      if (index < value) {
+        star.classList.add("fas");
         star.classList.remove("far");
-        star.classList.add("fa");
-        star.style.color = "orange";
       } else {
-        star.classList.remove("fa");
         star.classList.add("far");
+        star.classList.remove("fas");
       }
     });
   }
 
-  async function submitRating() {
-    if (selectedRating === 0) {
-      alert("Please select a rating!");
-    } else {
-      console.log("User's rating is: " + selectedRating);
-      const response = await fetch(`/users/add-rating/${productId}/${selectedRating}`);
-      console.log(response);
-      if (response.ok) {
-        const message = `Rating added successfully!`;
-        alert(message);
+  async function submitRating(button) {
+    const productId = button.getAttribute("data-product-id");
 
-        location.reload();
+    // Calculate rating based on the number of filled stars (fas class)
+    const ratingStars = document.querySelectorAll(
+      `.rating-star-container[data-product-id="${productId}"] .rating-stars i.fas`
+    );
+    const rating = ratingStars.length;
+
+    // Prepare data for the POST request
+    const data = {
+      rating: rating,
+      productId: productId,
+    };
+
+    try {
+      // Send a POST request to the server
+      const response = await fetch(`/users/add-rating`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      // Parse the response JSON
+      const result = await response.json();
+
+      // Display an alert based on the server response
+      if (result) {
+        alert("Rating submitted successfully");
+        button.disabled = true;
+      } else {
+        alert("Error submitting rating");
       }
-      // Perform additional actions (send data to the server, etc.) here
+    } catch (error) {
+      console.error("Error while submitting rating:", error);
+      alert("An unexpected error occurred while submitting the rating");
     }
+    
   }
 </script>
