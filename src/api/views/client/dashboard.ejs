@@ -50,39 +50,64 @@
         aria-label="Slide 3"
       ></button>
     </div>
-    <div
-      class="carousel-inner"
-      style="height: 500px;"
-    >
+    <div class="carousel-inner" style="height: 500px">
       <% bannerData.forEach((bannerItem, index) => { %>
       <div
         style="height: 100%"
         class="carousel-item <%= index === 0 ? 'active' : '' %>"
       >
         <img
-          style="height: 100%;"
+          style="height: 100%"
           src="/<%- bannerItem.image %>"
           class="d-block w-100 d-flex justify-content-center align-items-center mx-auto"
           alt="..."
         />
-        
+
         <div class="carousel-caption d-none d-md-block">
-        
           <div class="featured__content">
-            <span style="position: absolute; top: 10px;left: 50px;color: black;font-weight: 1000;"><%- bannerItem.title %></span>
-            <h2 style="position: absolute; top: 50px;left: 50px;color: black;font-weight: 1000;"><%- bannerItem.title %></h2>
-            <p style="position: absolute; top: 100px;left: 50px;color: black;font-weight: 1000;"><%- bannerItem.description %></p>
-           
+            <span
+              style="
+                position: absolute;
+                top: 10px;
+                left: 50px;
+                color: black;
+                font-weight: 1000;
+              "
+              ><%- bannerItem.title %></span
+            >
+            <h2
+              style="
+                position: absolute;
+                top: 50px;
+                left: 50px;
+                color: black;
+                font-weight: 1000;
+              "
+            >
+              <%- bannerItem.title %>
+            </h2>
+            <p
+              style="
+                position: absolute;
+                top: 100px;
+                left: 50px;
+                color: black;
+                font-weight: 1000;
+              "
+            >
+              <%- bannerItem.description %>
+            </p>
+
             <div class="banner__btn mt-30">
-                <a class="thm-btn thm-btn__black" href="#">
-                    <span class="btn-wrap"> 
-                        <span>Shop Now</span>
-                        <span>Shop Now</span>
-                    </span>
-                    <i class="far fa-long-arrow-right"></i>
-                </a>
+              <a class="thm-btn thm-btn__black" href="#">
+                <span class="btn-wrap">
+                  <span>Shop Now</span>
+                  <span>Shop Now</span>
+                </span>
+                <i class="far fa-long-arrow-right"></i>
+              </a>
             </div>
-        </div>
+          </div>
         </div>
       </div>
       <% }) %>
@@ -110,43 +135,7 @@
 
   <!-- Ensure you have jQuery included before running the carousel function -->
 
-  <div class="banner-product">
-    <div class="container mxw_1530 pt-45">
-      <div class="row mt-none-30">
-        <% categoryData.forEach(function(category,index){ %>
-        <div class="col-lg-3 col-md-6 mt-30">
-          <div
-            class="banner-product__item ul_li bg_img"
-            style="
-              background-color: lightgoldenrodyellow;
-              height: 125px;
-              padding: 0;
-            "
-          >
-            <div class="banner-product__img" style="height: 125px">
-              <img src="/<%- category.image %>" alt="" style="height: 125px" />
-            </div>
-            <div class="banner-product__content">
-              <span><%- category.name %></span>
-              <div class="upto-offer ul_li mb-10">
-                <span class="upto"
-                  >Up <br />
-                  To</span
-                >
-                <span class="offer-no"
-                  ><%- category.offer %> <span>%</span></span
-                >
-              </div>
-              <a href="/users/all-products/<%- category._id %>"
-                >Shop Now <i class="fas fa-chevron-circle-right"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-        <% }) %>
-      </div>
-    </div>
-  </div>
+ 
 
   <!-- tx baner end -->
   <% categoryData.forEach((category) => { %>
@@ -215,14 +204,14 @@
                     <div class="tab-product__item tx-product text-center">
                       <div
                         class="thumb"
-                        style="width: 200px; height: 200px"
+                        style=" height: 200px"
                         data-stock="<%- product.stock %>"
                       >
                         <a href="/users/single-product/<%- product._id %>">
                           <img
                             src="/<%- product.image[0] %>"
                             alt=""
-                            style="width: 200px; height: 200px"
+                            
                           />
                         </a>
 
@@ -283,11 +272,14 @@
                       <div class="content mt-2">
                         <div class="product__review ul_li_center">
                           <ul class="rating-star ul_li mr-10">
-                            <li><i class="fas fa-star"></i></li>
-                            <li><i class="fas fa-star"></i></li>
-                            <li><i class="fas fa-star"></i></li>
+                            <% for (let i = 1; i <= 5; i++) { %> <% if (i <= 3)
+                            { %>
+                            <li>
+                              <i style="color: orange" class="fas fa-star"></i>
+                            </li>
+                            <% } else { %>
                             <li><i class="far fa-star"></i></li>
-                            <li><i class="far fa-star"></i></li>
+                            <% } %> <% } %>
                           </ul>
                           <span>(126)</span>
                         </div>

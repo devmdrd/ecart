@@ -470,7 +470,34 @@ const getUserDashboard = async (req, res) => {
     const categoryIds = categoryData.map((category) => category._id);
 
     const product = await Product.find({ category: { $in: categoryIds } });
+  
+    const productsWithRatings = product.filter((product) => {
+      // Check if the product has a defined ratings property and its length is greater than 0
+      return product.ratings && Array.isArray(product.ratings) && product.ratings.length > 0;
+    });
+    
+    // Now, productsWithRatings contains only the products with non-empty ratings arrays
+    console.log(productsWithRatings);
+    
+let ratedProducts = [];
+    // Calculate average rating for each product
+    productsWithRatings.forEach((product) => {
+      const ratings = product.ratings;
+      const totalRatings = ratings.length;
+      const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
+      const averageRating = sumRatings / totalRatings;
 
+      // Add the average rating to the product object
+      product.averageRating = averageRating;
+      console.log(product.averageRating);
+      ratedProducts.push(product);
+
+
+     
+      
+    });
+    
+console.log(ratedProducts);
     // Attach products to their respective categories
     categoryData.forEach((category) => {
       category.products = product.filter((p) =>
@@ -486,17 +513,19 @@ const getUserDashboard = async (req, res) => {
         categoryData,
         brandData,
         bannerData,
+        ratedProducts,
       });
     }
-    console.log("sfysdyfs");
+    // console.log("sfysdyfs");
     
-    console.log(bannerData);
+    // console.log(bannerData);
     res.render("client/dashboard", {
       layout: "layouts/user-layout",
       user: true,
       categoryData,
       brandData,
       bannerData,
+      ratedProducts,
     });
   } catch (error) {
     console.error(error);

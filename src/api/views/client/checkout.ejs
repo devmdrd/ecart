@@ -1,24 +1,6 @@
 <style>
-  /* Add your CSS styles here */
-  .address-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    cursor: pointer;
-    height: 50px;
-    width: 50%;
-  }
-  .address-box.selected {
-    border-color: #007bff;
-  }
-  .style {
-    margin-top: 0;
-  }
-  #order_review {
-    position: absolute;
-    right: 8rem;
-    top: 12rem;
-  }
+
+
 </style>
 <!-- breadcrumb start -->
 <section class="breadcrumb-area">
@@ -45,7 +27,7 @@
     <div class="row">
       <div class="col col-xs-12">
         <div class="woocommerce">
-          <div class="woocommerce-info" style="width: 50%">
+          <div class="woocommerce-info"style="">
             see all coupons?
             <a href="#!" class="showcoupon">Click here to show all coupons</a>
           </div>
@@ -55,7 +37,7 @@
             id="coupon"
             class="checkout_coupon"
             method="post"
-            style="width: 50%; position: relative"
+            style=""
           >
             <p class="form-row form-row-first">
               <input
@@ -70,7 +52,7 @@
             <% coupons.forEach((coupon)=>{ %>
             <div
               class="modal-dialog modal-side modal-top-right modal-notify modal-danger text-white"
-              style="margin-right: 10px; width: 50%; background-color: orange"
+              style=" background-color: orange"
               role="document"
             >
               <!-- Content -->
@@ -98,7 +80,7 @@
             <% }) %>
             <p
               class="form-row form-row-last"
-              style="position: absolute; top: 6rem; left: 2.2rem"
+              style=""
             >
               <input
                 type="submit"
@@ -113,7 +95,7 @@
 
           <div class="coll-2">
             <div class="woocommerce-shipping-fields">
-              <div class="woocommerce-info" style="width: 50%">
+              <div class="woocommerce-info">
                 Have a Address?
                 <a href="#!" id="ship-to-different-address"
                   >Click to choose your Address</a
@@ -158,7 +140,7 @@
             <div
               class="col2-set"
               id="customer_details"
-              style="width: 50%; padding-right: 0"
+              style=""
             >
               <div class="coll-1">
                 <div class="woocommerce-billing-fields">
@@ -311,7 +293,7 @@
                 <button
                   type="button"
                   class="thm-btn thm-btn__2 no-icon br-0"
-                  style="margin: 30px"
+                  style=""
                   id="checkout-address"
                 >
                   <span class="btn-wrap">

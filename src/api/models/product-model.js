@@ -51,13 +51,14 @@ const productSchema = new mongoose.Schema({
     ref: "Brand",
     required: true,
   },
-  rating: { 
-    type: Number, 
-    default: 0 
-  },
+  ratings:[{
+    type:Number,
+    default:1
+  }]
+ 
 });
 
 
-const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema);    
 
 module.exports = Product;

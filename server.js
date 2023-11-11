@@ -76,9 +76,9 @@ app.get("/", async (req, res) => {
     const bannerData = await Banner.find();
 
     const categoryIds = categoryData.map((category) => category._id);
-    console.log(categoryIds);
+    // console.log(categoryIds);
     const product = await Product.find({ category: { $in: categoryIds } });
-    console.log(product);
+    // console.log(product);
 
     // Attach products to their respective categories
     categoryData.forEach((category) => {

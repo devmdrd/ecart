@@ -307,14 +307,15 @@ const addRating = async (req, res) => {
       return;
     }
 
-   const ratingData = await Product.updateOne(
+    const ratingData = await Product.updateOne(
       { _id: productId },
       {
-        $set: {
-          rating: rating,
+        $push: {
+          ratings: rating,
         },
       }
     );
+    
 
     res.json(ratingData)
   } catch (error) {
