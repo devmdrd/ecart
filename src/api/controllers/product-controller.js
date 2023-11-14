@@ -240,6 +240,7 @@ const searchProducts = async (req, res) => {
 };
 
 // user actions
+
 const getSingleProduct = async (req, res) => {
   try {
     const { productId } = req.params;
@@ -335,4 +336,5 @@ module.exports = {
   getSingleProduct,
   getAllProducts,
   addRating,
+  
 };
