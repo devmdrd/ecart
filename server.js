@@ -66,12 +66,12 @@ app.get("/auth/google/callback",
     req.session.user = req.user;
     console.log("The session" + req.session.user);
   
-    res.redirect("/users/dashboard");
+    res.redirect("/users/dashboard");     
   }
 );
 app.get("/", async (req, res) => {
   try {
-    const categoryData = await Category.find();
+    const categoryData = await Category.find();        
     const brandData = await Brand.find();
     const bannerData = await Banner.find();
 
