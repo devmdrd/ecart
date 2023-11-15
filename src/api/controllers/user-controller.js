@@ -373,6 +373,7 @@ const sendResetLink = async (req, res) => {
     { resetPasswordToken: token, resetPasswordExpires: expiration }
   );
   const resetLink = `https://e-carts.shop/users/reset/${token}`;
+  console.log(resetLink);
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
