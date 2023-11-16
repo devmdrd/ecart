@@ -1,4 +1,6 @@
 const User = require("../models/user-model");
+const Cart = require("../models/cart-model");
+const Wishlist = require("../models/wishlist-model");
 // Admin Midleware
 const isAdminAuthenticated = (req, res, next) => {
   if (req.session.admin) {
@@ -23,6 +25,8 @@ const isUserAuthenticated = async(req, res, next) => {
         layout: "layouts/user-layout",
         user: false,
         message: "Your account has been blocked",
+        cartCount:"",
+        wishlistCount:"",
       });
     }
   } else {
@@ -30,6 +34,8 @@ const isUserAuthenticated = async(req, res, next) => {
       layout: "layouts/user-layout",
       user: false,
       message: "",
+      cartCount:"",
+      wishlistCount:"",
     });
   }    
 };

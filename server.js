@@ -19,6 +19,7 @@ const Category = require("./src/api/models/category-model");
 const Brand = require("./src/api/models/brand-model");
 const Product = require("./src/api/models/product-model");
 const Banner = require("./src/api/models/banner-model");
+const Cart = require("./src/api/models/cart-model");
 
 var app = express();
 
@@ -86,10 +87,11 @@ app.get("/", async (req, res) => {
         p.category.equals(category._id)
       );
 
-      console.log(category.products);
+     
     });
 
-    console.log(categoryData);
+   
+   
 
     if (!req.session.user) {
       return res.render("client/dashboard", {
@@ -97,6 +99,8 @@ app.get("/", async (req, res) => {
         user: false,
         categoryData,
         brandData,
+       cartCount:"",
+       wishlistCount:"",  
         bannerData,
       });
     }
@@ -106,6 +110,7 @@ app.get("/", async (req, res) => {
       user: true,
       categoryData,
       brandData,
+     
       bannerData,
     });
   } catch (error) {

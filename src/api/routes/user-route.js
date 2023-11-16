@@ -24,8 +24,9 @@ router.post('/validate-otp',userController.validateOtp);
 router.get("/forgot-password",userController.getForgotPassword);
 router.post("/forgot-password", userController.sendResetLink);
 router.get("/reset/:token",userController.getResetPassword);
-router.post("/signup-otp",userController.otpSignup);
+router.post("/signup-otp",userController.otpSignup);        
 router.post("/reset",userController.resetPassword);
+router.get("/resent-otp",userController.resendOtp);   
 
 
 // account routes

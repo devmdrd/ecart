@@ -5,7 +5,12 @@ const Wishlist = require("../models/wishlist-model");
 
 const addToCart = async (req, res) => {
   try {
+    
     if (req.session.user) {
+      const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+    const wishlistCount = await Wishlist.countDocuments({
+      user: req.session.user._id,
+    });
       const productId = req.params.productId;
       const calcPrice = parseInt(req.params.price);
       const brandId = req.params.brand;
@@ -39,6 +44,8 @@ const addToCart = async (req, res) => {
         layout: "layouts/user-layout",
         user: false,
         errorMessage: "",
+        cartCount:"",
+        wishlistCount:"",
       });
     }
   } catch (error) {
@@ -88,9 +95,14 @@ const getCart = async (req, res, next) => {
       return res.render("client/empty-cart", {
         layout: "layouts/user-layout",
         user: false,
+        cartCount: "",
+        wishlistCount: "",
       });
     }
-
+    const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+    const wishlistCount = await Wishlist.countDocuments({
+      user: req.session.user._id,
+    });
     const userId = req.session.user._id;
 
     const cartData = await Cart.find({ user: userId })
@@ -102,6 +114,8 @@ const getCart = async (req, res, next) => {
       return res.render("client/empty-cart", {
         layout: "layouts/user-layout",
         user: true,
+        cartCount,
+        wishlistCount,
       });
     }
 
@@ -109,7 +123,9 @@ const getCart = async (req, res, next) => {
       layout: "layouts/user-layout",
       message: "",
       user: true,
+      cartCount,
       cartData,
+      wishlistCount,
     });
   } catch (error) {
     // Handle any errors that may occur during database queries or rendering

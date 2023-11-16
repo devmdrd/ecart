@@ -4,6 +4,7 @@ const User = require("../models/user-model");
 const Cart = require("../models/cart-model");
 const Razorpay = require("razorpay");
 const Coupon = require("../models/coupon-model");
+const Wishlist = require("../models/wishlist-model");
 // const flash = require("express-flash");
 const path = require("path");
 
@@ -61,6 +62,10 @@ const updateOrder = async (req, res) => {
 const orderSuccess = async (req, res) => {
   console.log("first success");
   if (req.session.user) {
+    const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+    const wishlistCount = await Wishlist.countDocuments({
+      user: req.session.user._id,
+    });
     const userId = req.session.user._id;
     const {
       orderTotal,
@@ -141,6 +146,8 @@ const orderSuccess = async (req, res) => {
         orderPayment,
         orderNow1,
         productName,
+        cartCount:req.session.user?cartCount:"",
+        wishlistCount:req.session.user?wishlistCount:"",
       });
     } else {
       console.log("multiple");
@@ -206,6 +213,8 @@ const orderSuccess = async (req, res) => {
         orderPayment,
         orderNow1,
         productName,
+        cartCount:req.session.user?cartCount:"",
+        wishlistCount:req.session.user?wishlistCount:"",
       });
     }
 
@@ -254,6 +263,10 @@ const orderSuccess1 = async (req, res) => {
 };
 const orderSuccess2 = async (req, res) => {
   console.log("esrtyvbnfxgchvjbkn");
+  const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+  const wishlistCount = await Wishlist.countDocuments({
+    user: req.session.user._id,
+  });
 
   const { orderId, total, addressId, payment, coupon } = req.params;
   console.log(total);
@@ -261,6 +274,7 @@ const orderSuccess2 = async (req, res) => {
   console.log(total1);
   if (req.session.product) {
     // console.log(req.session.product)
+   
     const { productId, count } = req.session.product;
 
     const user = await User.findOne({ _id: req.session.user._id });
@@ -330,6 +344,8 @@ const orderSuccess2 = async (req, res) => {
       payment,
       orderNow1,
       productName,
+      cartCount,
+      wishlistCount,
     });
   } else {
     console.log("multiple");
@@ -378,13 +394,18 @@ const orderSuccess2 = async (req, res) => {
       payment,
       orderNow1,
       productName,
+      cartCount,
+      wishlistCount,
     });
   }
 };
 
 const getAllOrders11 = async (req, res) => {
   console.log("nkmlcgvhbj");
-
+  const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+  const wishlistCount = await Wishlist.countDocuments({
+    user: req.session.user._id,
+  });
   const orderId = req.params.orderId;
   const orders2 = await Order.find({ orderId: orderId });
 
@@ -405,6 +426,8 @@ const getAllOrders11 = async (req, res) => {
     orders,
     products,
     orders1,
+    cartCount,
+    wishlistCount,
   });
 };
 const cancelOrder = async (req, res) => {
@@ -536,6 +559,7 @@ const getSalesRevenueReport = async (req, res) => {
 const getAllSalesRevenueReport = async (req, res) => {
   console.log("hello");
   try {
+    
     const sales = await Order.find().populate("userId").sort({ orderDate: -1 });
     const items = sales.map((item)=>item.items)
     // console.log(items);

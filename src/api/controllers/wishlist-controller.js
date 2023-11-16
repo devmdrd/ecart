@@ -1,18 +1,26 @@
 const Wishlist = require("../models/wishlist-model");
 const Product = require("../models/product-model");
+const Cart = require("../models/cart-model");
 // const flash = require("express-flash");
 const path = require("path");
 
 const getWishlist = async (req, res, next) => {
   try {
+   
     if (!req.session.user) {
       return res.render("client/empty-wishlist", {
         layout: "layouts/user-layout",
         user: false,
         message: "",
+        cartCount:"",
+        wishlistCount:"",
       });
     }
-
+    const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+    const wishlistCount = await Wishlist.countDocuments({
+      user: req.session.user._id,
+    });
+    console.log(wishlistCount);
     const userId = req.session.user._id;
 
     const wishlistData = await Wishlist.find({ user: userId })
@@ -25,6 +33,8 @@ const getWishlist = async (req, res, next) => {
         layout: "layouts/user-layout",
         user: true,
         message: "",
+        cartCount,
+        wishlistCount,
       });
     }
 
@@ -33,6 +43,9 @@ const getWishlist = async (req, res, next) => {
       message: "",
       user: true,
       wishlistData,
+      cartCount,
+      wishlistCount,
+
     });
   } catch (error) {
     // Handle any errors that may occur during database queries or rendering
@@ -40,15 +53,20 @@ const getWishlist = async (req, res, next) => {
   }
 };
 const addToWishlist = async (req, res) => {
+ 
   if (!req.session.user) {
     return res.render("client/empty-wishlist", {
       layout: "layouts/user-layout",
       user: false,
       message: "",
+      cartCount:"",
+      wishlistCount:"",
+
     });
   }
 
   try {
+  
     const productId = req.params.productId;
     const product = await Product.findById(productId).populate("brand");
 

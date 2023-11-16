@@ -89,7 +89,7 @@
           <nav class="main-menu__nav collapse navbar-collapse">
             <ul>
               <li class="menu-item-has-children has-mega-menu active">
-                <a href="/">Home</a>
+                <a href="/users/dashboard">Home</a>
               </li>
              
              
@@ -109,14 +109,18 @@
             <div class="icon">
               <a href="/users/wishlist" class="cart-link">
                 <i class="fas fa-heart"></i>
-                <!-- <span class="count" style="font-size: 12px;">0</span> -->
+                <% if(user){ %>
+                <span class="count" style="font-size: 12px;"><%- wishlistCount %></span>
+                <% } %>
               </a>
             </div>
 
             <div class="icon">
               <a href="/users/cart" class="cart-link">
                 <i class="fas fa-shopping-cart"></i>
-                <!-- <span class="count" style="font-size: 12px;">0</span> -->
+                <% if(user){ %>
+                <span class="count" style="font-size: 12px;"><%- cartCount %></span>
+                <% } %>
               </a>
             </div>
           </div>

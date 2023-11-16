@@ -1,6 +1,8 @@
 const Product = require("../models/product-model");
 const Category = require("../models/category-model");
 const Brand = require("../models/brand-model");
+const Cart = require("../models/cart-model");
+const Wishlist = require("../models/wishlist-model");
 // const flash = require("express-flash");
 const path = require("path");
 
@@ -256,14 +258,32 @@ const getSingleProduct = async (req, res) => {
     });
 
     req.session.brand = brand;
-
+    if(req.session.user){
+    const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+    const wishlistCount = await Wishlist.countDocuments({
+      user: req.session.user._id,
+    });
+  
     res.render("client/single-product", {
       layout: "layouts/user-layout",
       user: req.session.user ? true : false,
       product,
       products,
       brand,
+      cartCount,
+      wishlistCount
     });
+  }else{
+    res.render("client/single-product", {
+      layout: "layouts/user-layout",
+      user: req.session.user ? true : false,
+      product,
+      products,
+      brand,
+      cartCount:"",
+      wishlistCount:"",
+    });
+  }
   } catch (error) {
     console.error("Error in getSingleProduct:", error);
   }
@@ -271,6 +291,7 @@ const getSingleProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   const { categoryId } = req.params;
+ 
 
   const products = await Product.find({ category: categoryId });
   const brandsData = await Brand.find().limit(10);
@@ -283,15 +304,22 @@ const getAllProducts = async (req, res) => {
       products,
       brandsData,
       categoriesData,
+      cartCount:"",
+      wishlistCount:"",
     });
   }
-
+  const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+  const wishlistCount = await Wishlist.countDocuments({
+    user: req.session.user._id,
+  });
   res.render("client/all-products", {
     layout: "layouts/user-layout",
     user: true,
     products,
     brandsData,
     categoriesData,
+    cartCount,
+    wishlistCount,
   });
 };
 const addRating = async (req, res) => {

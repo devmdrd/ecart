@@ -180,12 +180,14 @@
                  
                   pattern="^[a-zA-Z_$][a-zA-Z_$0-9]*$"
                 />
+                <p id="passwordMatchMessage" class="text-danger"></p>
                 <label class="form-label" for="form3Example6"
                   >Confirm Password
                   </label
                 >
+                
               </div>
-              <div id="passwordMatchMessage" class="text-danger"></div>
+              <p id="passwordMatchMessage" class="text-danger"></p>
 
               <!-- Submit button -->
               <button type="submit" class="btn btn-primary btn-block mb-4">
@@ -205,6 +207,7 @@
 
 <script>
   function validateForm() {
+   
     return validatePasswords();
   }
 

@@ -191,40 +191,81 @@
     OTPInput();
   });
 
-  const timerElement = document.getElementById("timer");
-  const resendButton = document.getElementById("resend");
-  let timeInSeconds = 60;
-  let intervalId;
-  resendButton.addEventListener("click", (event) => {
-    timeInSeconds = 60;
-    resendButton.disabled = true;
-    location.reload();
-    startTimer();
+  // JavaScript
+const message = document.getElementById("alertMessage");
+const timerElement = document.getElementById("timer");
+const resendButton = document.getElementById("resend");
+let timeInSeconds = localStorage.getItem("timeInSeconds") || 60;
+let intervalId;
+
+resendButton.addEventListener("click", async(event) => {
+  event.preventDefault();
+
+  const response = await fetch("/users/resent-otp", {
+    method: "GET",
   });
-  function startTimer() {
-    console.log("Timer started");
-    intervalId = setInterval(updateTimer, 1000);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch OTP');
   }
 
-  function updateTimer() {
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = timeInSeconds % 60;
+  const data = await response.json();
+  
+  console.log(data);
 
-    const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
-
-    timerElement.textContent = formattedTime;
-
-    if (timeInSeconds <= 0) {
-      clearInterval(intervalId);
-      timerElement.textContent = "Time's up!";
-      resendButton.disabled = false;
-    }
-
-    timeInSeconds--; // Decrement the time
+  if (data && data.message) {
+    console.log("OTP sent");
+    alert(data.message);
+  } else {
+    console.error('Invalid response format:', data);
+    // Handle the case where the response format is unexpected
   }
 
-  // Call startTimer to begin the countdown
+  timeInSeconds = 60;
+  resendButton.disabled = true;
   startTimer();
+});
+
+function startTimer() {
+  console.log("Timer started");
+  intervalId = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  const minutes = Math.floor(timeInSeconds / 60);
+  const seconds = timeInSeconds % 60;
+
+  const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+
+  timerElement.textContent = formattedTime;
+
+  if (timeInSeconds <= 0) {
+    clearInterval(intervalId);
+    timerElement.textContent = "Time's up!";
+    resendButton.disabled = false;
+  }
+
+  timeInSeconds--; // Decrement the time
+  localStorage.setItem("timeInSeconds", timeInSeconds); // Store the time in localStorage
+}
+
+// Call startTimer to begin the countdown
+startTimer();
+function validateOtp() {
+  const otp = document.getElementById("otp").value;
+  
+  const response = fetch("/users/signup-otp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ otp }),
+  });
+  if (response.status === 200) {
+    window.location.href = "/users/login";
+  }
+};
+
 </script>
