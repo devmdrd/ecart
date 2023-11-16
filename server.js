@@ -105,12 +105,17 @@ app.get("/", async (req, res) => {
       });
     }
     console.log("sfysdyfs");
+    const cartCount = await Cart.countDocuments({ user: req.session.user._id });
+    const wishlistCount = await Wishlist.countDocuments({
+      user: req.session.user._id,
+    });
     res.render("client/dashboard", {
       layout: "layouts/user-layout",
       user: true,
       categoryData,
       brandData,
-     
+      cartCount,
+      wishlistCount,
       bannerData,
     });
   } catch (error) {
