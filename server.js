@@ -20,6 +20,7 @@ const Brand = require("./src/api/models/brand-model");
 const Product = require("./src/api/models/product-model");
 const Banner = require("./src/api/models/banner-model");
 const Cart = require("./src/api/models/cart-model");
+const Wishlist = require("./src/api/models/wishlist-model");
 
 var app = express();
 
