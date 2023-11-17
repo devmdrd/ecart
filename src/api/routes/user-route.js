@@ -39,7 +39,9 @@ router.get('/delete-address/:addressId',isUserAuthenticated,userController.delet
     
 // products routes
 router.get("/single-product/:productId", productController.getSingleProduct);
-router.get("/all-products/:categoryId", productController.getAllProducts);    
+router.get("/all-products/:categoryId", productController.getAllProducts); 
+router.get("/search-products", productController.searchProducts1);
+router.get("/filter-products", productController.filterProducts);      
 
 // cart routes 
 router.get("/add-to-cart/:productId/:count/:price/:brand",cartController.addToCart);

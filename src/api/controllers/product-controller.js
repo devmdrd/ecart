@@ -242,9 +242,27 @@ const searchProducts = async (req, res) => {
 };
 
 // user actions
-
+const searchProducts1 = async (req, res) => {
+  const { searchTerm,categoryId } = req.query;
+  console.log(searchTerm,categoryId)
+  const products = await Product.find({
+    name: { $regex: searchTerm, $options: "i" },category:categoryId,
+  });
+  console.log(products)
+  res.json(products);
+}
+const filterProducts = async (req, res) => {
+  const { categoryId, minPrice, maxPrice } = req.query;  
+  console.log(categoryId, minPrice, maxPrice)
+  const products = await Product.find({
+    category: categoryId,
+    originalPrice: { $gte: minPrice, $lte: maxPrice },
+  });
+  console.log(products)
+  res.json(products);
+}
 const getSingleProduct = async (req, res) => {
-  try {
+  try {      
     const { productId } = req.params;
 
     const product = await Product.findById(productId);
@@ -364,5 +382,6 @@ module.exports = {
   getSingleProduct,
   getAllProducts,
   addRating,
-  
+  searchProducts1,
+  filterProducts,
 };

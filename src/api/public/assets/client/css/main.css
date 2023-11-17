@@ -10210,7 +10210,7 @@ abbr[title] {
   margin-bottom: 15px; }
 .widget__category li a {
   font-size: 16px;
-  color: #232638;
+  /* color: #232638; */
   display: flex;
   align-items: center;
   justify-content: space-between; }

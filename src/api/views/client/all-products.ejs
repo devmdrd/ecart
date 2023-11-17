@@ -1,10 +1,9 @@
 <style>
-  /* CSS to define the highlighting effect */
-  .category-link.active {
-    /* Your active styles to highlight the selected category */
-    /* For example: */
+  /* Add your other styles as needed */
+  .highlighted-category {
+    /* Change this to the desired highlighting color */
     color: orange;
-    font-weight: bold;
+    font-weight: bold; /* Optionally, you can apply additional styles for emphasis */
   }
 </style>
 <!-- breadcrumb start -->
@@ -97,12 +96,23 @@
               </form>
             </div>
             <div class="woocommerce-content-inner">
-              <ul class="products three-column clearfix product-list">
+              <ul
+                class="products three-column clearfix product-list"
+                id="searchProducts"
+              >
                 <% products.forEach((product)=>{ %>
                 <li class="product">
+                  <input
+                    type="hidden"
+                    class="categoryId"
+                    value="<%-product.category %>"
+                  />
                   <div class="product-holder">
                     <a href="/users/single-product/<%- product._id %>"
-                      ><img src="/<%- product.image[0] %>" alt=""style="height:100%; width:100%"
+                      ><img
+                        src="/<%- product.image[0] %>"
+                        alt=""
+                        style="height: 100%; width: 100%"
                     /></a>
                     <ul class="product__action">
                       <li>
@@ -227,8 +237,13 @@
               <h2 class="widget__title">
                 <span>Search</span>
               </h2>
-              <form class="widget__search"  action="">
-                <input type="text" id="searchInput" name="searchQuery" placeholder="Search..."  />
+              <form class="widget__search" action="">
+                <input
+                  type="text"
+                  id="searchInput"
+                  name="searchQuery"
+                  placeholder="Search..."
+                />
                 <button id="searchButton"><i class="far fa-search"></i></button>
               </form>
             </div>
@@ -301,6 +316,8 @@
     });
 
     $("#amount").val("₹" + minPrice + " - ₹" + maxPrice);
+    const productList = document.querySelector(".product-list");
+    const categoryId = document.querySelector(".categoryId").value;
 
     $("#filter-form").submit(function (event) {
       event.preventDefault();
@@ -311,49 +328,499 @@
       const min = parseFloat(minSelectedPrice);
       const max = parseFloat(maxSelectedPrice);
 
-      $("li.product").each(function () {
-        const productPrice = parseFloat($(this).find(".new").data("price"));
+      console.log(categoryId);
+      fetchProducts(minSelectedPrice, maxSelectedPrice, categoryId);
+      async function fetchProducts(min, max, categoryId) {
+        const response = await fetch(
+          `/users/filter-products?minPrice=${min}&maxPrice=${max}&categoryId=${categoryId}`
+        );
 
-        if (productPrice >= min && productPrice <= max) {
-          $(this).show();
-        } else {
-          $(this).hide();
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
         }
-      });
-    });
-  });
-  $(document).ready(function () {
-    const $searchInput = $("#searchInput");
-    const $searchButton = $("#searchButton");
-    const $productList = $(".product-list");
 
-    $searchButton.click(function (e) {
+        const products = await response.json();
+        console.log("products", products);
+
+        // Clear the product list
+        productList.innerHTML = "";
+
+        // Append each product to the product list
+        products.forEach((product) => {
+          const listItem = document.createElement("li");
+          listItem.classList.add("product");
+          listItem.innerHTML = `
+    <div class="product-holder">
+      <a href="/users/single-product/${product._id}">
+        <img src="/${product.image[0]}" alt="" style="height:100%; width:100%" />
+      </a>
+      <ul class="product__action">
+        <li>
+          <a
+            href=""
+            class="add-to-cart-link"
+            data-product-id="${product._id}"
+            data-count="1"
+            data-price="${product.originalPrice}"
+          >
+            <i class="far fa-shopping-basket"></i>
+          </a>
+        </li>
+
+        <li>
+          <a
+            href=""
+            class="add-to-wishlist-link"
+            data-product-id="${product._id}"
+          >
+            <i class="far fa-heart"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="toast"
+      role="alert"
+      style="display: none"
+      aria-live="assertive"
+      aria-atomic="true"
+      data-product-id="${product._id}-cart"
+    >
+      <div
+        class="toast-body"
+        style="background-color: green; color: white"
+      >
+        Product added to cart!
+      </div>
+    </div>
+    <div
+      class="toast"
+      role="alert"
+      style="display: none"
+      aria-live="assertive"
+      aria-atomic="true"
+      data-product-id="${product._id}-wishlist"
+    >
+      <div
+        class="toast-body"
+        style="background-color: green; color: white"
+      >
+        Product added to wishlist!
+      </div>
+    </div>
+    <div class="product-info">
+      <div class="product__review ul_li">
+        <ul class="rating-star ul_li mr-10">
+          <li><i class="fas fa-star"></i></li>
+          <li><i class="fas fa-star"></i></li>
+          <li><i class="fas fa-star"></i></li>
+          <li><i class="far fa-star"></i></li>
+          <li><i class="far fa-star"></i></li>
+        </ul>
+        <span>(126) Review</span>
+      </div>
+      <h2 class="product__title">
+        <a href="#">${product.name}</a>
+      </h2>
+      <span class="product__available"> <span></span></span>
+      <div class="product__progress progress color-primary">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: 50%"
+          aria-valuenow="50"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+      <h4 class="product__price">
+        <span
+          class="new"
+          data-price="${product.originalPrice}"
+          >₹${product.originalPrice}</span
+        ><span class="old">₹${product.mrp}</span>
+      </h4>
+      <p class="product-description">
+        ${product.description}
+      </p>
+    </div>
+  `;
+          productList.appendChild(listItem);
+        });
+        updatePagination();
+      }
+
+      // updatePagination();
+
+      function updatePagination() {
+        console.log("updatePagination");
+        const itemsPerPage = 3; // Number of items per page
+        const products = document.querySelectorAll(".product");
+        console.log(products);
+        const items = Array.from(products);
+        console.log(items);
+        let currentPage = 1;
+        displayList(currentPage); // Display initial page
+        function displayList(page) {
+          console.log(page);
+          const startIndex = (page - 1) * itemsPerPage;
+          const endIndex = startIndex + itemsPerPage;
+          const paginatedItems = items.slice(startIndex, endIndex);
+          console.log("paginatedItems", paginatedItems);
+
+          updateProductList(paginatedItems);
+        }
+
+        function updateProductList(paginatedItems) {
+          console.log("paginatedItems arrived");
+          const productList = document.querySelector(".product-list");
+          console.log(productList);
+          console.log(paginatedItems);
+          productList.innerHTML = ""; // Clear existing products
+          paginatedItems.forEach((product) => {
+            productList.appendChild(product);
+          });
+        }
+        console.log("updatePagination123");
+        const paginationElement = document.getElementById("pagination");
+        const pageNumbers = Math.ceil(products.length / itemsPerPage);
+        const paginationHTML = generatePaginationHTML(pageNumbers);
+        console.log(pageNumbers);
+
+        paginationElement.innerHTML = paginationHTML;
+
+        const prevButton = paginationElement.querySelector(".previous");
+        const nextButton = paginationElement.querySelector(".next");
+
+        if (currentPage === 1) {
+          prevButton.style.visibility = "hidden";
+        } else {
+          prevButton.style.visibility = "visible";
+        }
+
+        if (currentPage === pageNumbers) {
+          nextButton.style.visibility = "hidden";
+        } else {
+          nextButton.style.visibility = "visible";
+        }
+      }
+
+      function generatePaginationHTML(pageNumbers) {
+        let paginationHTML = "";
+        for (let i = 1; i <= pageNumbers; i++) {
+          if (i === 1) {
+            paginationHTML += `<a href="#!" class="current_page page">${i}</a>`;
+          } else {
+            paginationHTML += `<a href="#!" class="page">${i}</a>`;
+          }
+        }
+        return paginationHTML;
+      }
+
+      function handlePaginationClick(event) {
+        const target = event.target;
+
+        if (target.classList.contains("page")) {
+          console.log("hello");
+          document
+            .querySelector(".current_page")
+            .classList.remove("current_page");
+          target.classList.add("current_page");
+          currentPage = parseInt(target.textContent);
+          // document.querySelector('.page').classList.add('page');
+          displayList(currentPage);
+        } else if (target.classList.contains("previous")) {
+          console.log("hello");
+          if (currentPage > 1) {
+            currentPage--;
+            document
+              .querySelector(".current_page")
+              .classList.remove("current_page");
+            const previousPage = document.querySelector(
+              `.page:nth-child(${currentPage})`
+            );
+            previousPage.classList.add("current_page");
+            displayList(currentPage);
+          }
+        } else if (target.classList.contains("next")) {
+          console.log("hellowww");
+          const pageNumbers = Math.ceil(products.length / itemsPerPage);
+          if (currentPage < pageNumbers) {
+            currentPage++;
+            document
+              .querySelector(".current_page")
+              .classList.remove("current_page");
+            const nextPage = document.querySelector(
+              `.page:nth-child(${currentPage})`
+            );
+            nextPage.classList.add("current_page");
+            displayList(currentPage);
+          }
+        }
+      }
+    });
+    document
+      .getElementById("pagination")
+      .addEventListener("click", handlePaginationClick);
+
+    displayList(currentPage); // Display initial page
+    updatePagination();
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+    const productList = document.getElementById("searchProducts");
+    const categoryId = document.querySelector(".categoryId").value;
+    console.log(categoryId);
+    searchButton.addEventListener("click", function (e) {
       e.preventDefault();
       searchProducts();
     });
 
-    $searchInput.keyup(function (event) {
+    searchInput.addEventListener("keyup", function (event) {
       if (event.key === "Enter") {
         searchProducts();
       }
     });
 
-    function searchProducts() {
-      const searchTerm = $searchInput.val().toLowerCase();
+    async function searchProducts() {
+      const searchTerm = searchInput.value.toLowerCase();
       console.log(searchTerm);
 
-      $productList.find(".product").each(function () {
-        const productName = $(this)
-          .find(".product__title")
-          .text()
-          .toLowerCase();
-        console.log(productName);
-        const isVisible = productName.includes(searchTerm);
-        console.log(isVisible);
-        $(this).toggle(isVisible);
+      // Get the value of the categoryId input field
+
+      const response = await fetch(
+        `/users/search-products?searchTerm=${searchTerm}&categoryId=${categoryId}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const products = await response.json();
+      console.log("products", products);
+
+      // Clear the product list
+      productList.innerHTML = "";
+
+      // Append each product to the product list
+      products.forEach((product) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("product");
+        listItem.innerHTML = `
+    <div class="product-holder">
+      <a href="/users/single-product/${product._id}">
+        <img src="/${product.image[0]}" alt="" style="height:100%; width:100%" />
+      </a>
+      <ul class="product__action">
+        <li>
+          <a
+            href=""
+            class="add-to-cart-link"
+            data-product-id="${product._id}"
+            data-count="1"
+            data-price="${product.originalPrice}"
+          >
+            <i class="far fa-shopping-basket"></i>
+          </a>
+        </li>
+
+        <li>
+          <a
+            href=""
+            class="add-to-wishlist-link"
+            data-product-id="${product._id}"
+          >
+            <i class="far fa-heart"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="toast"
+      role="alert"
+      style="display: none"
+      aria-live="assertive"
+      aria-atomic="true"
+      data-product-id="${product._id}-cart"
+    >
+      <div
+        class="toast-body"
+        style="background-color: green; color: white"
+      >
+        Product added to cart!
+      </div>
+    </div>
+    <div
+      class="toast"
+      role="alert"
+      style="display: none"
+      aria-live="assertive"
+      aria-atomic="true"
+      data-product-id="${product._id}-wishlist"
+    >
+      <div
+        class="toast-body"
+        style="background-color: green; color: white"
+      >
+        Product added to wishlist!
+      </div>
+    </div>
+    <div class="product-info">
+      <div class="product__review ul_li">
+        <ul class="rating-star ul_li mr-10">
+          <li><i class="fas fa-star"></i></li>
+          <li><i class="fas fa-star"></i></li>
+          <li><i class="fas fa-star"></i></li>
+          <li><i class="far fa-star"></i></li>
+          <li><i class="far fa-star"></i></li>
+        </ul>
+        <span>(126) Review</span>
+      </div>
+      <h2 class="product__title">
+        <a href="#">${product.name}</a>
+      </h2>
+      <span class="product__available"> <span></span></span>
+      <div class="product__progress progress color-primary">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: 50%"
+          aria-valuenow="50"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+      <h4 class="product__price">
+        <span
+          class="new"
+          data-price="${product.originalPrice}"
+          >₹${product.originalPrice}</span
+        ><span class="old">₹${product.mrp}</span>
+      </h4>
+      <p class="product-description">
+        ${product.description}
+      </p>
+    </div>
+  `;
+        productList.appendChild(listItem);
       });
+      updatePagination();
+
+      function updatePagination() {
+        const itemsPerPage = 3; // Number of items per page
+        const products = document.querySelectorAll(".product");
+        console.log(products);
+        const items = Array.from(products);
+        console.log(items);
+        let currentPage = 1;
+        function displayList(page) {
+          console.log(page);
+          const startIndex = (page - 1) * itemsPerPage;
+          const endIndex = startIndex + itemsPerPage;
+          const paginatedItems = items.slice(startIndex, endIndex);
+          console.log(paginatedItems);
+
+          updateProductList(paginatedItems);
+        }
+
+        function updateProductList(paginatedItems) {
+          console.log("paginatedItems arrived");
+          const productList = document.querySelector(".product-list");
+          console.log(productList);
+          console.log(paginatedItems);
+          productList.innerHTML = ""; // Clear existing products
+          paginatedItems.forEach((product) => {
+            productList.appendChild(product);
+          });
+        }
+        console.log("updatePagination123");
+        const paginationElement = document.getElementById("pagination");
+        const pageNumbers = Math.ceil(products.length / itemsPerPage);
+        const paginationHTML = generatePaginationHTML(pageNumbers);
+        console.log(pageNumbers);
+
+        paginationElement.innerHTML = paginationHTML;
+
+        const prevButton = paginationElement.querySelector(".previous");
+        const nextButton = paginationElement.querySelector(".next");
+
+        if (currentPage === 1) {
+          prevButton.style.visibility = "hidden";
+        } else {
+          prevButton.style.visibility = "visible";
+        }
+
+        if (currentPage === pageNumbers) {
+          nextButton.style.visibility = "hidden";
+        } else {
+          nextButton.style.visibility = "visible";
+        }
+      }
+
+      function generatePaginationHTML(pageNumbers) {
+        let paginationHTML = "";
+        for (let i = 1; i <= pageNumbers; i++) {
+          if (i === 1) {
+            paginationHTML += `<a href="#!" class="current_page page">${i}</a>`;
+          } else {
+            paginationHTML += `<a href="#!" class="page">${i}</a>`;
+          }
+        }
+        return paginationHTML;
+      }
+
+      function handlePaginationClick(event) {
+        const target = event.target;
+
+        if (target.classList.contains("page")) {
+          console.log("hello");
+          document
+            .querySelector(".current_page")
+            .classList.remove("current_page");
+          target.classList.add("current_page");
+          currentPage = parseInt(target.textContent);
+          // document.querySelector('.page').classList.add('page');
+          displayList(currentPage);
+        } else if (target.classList.contains("previous")) {
+          console.log("hello");
+          if (currentPage > 1) {
+            currentPage--;
+            document
+              .querySelector(".current_page")
+              .classList.remove("current_page");
+            const previousPage = document.querySelector(
+              `.page:nth-child(${currentPage})`
+            );
+            previousPage.classList.add("current_page");
+            displayList(currentPage);
+          }
+        } else if (target.classList.contains("next")) {
+          console.log("hellowww");
+          const pageNumbers = Math.ceil(products.length / itemsPerPage);
+          if (currentPage < pageNumbers) {
+            currentPage++;
+            document
+              .querySelector(".current_page")
+              .classList.remove("current_page");
+            const nextPage = document.querySelector(
+              `.page:nth-child(${currentPage})`
+            );
+            nextPage.classList.add("current_page");
+            displayList(currentPage);
+          }
+        }
+      }
+
+      document
+        .getElementById("pagination")
+        .addEventListener("click", handlePaginationClick);
+
+      displayList(currentPage); // Display initial page
+      updatePagination();
     }
   });
+
   // sorting
   document
     .getElementById("sort-select")
@@ -374,7 +841,6 @@
         } else {
           return 0; // No change in sorting
         }
-       
       });
       renderProducts(sortedProducts);
     });
@@ -382,23 +848,29 @@
   function renderProducts(productData) {
     const productList = document.querySelector(".product-list");
     productList.innerHTML = ""; // Clear existing products
-console.log(productData);
+    console.log(productData);
     productData.forEach((product) => {
       productList.appendChild(product);
     });
   }
+  function getCategoryIdFromUrl() {
+    const urlParts = window.location.pathname.split("/");
+    const categoryIdIndex = urlParts.indexOf("all-products") + 1;
+    return urlParts[categoryIdIndex];
+  }
 
-  // category highlighting
+  // Get the selected category ID
+  const selectedCategoryId = getCategoryIdFromUrl();
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const categoryLinks = document.querySelectorAll("#category-data-id");
+  // Get all category links
+  const categoryLinks = document.querySelectorAll(".category-link");
 
-    console.log(categoryId);
-    categoryLinks.addEventListener("click", (categoryLink) => {
-      if (categoryLink.dataset.categoryId === categoryLink.dataset.categoryId) {
-        categoryLink.classList.add("active");
-      }
-    });
+  // Highlight the selected category
+  categoryLinks.forEach((link) => {
+    const categoryId = link.getAttribute("data-category-id");
+    if (categoryId === selectedCategoryId) {
+      link.classList.add("highlighted-category");
+    }
   });
 </script>
 <script>
