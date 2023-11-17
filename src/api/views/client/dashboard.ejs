@@ -50,7 +50,7 @@
         aria-label="Slide 3"
       ></button>
     </div>
-    <div class="carousel-inner" style="height: 500px">
+    <div class="carousel-inner" style="height: 400px">
       <% bannerData.forEach((bannerItem, index) => { %>
       <div
         style="height: 100%"
@@ -65,48 +65,19 @@
 
         <div class="carousel-caption d-none d-md-block">
           <div class="featured__content">
-            <span
-              style="
-                position: absolute;
-                top: 10px;
-                left: 50px;
-                color: black;
-                font-weight: 1000;
-              "
-              ><%- bannerItem.title %></span
-            >
-            <h2
-              style="
-                position: absolute;
-                top: 50px;
-                left: 50px;
-                color: black;
-                font-weight: 1000;
-              "
-            >
-              <%- bannerItem.title %>
-            </h2>
-            <p
-              style="
-                position: absolute;
-                top: 100px;
-                left: 50px;
-                color: black;
-                font-weight: 1000;
-              "
-            >
-              <%- bannerItem.description %>
-            </p>
+            <span><%- bannerItem.title %></span>
+            <h2><%- bannerItem.title %></h2>
+            <p><%- bannerItem.description %></p>
 
-            <!-- <div class="banner__btn mt-30">
-              <a class="thm-btn thm-btn__black" href="#">
+            <div class="banner__btn mt-30">
+              <!-- <a class="thm-btn thm-btn__black" href="#">
                 <span class="btn-wrap">
                   <span>Shop Now</span>
                   <span>Shop Now</span>
                 </span>
                 <i class="far fa-long-arrow-right"></i>
-              </a>
-            </div> -->
+              </a> -->
+            </div>
           </div>
         </div>
       </div>
@@ -134,8 +105,6 @@
   </div>
 
   <!-- Ensure you have jQuery included before running the carousel function -->
-
- 
 
   <!-- tx baner end -->
   <% categoryData.forEach((category) => { %>
@@ -202,16 +171,13 @@
                     <% category.products.forEach((product) => { %>
 
                     <div class="tab-product__item tx-product text-center">
-                      <div
-                        class="thumb"
-                        style=" height: 200px"
-                        data-stock="<%- product.stock %>"
-                      >
+                      <div class="thumb" data-stock="<%- product.stock %>">
                         <a href="/users/single-product/<%- product._id %>">
                           <img
                             src="/<%- product.image[0] %>"
+                            style="max-height: 200px"
+                            width="200px"
                             alt=""
-                            
                           />
                         </a>
 
@@ -326,9 +292,6 @@
       </div>
     </div>
   </div>
-
-  
-
 </main>
 
 <script>
