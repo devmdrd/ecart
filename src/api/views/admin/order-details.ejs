@@ -44,7 +44,7 @@
           <td class="text-center align-middle"><%- orderItem.quantity %></td>
           <!-- Total Price -->
           <td class="text-center align-middle">
-            <strong><%- orderItem.price %></strong>
+            <strong><%- orderItem.price * orderItem.quantity %></strong>
           </td>
           <% }) %>
         </tr>
