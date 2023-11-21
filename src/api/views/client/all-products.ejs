@@ -123,7 +123,7 @@
                           data-count="1"
                           data-price="<%- product.originalPrice %>"
                         >
-                          <i class="far fa-shopping-basket"></i>
+                          <i class="fa fa-shopping-cart"></i>
                         </a>
                       </li>
 
@@ -133,7 +133,7 @@
                           class="add-to-wishlist-link"
                           data-product-id="<%- product._id %>"
                         >
-                          <i class="far fa-heart"></i>
+                          <i class="fa fa-heart"></i>
                         </a>
                       </li>
                     </ul>
@@ -171,28 +171,19 @@
                   <div class="product-info">
                     <div class="product__review ul_li">
                       <ul class="rating-star ul_li mr-10">
-                        <li><i class="fas fa-star"></i></li>
-                        <li><i class="fas fa-star"></i></li>
-                        <li><i class="fas fa-star"></i></li>
-                        <li><i class="far fa-star"></i></li>
-                        <li><i class="far fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
                       </ul>
-                      <span>(126) Review</span>
+                      <span>(2) Review</span>
                     </div>
                     <h2 class="product__title">
                       <a href="#"><%- product.name %></a>
                     </h2>
-                    <span class="product__available"> <span></span></span>
-                    <div class="product__progress progress color-primary">
-                      <div
-                        class="progress-bar"
-                        role="progressbar"
-                        style="width: 50%"
-                        aria-valuenow="50"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
+                 
+                   
                     <h4 class="product__price">
                       <span
                         class="new"
@@ -219,13 +210,13 @@
                 <ul id="">
                   <li>
                     <a href="#!" class="previous"
-                      ><i class="far fa-angle-double-left"></i
+                      ><i class="fa fa-angle-double-left"></i
                     ></a>
                   </li>
                   <li id="pagination"></li>
                   <li>
                     <a href="#" class="next"
-                      ><i class="far fa-angle-double-right"></i
+                      ><i class="fa fa-angle-double-right"></i
                     ></a>
                   </li>
                 </ul>
@@ -244,7 +235,7 @@
                   name="searchQuery"
                   placeholder="Search..."
                 />
-                <button id="searchButton"><i class="far fa-search"></i></button>
+                <button id="searchButton"><i class="fa fa-search"></i></button>
               </form>
             </div>
             <div class="widget widget_price_filter">
@@ -272,7 +263,7 @@
                     class="category-link"
                     id="<%- category._id %>"
                     data-category-id="<%- category._id %>"
-                    ><%- category.name %><i class="far fa-chevron-right"></i
+                    ><%- category.name %><i class="fa fa-chevron-right"></i
                   ></a>
                 </li>
                 <% }) %>

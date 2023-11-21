@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
 <div class="preloder_part">
   <div class="spinner">
     <div class="dot1"></div>
@@ -32,12 +35,12 @@
         </a>
       </div>
       <div class="header-date">
-        <i class="far fa-calendar-alt"></i><%= new Date().toLocaleDateString()
+        <i class="fa fa-calendar-alt"></i><%= new Date().toLocaleDateString()
         %>
       </div>
       <div class="add">
         <a href="#!">
-          <img src="/assets/client/img/add/img_01.jpg" alt="" />
+          <img src="" alt="" />
         </a>
       </div>
       <div class="d-none d-lg-block">
@@ -46,9 +49,9 @@
             <ul>
               <li>
                 <a href="#!" class="lang-btn"
-                  ><img src="/assets/client/img/icon/usd_flag.png" alt="" />
+                  ><img src="" alt="" />
                   English
-                  <i class="far fa-chevron-down"></i
+                  <i class="fa fa-chevron-down"></i
                 ></a>
                 <ul class="lang_sub_list">
                   <li><a href="#">English</a></li>
@@ -57,10 +60,10 @@
             </ul>
           </div>
           <div class="header__social">
-            <a href="#!"><i class="fab fa-facebook-f"></i></a>
-            <a href="#!"><i class="fab fa-twitter"></i></a>
-            <a href="#!"><i class="fab fa-instagram"></i></a>
-            <a href="#!"><i class="fab fa-youtube"></i></a>
+            <a href="#!"><i class="fa fa-facebook-f"></i></a>
+            <a href="#!"><i class="fa fa-twitter"></i></a>
+            <a href="#!"><i class="fa fa-instagram"></i></a>
+            <a href="#!"><i class="fa fa-youtube"></i></a>
           </div>
         </div>
       </div>
@@ -73,22 +76,22 @@
     <div class="container mxw_1530">
       <div class="header__main ul_li">
         <div class="header__logo">
-          <a href="index.html">
-            <img src="/assets/img/logo/logo.svg" alt="" />
+          <a href="#">
+            <img src="" alt="" />
           </a>
         </div>
 
         <div class="hamburger_menu d-lg-none">
           <a href="javascript:void(0);" class="active">
             <div class="icon bar">
-              <span><i class="fal fa-bars"></i></span>
+              <span><i class="fa fa-bars"></i></span>
             </div>
           </a>
         </div>
         <div class="main-menu navbar navbar-expand-lg">
           <nav class="main-menu__nav collapse navbar-collapse">
             <ul>
-              <li class="menu-item-has-children has-mega-menu active">
+              <li class=" has-mega-menu active">
                 <a href="/users/dashboard">Home</a>
               </li>
              
@@ -108,21 +111,26 @@
           <div class="header__icons ul_li mr-15">
             <div class="icon">
               <a href="/users/wishlist" class="cart-link">
-                <i class="fas fa-heart"></i>
+                <i class="fa fa-heart" style="font-size:20px"></i>
                 <% if(user){ %>
-                <span class="count" style="font-size: 12px;"><%- wishlistCount %></span>
+                  <span class="count" style="position: absolute; top: -5px; right: -5px; background-color: orange; color: white; border-radius: 50%; padding: 3px 5px; font-size: 12px;"><%- wishlistCount %></span>
+
                 <% } %>
               </a>
             </div>
 
             <div class="icon">
               <a href="/users/cart" class="cart-link">
-                <i class="fas fa-shopping-cart"></i>
-                <% if(user){ %>
-                <span class="count" style="font-size: 12px;"><%- cartCount %></span>
-                <% } %>
+                  
+                  <i class="fa fa-shopping-cart" style="font-size:24px"></i>
+                  <% if(user){ %>
+
+                    <span class="count" style="position: absolute; top: -5px; right: -5px; background-color: orange; color: white; border-radius: 50%; padding: 3px 5px; font-size: 12px;"><%- cartCount %></span>
+
+                  <% } %>
               </a>
-            </div>
+          </div>
+          
           </div>
           <% if(user){ %>
           <div class="icon dropdown">
@@ -134,7 +142,7 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <i class="fas fa-user"></i>
+              <i class="fa fa-user" style="font-size: 24px;"></i>
             </a>
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
               <!-- Add your profile information and customization here -->
@@ -163,7 +171,7 @@
 </header>
 <aside class="slide-bar">
   <div class="close-mobile-menu">
-    <a href="javascript:void(0);"><i class="fal fa-times"></i></a>
+    <a href="javascript:void(0);"><i class="fa fa-times"></i></a>
   </div>
   <nav class="side-mobile-menu">
     <ul id="mobile-menu-active">
