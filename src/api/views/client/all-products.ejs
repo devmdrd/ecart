@@ -7,24 +7,11 @@
   }
 </style>
 <!-- breadcrumb start -->
-<section class="breadcrumb-area">
-  <div class="container">
-    <div class="radios-breadcrumb breadcrumbs">
-      <ul class="list-unstyled d-flex align-items-center">
-        <li class="radiosbcrumb-item radiosbcrumb-begin">
-          <a href="#"><span>Home</span></a>
-        </li>
-        <li class="radiosbcrumb-item radiosbcrumb-end">
-          <span>Shop</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
+
 <!-- breadcrumb end -->
 
 <!-- start shop-section -->
-<section class="shop-section pb-80">
+<section class="shop-section pb-80 pt-2">
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
@@ -114,60 +101,9 @@
                         alt=""
                         style="height: 100%; width: 100%"
                     /></a>
-                    <ul class="product__action">
-                      <li>
-                        <a
-                          href=""
-                          class="add-to-cart-link"
-                          data-product-id="<%- product._id %>"
-                          data-count="1"
-                          data-price="<%- product.originalPrice %>"
-                        >
-                          <i class="fa fa-shopping-cart"></i>
-                        </a>
-                      </li>
+                  </div>
+                  <span style="visibility: hidden;" class="thumb"><%- product.stock %></span>
 
-                      <li>
-                        <a
-                          href=""
-                          class="add-to-wishlist-link"
-                          data-product-id="<%- product._id %>"
-                        >
-                          <i class="fa fa-heart"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div
-                    class="toast"
-                    role="alert"
-                    style="display: none"
-                    aria-live="assertive"
-                    aria-atomic="true"
-                    data-product-id="<%- product._id %>-cart"
-                  >
-                    <div
-                      class="toast-body"
-                      style="background-color: green; color: white"
-                    >
-                      Product added to cart!
-                    </div>
-                  </div>
-                  <div
-                    class="toast"
-                    role="alert"
-                    style="display: none"
-                    aria-live="assertive"
-                    aria-atomic="true"
-                    data-product-id="<%- product._id %>-wishlist"
-                  >
-                    <div
-                      class="toast-body"
-                      style="background-color: green; color: white"
-                    >
-                      Product added to wishlist!
-                    </div>
-                  </div>
                   <div class="product-info">
                     <div class="product__review ul_li">
                       <ul class="rating-star ul_li mr-10">
@@ -182,8 +118,7 @@
                     <h2 class="product__title">
                       <a href="#"><%- product.name %></a>
                     </h2>
-                 
-                   
+
                     <h4 class="product__price">
                       <span
                         class="new"
@@ -215,7 +150,7 @@
                   </li>
                   <li id="pagination"></li>
                   <li>
-                    <a href="#" class="next"
+                    <a href="#!" class="next"
                       ><i class="fa fa-angle-double-right"></i
                     ></a>
                   </li>
@@ -292,7 +227,7 @@
 <script>
   $(document).ready(function () {
     const minPrice = 1;
-    const maxPrice = 100000;
+    const maxPrice = 150000;
     const step = 1;
 
     $("#slider-range").slider({
@@ -319,7 +254,8 @@
       const min = parseFloat(minSelectedPrice);
       const max = parseFloat(maxSelectedPrice);
 
-      console.log(categoryId);
+      console.log(min, max, categoryId);
+
       fetchProducts(minSelectedPrice, maxSelectedPrice, categoryId);
       async function fetchProducts(min, max, categoryId) {
         const response = await fetch(
@@ -345,85 +281,25 @@
       <a href="/users/single-product/${product._id}">
         <img src="/${product.image[0]}" alt="" style="height:100%; width:100%" />
       </a>
-      <ul class="product__action">
-        <li>
-          <a
-            href=""
-            class="add-to-cart-link"
-            data-product-id="${product._id}"
-            data-count="1"
-            data-price="${product.originalPrice}"
-          >
-            <i class="far fa-shopping-basket"></i>
-          </a>
-        </li>
-
-        <li>
-          <a
-            href=""
-            class="add-to-wishlist-link"
-            data-product-id="${product._id}"
-          >
-            <i class="far fa-heart"></i>
-          </a>
-        </li>
-      </ul>
+      
     </div>
-    <div
-      class="toast"
-      role="alert"
-      style="display: none"
-      aria-live="assertive"
-      aria-atomic="true"
-      data-product-id="${product._id}-cart"
-    >
-      <div
-        class="toast-body"
-        style="background-color: green; color: white"
-      >
-        Product added to cart!
-      </div>
-    </div>
-    <div
-      class="toast"
-      role="alert"
-      style="display: none"
-      aria-live="assertive"
-      aria-atomic="true"
-      data-product-id="${product._id}-wishlist"
-    >
-      <div
-        class="toast-body"
-        style="background-color: green; color: white"
-      >
-        Product added to wishlist!
-      </div>
-    </div>
+   
+  
     <div class="product-info">
       <div class="product__review ul_li">
         <ul class="rating-star ul_li mr-10">
-          <li><i class="fas fa-star"></i></li>
-          <li><i class="fas fa-star"></i></li>
-          <li><i class="fas fa-star"></i></li>
-          <li><i class="far fa-star"></i></li>
-          <li><i class="far fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
         </ul>
-        <span>(126) Review</span>
+        <span>(2) Review</span>
       </div>
       <h2 class="product__title">
         <a href="#">${product.name}</a>
       </h2>
-      <span class="product__available"> <span></span></span>
-      <div class="product__progress progress color-primary">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          style="width: 50%"
-          aria-valuenow="50"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
+      
       <h4 class="product__price">
         <span
           class="new"
@@ -446,6 +322,7 @@
       function updatePagination() {
         console.log("updatePagination");
         const itemsPerPage = 3; // Number of items per page
+        
         const products = document.querySelectorAll(".product");
         console.log(products);
         const items = Array.from(products);
@@ -603,85 +480,25 @@
       <a href="/users/single-product/${product._id}">
         <img src="/${product.image[0]}" alt="" style="height:100%; width:100%" />
       </a>
-      <ul class="product__action">
-        <li>
-          <a
-            href=""
-            class="add-to-cart-link"
-            data-product-id="${product._id}"
-            data-count="1"
-            data-price="${product.originalPrice}"
-          >
-            <i class="far fa-shopping-basket"></i>
-          </a>
-        </li>
+      
+    </div>
 
-        <li>
-          <a
-            href=""
-            class="add-to-wishlist-link"
-            data-product-id="${product._id}"
-          >
-            <i class="far fa-heart"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div
-      class="toast"
-      role="alert"
-      style="display: none"
-      aria-live="assertive"
-      aria-atomic="true"
-      data-product-id="${product._id}-cart"
-    >
-      <div
-        class="toast-body"
-        style="background-color: green; color: white"
-      >
-        Product added to cart!
-      </div>
-    </div>
-    <div
-      class="toast"
-      role="alert"
-      style="display: none"
-      aria-live="assertive"
-      aria-atomic="true"
-      data-product-id="${product._id}-wishlist"
-    >
-      <div
-        class="toast-body"
-        style="background-color: green; color: white"
-      >
-        Product added to wishlist!
-      </div>
-    </div>
     <div class="product-info">
       <div class="product__review ul_li">
         <ul class="rating-star ul_li mr-10">
-          <li><i class="fas fa-star"></i></li>
-          <li><i class="fas fa-star"></i></li>
-          <li><i class="fas fa-star"></i></li>
-          <li><i class="far fa-star"></i></li>
-          <li><i class="far fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
+          <li><i class="fa fa-star"></i></li>
         </ul>
-        <span>(126) Review</span>
+        <span>(2) Review</span>
       </div>
       <h2 class="product__title">
         <a href="#">${product.name}</a>
       </h2>
-      <span class="product__available"> <span></span></span>
-      <div class="product__progress progress color-primary">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          style="width: 50%"
-          aria-valuenow="50"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
+     
+     
       <h4 class="product__price">
         <span
           class="new"
@@ -866,88 +683,14 @@
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    // For "Add to Cart" action
-    const handleAddToCart = async (productId, count, price) => {
-      try {
-        const response = await fetch(
-          `/users/add-to-cart/${productId}/${count}/${price}`
-        );
-        if (response.ok) {
-          const toastEl = document.querySelector(
-            `.toast[data-product-id="${productId}-cart"]`
-          );
-          const toast = new bootstrap.Toast(toastEl);
-          toastEl.style.display = "block";
-
-          toast.show();
-          setTimeout(() => {
-            toastEl.style.display = "none"; // Set display property back to 'none' after 3 seconds
-          }, 3000);
-        } else {
-          console.error("Failed to add product to cart");
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
-
-    // For "Add to Wishlist" action
-    const handleAddToWishlist = async (productId) => {
-      try {
-        const response = await fetch(`/users/add-to-wishlist/${productId}`);
-        if (response.ok) {
-          const toastEl = document.querySelector(
-            `.toast[data-product-id="${productId}-wishlist"]`
-          );
-          const toast = new bootstrap.Toast(toastEl);
-          toastEl.style.display = "block";
-
-          toast.show();
-          setTimeout(() => {
-            toastEl.style.display = "none"; // Set display property back to 'none' after 3 seconds
-          }, 3000);
-        } else {
-          console.error("Failed to add product to wishlist");
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
-
-    // Rest of the JavaScript code remains unchanged as provided earlier
-
-    const handleProductActions = (link, actionHandler) => {
-      link.addEventListener("click", async (e) => {
-        e.preventDefault();
-        const productId = link.getAttribute("data-product-id");
-        if (actionHandler) {
-          actionHandler(productId);
-        }
-      });
-    };
-
-    const addToCartLinks = document.querySelectorAll(".add-to-cart-link");
-    const addToWishlistLinks = document.querySelectorAll(
-      ".add-to-wishlist-link"
-    );
-
-    addToCartLinks.forEach((link) => {
-      handleProductActions(link, (productId) => {
-        const count = link.getAttribute("data-count");
-        const price = link.getAttribute("data-price");
-        handleAddToCart(productId, count, price);
-      });
-    });
-
-    addToWishlistLinks.forEach((link) => {
-      handleProductActions(link, handleAddToWishlist);
-    });
+    console.log("DOM loaded");
     const stock = document.querySelectorAll(".thumb");
-    const products = document.querySelectorAll(".tx-product");
+    console.log(stock)
+    const products = document.querySelectorAll(".product");
     //  const categories = document.querySelectorAll(".rd-tab-product");
 
     for (let i = 0; i < stock.length; i++) {
-      if (stock[i].getAttribute("data-stock") == 0) {
+      if (stock[i].textContent == 0) {
         products[i].style.opacity = "0.5";
         products[
           i

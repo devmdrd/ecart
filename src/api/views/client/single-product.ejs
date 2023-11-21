@@ -249,6 +249,7 @@
                       alt=""
                       style="width: 100%; height: 100%"
                   /></a>
+                  <span class="thumb" style="visibility: hidden;"><%- prod.stock %></span>
                   <ul class="product__action">
                     <li>
                       <a
@@ -524,11 +525,11 @@
       handleProductActions(link, handleAddToWishlist);
     });
     const stock = document.querySelectorAll(".thumb");
-    const products = document.querySelectorAll(".tx-product");
+    const products = document.querySelectorAll(".product");
     //  const categories = document.querySelectorAll(".rd-tab-product");
 
     for (let i = 0; i < stock.length; i++) {
-      if (stock[i].getAttribute("data-stock") == 0) {
+      if (stock[i].textContent == 0) {
         products[i].style.opacity = "0.5";
         products[
           i
