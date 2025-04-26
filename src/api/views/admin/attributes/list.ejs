@@ -1,0 +1,224 @@
+<div class="container mx-auto mt-5 px-4">
+  <h3 class="text-2xl font-semibold mb-5">List Attributes</h3>
+
+  <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <table id="example" class="min-w-full text-left table-auto">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="px-4 py-3 text-sm font-medium">No</th>
+          <th class="px-4 py-3 text-sm font-medium">Name</th>
+          <th class="px-4 py-3 text-sm font-medium">Values</th>
+          <th class="px-4 py-3 text-sm font-medium">Category</th>
+          <th class="px-4 py-3 text-sm font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700">
+        <% attributes.forEach((attribute, index) => { %>
+          <tr class="border-b">
+            <td class="px-4 py-2 text-sm"><%= index + 1 %></td>
+            <td class="px-4 py-2 text-sm"><%= attribute.name %></td>
+            <td class="px-4 py-2 text-sm flex flex-wrap gap-2">
+              <% attribute.values.forEach((val) => { %>
+                <span class="flex items-center gap-2 bg-gray-700 text-white text-xs px-2 py-1 rounded">
+                  <%= val.value %>
+                  <a href="#" onclick="openEditModal('<%= attribute._id %>', '<%= attribute.name %>', '<%= val.value %>', '<%= attribute.categoryId.name %>', '<%= val._id %>')" class="hover:text-gray-300">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <button class="hover:text-red-300" onclick="openDeleteModal('<%= attribute._id %>', '<%= val._id %>')">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </span>
+              <% }) %>
+            </td>
+            <td class="px-4 py-2 text-sm"><%= attribute.categoryId.name || attribute.categoryId %></td>
+            <td class="px-4 py-2 text-sm">
+              <a href="#" onclick="openEditModal('<%= attribute._id %>', '<%= attribute.name %>', '', '<%= attribute.categoryId.name %>')" class="text-gray-800 hover:text-gray-600">
+                <i class="fas fa-plus-circle text-lg"></i>
+              </a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Edit/Add Modal -->
+<div id="editModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+    <h2 id="modalTitle" class="text-xl font-bold text-center mb-4">Edit Attribute</h2>
+
+    <form id="attributeForm">
+      <input type="hidden" id="attributeId" name="attributeId">
+      <input type="hidden" id="valueId" name="valueId">
+
+      <div class="mb-4">
+        <label for="attributeName" class="block text-sm font-medium text-gray-700">Attribute Name</label>
+        <input type="text" id="attributeName" name="name" class="w-full mt-1 px-4 py-2 border rounded-lg bg-gray-100" disabled>
+      </div>
+
+      <div class="flex items-center mb-2 gap-2">
+        <input type="checkbox" id="isColor" name="isColor" value="true" class="h-4 w-4 text-indigo-600">
+        <label for="isColor" class="text-sm text-gray-700">I'm adding a color value</label>
+      </div>
+
+      <div class="mb-4 relative">
+        <label for="attributeValues" class="block text-sm font-medium text-gray-700">Attribute Value</label>
+        <input type="text" id="attributeValues" name="value" placeholder="e.g. 4GB/ 256GB SSD/ NVIDIA GTX 1650 etc..." class="w-full mt-1 py-2 pl-14 pr-4 border rounded-lg text-sm">
+        <input type="color" id="colorPicker" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-7 rounded border-none cursor-pointer hidden" value="#000000">
+      </div>
+
+      <div class="mb-4">
+        <label for="categorySelect" class="block text-sm font-medium text-gray-700">Category</label>
+        <input type="text" id="categorySelect" name="categoryId" class="w-full mt-1 px-4 py-2 border rounded-lg bg-gray-100" disabled>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="w-full py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">Save</button>
+        <button type="button" onclick="closeModal()" class="w-full py-2 border border-gray-400 rounded-lg hover:bg-gray-100">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white p-6 rounded-lg w-96">
+    <h4 class="text-xl font-semibold mb-4">Confirm Deletion</h4>
+    <p>Are you sure you want to delete this value?</p>
+    <div class="mt-4 flex justify-end gap-4">
+      <button id="cancelDelete" class="px-4 py-2 bg-gray-300 rounded-md">Cancel</button>
+      <button id="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-md">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 bg-gray-800 text-white py-3 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 pointer-events-none z-50"></div>
+
+<script>
+  const isColorCheckbox = document.getElementById("isColor");
+  const colorPicker = document.getElementById("colorPicker");
+  const attributeValuesInput = document.getElementById("attributeValues");
+  const toast = document.getElementById("toast");
+
+  let attributeIdToDelete = null;
+  let valueIdToDelete = null;
+
+  function openEditModal(attributeId = '', name = '', value = '', categoryName = '', valueId = '') {
+    document.getElementById('modalTitle').textContent = 'Edit Attribute';
+    document.getElementById('attributeId').value = attributeId;
+    document.getElementById('valueId').value = valueId || '';
+    document.getElementById('attributeName').value = name;
+    document.getElementById('attributeValues').value = value.trim();
+    document.getElementById('categorySelect').value = categoryName;
+
+    const isColor = /^#[0-9A-Fa-f]{6}$/.test(value.trim());
+    isColorCheckbox.checked = isColor;
+    colorPicker.classList.toggle("hidden", !isColor);
+    if (isColor) {
+      colorPicker.value = value.trim();
+    }
+
+    document.getElementById('editModal').classList.remove('hidden');
+    document.getElementById('editModal').classList.add('flex');
+  }
+
+  function closeModal() {
+    document.getElementById('editModal').classList.add('hidden');
+    document.getElementById('editModal').classList.remove('flex');
+  }
+
+  isColorCheckbox.addEventListener("change", () => {
+    if (isColorCheckbox.checked) {
+      colorPicker.classList.remove("hidden");
+      attributeValuesInput.value = colorPicker.value || "#000000";
+    } else {
+      colorPicker.classList.add("hidden");
+      attributeValuesInput.value = "";
+    }
+  });
+
+  colorPicker.addEventListener("input", () => {
+    attributeValuesInput.value = colorPicker.value;
+  });
+
+  function showToast(message, isSuccess = true) {
+    toast.textContent = message;
+    toast.classList.remove("opacity-0", "bg-red-600", "bg-green-600");
+    toast.classList.add("opacity-100", isSuccess ? "bg-green-600" : "bg-red-600");
+
+    setTimeout(() => {
+      toast.classList.remove("opacity-100");
+      toast.classList.add("opacity-0");
+    }, 2500);
+  }
+
+  document.getElementById("attributeForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const attributeId = formData.get("attributeId");
+    const valueId = formData.get("valueId");
+    const rawValue = attributeValuesInput.value.trim();
+
+    if (!rawValue) {
+      showToast("Value cannot be empty", false);
+      return;
+    }
+
+    formData.set("value", rawValue); 
+    formData.set("valueId", valueId); 
+
+    try {
+      const response = await fetch("/admin/attributes", {
+        method: "PUT",
+        body: formData
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        showToast(result.message, true);
+        setTimeout(() => window.location.reload(), 2000);
+      } else {
+        showToast(result.message || "Failed to save", false);
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      showToast("Something went wrong!", false);
+    }
+  });
+
+  function openDeleteModal(attrId, valId) {
+    attributeIdToDelete = attrId;
+    valueIdToDelete = valId;
+    document.getElementById("deleteModal").classList.remove("hidden");
+  }
+
+  document.getElementById("cancelDelete").addEventListener("click", () => {
+    document.getElementById("deleteModal").classList.add("hidden");
+  });
+
+  document.getElementById("confirmDelete").addEventListener("click", async () => {
+    if (attributeIdToDelete && valueIdToDelete) {
+      try {
+        const response = await fetch(`/admin/attributes/${attributeIdToDelete}/${valueIdToDelete}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          showToast("Value deleted", true);
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          showToast(data.message || "Failed to delete", false);
+        }
+      } catch (error) {
+        console.error("Delete error:", error);
+        showToast("An error occurred while deleting the value.", false);
+      }
+    }
+    document.getElementById("deleteModal").classList.add("hidden");
+  });
+</script>

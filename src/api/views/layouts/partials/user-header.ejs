@@ -1,199 +1,91 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
-<div class="preloder_part">
-  <div class="spinner">
-    <div class="dot1"></div>
-    <div class="dot2"></div>
-  </div>
+<!-- Flash Sale Banner -->
+<div class="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-4 py-2 text-center text-sm md:text-base font-semibold">
+  🚨 <span class="text-lg font-extrabold">Flash Sale</span>: Up to <span class="text-xl font-bold">50% off</span> on top gadgets! Limited time only!
 </div>
-<!-- preloder end  -->
 
-<!-- back to top start -->
-<div class="progress-wrap">
-  <svg
-    class="progress-circle svg-content"
-    width="100%"
-    height="100%"
-    viewBox="-1 -1 102 102"
-  >
-    <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
-  </svg>
-</div>
-<!-- back to top end -->
+<!-- Header -->
+<header class="py-4 bg-white text-black shadow">
+  <div class="max-w-screen-xl mx-auto px-4">
 
-<!-- header start -->
-<header
-  class="header header__style-two"
-  style="background-color: lightgoldenrodyellow"
->
-  <div class="container mxw_1530">
-    <div class="header__middle ul_li_between">
-      <div class="header__logo">
-        <a href="#">
-          <h3 style="color: orangered"><b>E-Cart</b></h3>
+    <!-- Top Row -->
+    <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 mb-4">
+
+      <!-- Logo -->
+      <div class="flex flex-col items-center md:items-start">
+        <a href="/" class="flex items-center space-x-2">
+          <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="E-Cart Logo" class="h-10">
+          <span class="text-xl font-bold text-black">E-Cart</span>
         </a>
       </div>
-      <div class="header-date">
-        <i class="fa fa-calendar-alt"></i><%= new Date().toLocaleDateString()
-        %>
-      </div>
-      <div class="add">
-        <a href="#!">
-          <img src="" alt="" />
-        </a>
-      </div>
-      <div class="d-none d-lg-block">
-        <div class="ul_li">
-          <div class="header__language style-2 mr-25">
-            <ul>
-              <li>
-                <a href="#!" class="lang-btn"
-                  ><img src="" alt="" />
-                  English
-                  <i class="fa fa-chevron-down"></i
-                ></a>
-                <ul class="lang_sub_list">
-                  <li><a href="#">English</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-          <div class="header__social">
-            <a href="#!"><i class="fa fa-facebook-f"></i></a>
-            <a href="#!"><i class="fa fa-twitter"></i></a>
-            <a href="#!"><i class="fa fa-instagram"></i></a>
-            <a href="#!"><i class="fa fa-youtube"></i></a>
-          </div>
+
+      <!-- Search Bar -->
+      <div class="w-full md:w-1/3">
+        <div class="relative">
+          <input type="text"
+                 placeholder="Search for products, brands and more"
+                 class="w-full bg-white text-black rounded-full border border-black pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-black placeholder-black">
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-black"></i>
         </div>
       </div>
-    </div>
-  </div>
-  <div
-    class="header__wrap"
-    data-uk-sticky="top: 250; animation: uk-animation-slide-top;"
-  >
-    <div class="container mxw_1530">
-      <div class="header__main ul_li">
-        <div class="header__logo">
-          <a href="#">
-            <img src="" alt="" />
-          </a>
-        </div>
 
-        <div class="hamburger_menu d-lg-none">
-          <a href="javascript:void(0);" class="active">
-            <div class="icon bar">
-              <span><i class="fa fa-bars"></i></span>
-            </div>
-          </a>
-        </div>
-        <div class="main-menu navbar navbar-expand-lg">
-          <nav class="main-menu__nav collapse navbar-collapse">
-            <ul>
-              <li class=" has-mega-menu active">
-                <a href="/users/dashboard">Home</a>
-              </li>
-             
-             
+      <!-- Icons -->
+      <div class="flex items-center space-x-6">
 
-              <li><a href="/users/all-products/6515c19eb6b85670909a53bf">Smart Phones</a></li>
-
-              <li><a href="/users/all-products/651456f4e8a5b44f4dda6f7f">Tablets</a></li>
-              <li><a href="/users/all-products/6514570be8a5b44f4dda6f83">Laptops</a></li>
-              <li><a href="/users/all-products/6515c1c5b6b85670909a53c3">Head Phones</a></li>
-
-              <li><a href="/users/all-products/65145729e8a5b44f4dda6f87">Accessories</a></li>
-            </ul>
-          </nav>
-        </div>
-        <div class="header__main-right ul_li">
-          <div class="header__icons ul_li mr-15">
-            <div class="icon">
-              <a href="/users/wishlist" class="cart-link">
-                <i class="fa fa-heart" style="font-size:20px"></i>
-                <% if(user){ %>
-                  <span class="count" style="position: absolute; top: -5px; right: -5px; background-color: orange; color: white; border-radius: 50%; padding: 3px 5px; font-size: 12px;"><%- wishlistCount %></span>
-
-                <% } %>
-              </a>
-            </div>
-
-            <div class="icon">
-              <a href="/users/cart" class="cart-link">
-                  
-                  <i class="fa fa-shopping-cart" style="font-size:24px"></i>
-                  <% if(user){ %>
-
-                    <span class="count" style="position: absolute; top: -5px; right: -5px; background-color: orange; color: white; border-radius: 50%; padding: 3px 5px; font-size: 12px;"><%- cartCount %></span>
-
-                  <% } %>
-              </a>
-          </div>
-          
-          </div>
-          <% if(user){ %>
-          <div class="icon dropdown">
-            <a
-              href="#"
-              class="user-link"
-              id="userDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="fa fa-user" style="font-size: 24px;"></i>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="userDropdown">
-              <!-- Add your profile information and customization here -->
-              <li>
-                <a class="dropdown-item" href="/users/accounts">Profile</a>
-              </li>
-             
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="/users/logout">Logout</a></li>
-            </ul>
-          </div>
-          <% }else{ %>
-          <div class="login-sign-btn">
-            <a class="thm-btn thm-btn__2 text-black" href="/users/login">
-              <span class="btn-wrap">
-                <span>Login / Sign Up</span>
-                <span>Login / Sign Up</span>
-              </span>
-            </a>
-          </div>
+        <!-- Wishlist -->
+        <a href="/wishlist" title="Wishlist" class="relative">
+          <i class="fas fa-heart text-black"></i>
+          <% if (user) { %>
+          <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+            <%= wishlistCount %>
+          </span>
           <% } %>
+        </a>
+
+        <!-- Cart -->
+        <a href="/cart" title="Cart" class="relative">
+          <i class="fas fa-shopping-cart text-black"></i>
+          <% if (user) { %>
+          <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+            <%= cartCount %>
+          </span>
+          <% } %>
+        </a>
+
+        <!-- User/Login -->
+        <% if (user) { %>
+          <div class="relative group inline-block">
+            <a href="#" id="userDropdown" class="inline-flex items-center">
+              <i class="fas fa-user text-black"></i>
+            </a>
+          <ul class="absolute right-0 mt-2 w-32 bg-white text-black rounded-md shadow-md opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 z-10">
+            <li>
+              <a href="/profile" class="block px-4 py-2 text-sm hover:bg-gray-100">Profile</a>
+            </li>
+            <li>
+              <hr class="border-t border-black my-1">
+            </li>
+            <li>
+              <a href="/logout" class="block px-4 py-2 text-sm hover:bg-gray-100">Logout</a>
+            </li>
+          </ul>
         </div>
+        <% } else { %>
+          <a href="/login"
+            class="px-6 py-2 rounded-full text-black border font-semibold border-black hover:bg-black hover:text-white transition">
+            Login / Sign Up
+          </a>       
+        <% } %>
       </div>
     </div>
+
+    <!-- Category Tags -->
+    <div class="flex flex-wrap justify-center gap-3 pt-3">
+      <span class="px-4 py-1 text-sm rounded-full text-black font-bold bg-white border border-black">Top Picks</span>
+      <span class="px-4 py-1 text-sm rounded-full text-black font-bold bg-white border border-black">New Arrivals</span>
+      <span class="px-4 py-1 text-sm rounded-full text-black font-bold bg-white border border-black">Best Sellers</span>
+      <span class="px-4 py-1 text-sm rounded-full text-black font-bold bg-white border border-black">Free Shipping</span>
+      <span class="px-4 py-1 text-sm rounded-full text-black font-bold bg-white border border-black">Gadget Deals</span>
+    </div>
+
   </div>
 </header>
-<aside class="slide-bar">
-  <div class="close-mobile-menu">
-    <a href="javascript:void(0);"><i class="fa fa-times"></i></a>
-  </div>
-  <nav class="side-mobile-menu">
-    <ul id="mobile-menu-active">
-      <li class=""><a href="/">Home</a></li>
-      <li class="">
-        <a href="/users/all-products/6515c19eb6b85670909a53bf">Smart Phones</a>
-      </li>
-      <li class="">
-        <a href="/users/all-products/651456f4e8a5b44f4dda6f7f">Tablets</a>
-      </li>
-      <li class="">
-        <a href="/users/all-products/6514570be8a5b44f4dda6f83">Laptops</a>
-      </li>
-      <li class="">
-        <a href="/users/all-products/6515c1c5b6b85670909a53c3">Head Phones</a>
-      </li>
-      <li class="">
-        <a href="/users/all-products/65145729e8a5b44f4dda6f87">Accessories</a>
-      </li>
-    </ul>
-  </nav>
-  <!-- side-mobile-menu end -->
-</aside>
-<div class="body-overlay"></div>
-<!-- header end -->

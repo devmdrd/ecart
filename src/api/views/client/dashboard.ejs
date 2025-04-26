@@ -1,388 +1,249 @@
 <style>
-  .price {
-    font-weight: bold;
-    color: #ff5733;
+  @keyframes brandScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 
-  .old-price {
-    text-decoration: line-through;
-    font-size: small;
-    margin: 10px;
-    color: #888;
+  .brand-container {
+    overflow: hidden;
+    width: 100%;
   }
 
-  .message {
-    background-color: #4caf50; /* Background color for success message */
-    color: #fff; /* Text color */
-    padding: 10px; /* Padding around the message */
-    border: 1px solid #4caf50; /* Border style for the message */
-    margin-top: 10px; /* Add some space between the link and the message */
-    border-radius: 5px; /* Rounded corners for the message */
+  .brand-track {
+    display: flex;
+    animation: brandScroll 20s linear infinite;
+    width: max-content;
+  }
+
+  .brand-logo {
+    flex-shrink: 0;
+    margin: 0 1rem;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .products-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+  }
+
+  .products-scroll::-webkit-scrollbar {
+    display: none; 
+  }
+
+  .products-scroll > * {
+    width: 25%;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  @media (max-width: 768px) {
+    .products-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+  }
+
+  .categories-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 1rem;
+    max-width: calc(120px * 5 + 1rem * 4); 
+    margin: 0 auto;
+    padding: 0 0.5rem;
+  }
+
+  .categories-grid > * {
+    flex: 0 0 calc(20% - 1rem);
+  }
+
+  @media (max-width: 768px) {
+    .categories-grid > * {
+      flex: 0 0 calc(50% - 1rem);
+    }
   }
 </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  $(document).ready(function () {
-    $(".carousel").carousel(); // This line initializes the carousel
-  });
-</script>
-<main>
-  <div id="carouselExampleCaptions" class="carousel slide">
-    <div class="carousel-indicators">
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="0"
-        class="active"
-        aria-current="true"
-        aria-label="Slide 1"
-      ></button>
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="1"
-        aria-label="Slide 2"
-      ></button>
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="2"
-        aria-label="Slide 3"
-      ></button>
-    </div>
-    <div class="carousel-inner" style="height: 400px">
-      <% bannerData.forEach((bannerItem, index) => { %>
-      <div
-        style="height: 100%"
-        class="carousel-item <%= index === 0 ? 'active' : '' %>"
-      >
-        <img
-          style="height: 100%"
-          src="/<%- bannerItem.image %>"
-          class="d-block w-100 d-flex justify-content-center align-items-center mx-auto"
-          alt="..."
-        />
 
-        <div class="carousel-caption d-none d-md-block">
-          <div class="featured__content">
-            <span><%- bannerItem.title %></span>
-            <h2><%- bannerItem.title %></h2>
-            <p><%- bannerItem.description %></p>
+<div class="container-fluid p-0">
 
-            <div class="banner__btn mt-30">
-              <!-- <a class="thm-btn thm-btn__black" href="#">
-                <span class="btn-wrap">
-                  <span>Shop Now</span>
-                  <span>Shop Now</span>
-                </span>
-                <i class="far fa-long-arrow-right"></i>
-              </a> -->
+  <div class="w-screen relative overflow-hidden mb-8" style="margin-left: calc(-48vw + 46.9%);">
+    <div class="relative h-72 md:h-96 w-full">
+      <% bannerData.forEach((banner, index) => { %>
+        <div class="carousel-slide absolute inset-0 transition-opacity bg-black duration-700 ease-in-out <%= index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' %>" data-index="<%= index %>">
+          <img src="/<%- banner.image %>" class="w-full h-full object-contain object-center" alt="<%- banner.title %>">
+          <% if (banner.title || banner.subtitle) { %>
+            <div class="absolute inset-0 flex items-center justify-start bg-black bg-opacity-30 text-white p-6">
+              <div class="pl-6 md:pl-32 pr-4 max-w-md">
+                <% if (banner.title) { %>
+                  <h2 class="text-2xl md:text-4xl font-bold mb-2"><%- banner.title %></h2>
+                <% } %>
+                  <p class="text-lg md:text-xl">We're glad you're here. Explore more below!</p>
+                  <a href="/" class="inline-block mt-4 px-6 py-2 bg-white text-black font-medium rounded-md hover:bg-gray-100 transition-colors">Shop Now</a>
+              </div>
             </div>
-          </div>
+          <% } %>
         </div>
-      </div>
       <% }) %>
-    </div>
-
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#carouselExampleCaptions"
-      data-bs-slide="prev"
-    >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#carouselExampleCaptions"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-
-  <!-- Ensure you have jQuery included before running the carousel function -->
-
-  <!-- tx baner end -->
-  <% categoryData.forEach((category) => { %>
-  <div class="rd-tab-product pt-60">
-    <div class="container mxw_1530">
-      <div class="row mt-none-30">
-        <div class="col-lg-3 mt-30">
-          <div class="add-banner__wrap pr-90">
-            <div
-              class="add-banner bg_img add-banner__2 add-banner__h444"
-              style="background-color: lightgoldenrodyellow"
-            >
-              <span>New</span>
-              <h2><%- category.name %></h2>
-              <div class="upto-offer ul_li mb-35">
-                <span class="upto"
-                  >Up <br />
-                  To</span
-                >
-                <span class="offer-no"
-                  ><%- category.offer %><span>%</span></span
-                >
-              </div>
-              <a
-                class="thm-btn thm-btn__transparent"
-                href="/users/all-products/<%- category._id %>"
-              >
-                <span class="btn-wrap">
-                  <span>Shop Now</span>
-                  <span>Shop Now</span>
-                </span>
-                <i class="fa fa-long-arrow-right"></i>
-              </a>
-              <div class="add-banner__img">
-                <img
-                  src="/<%- category.image %>"
-                  alt=""
-                  style="width: 100%; height: 200px"
-                />
-              </div>
-              <div class="add-banner__text-box add-banner__text-box--2">
-                <%- category.offer %>%<br />
-                <span>off</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-9 mt-30">
-          <div class="rd-products__wrap">
-            <div class="rd-products__nav ul_li_between mb-20">
-              <h2 class="section-heading">
-                <span>Best Seller Product</span>
-              </h2>
-            </div>
-            <div class="rd-products">
-              <div class="tab-content tab_has_slider" id="vd-myTabContent">
-                <div
-                  class="tab-pane fade show active"
-                  id="vd-tab4"
-                  role="tabpanel"
-                  aria-labelledby="vd-tab-04"
-                >
-                  <div class="rd-tab-product__slide">
-                    <% category.products.forEach((product) => { %>
-
-                    <div class="tab-product__item tx-product text-center">
-                      <div class="thumb" data-stock="<%- product.stock %>">
-                        <a href="/users/single-product/<%- product._id %>">
-                          <img
-                            src="/<%- product.image[0] %>"
-                            style="max-height: 200px"
-                            width="200px"
-                            alt=""
-                          />
-                        </a>
-
-                        <ul class="product__action">
-                          <li>
-                            <a
-                              href=""
-                              class="add-to-cart-link"
-                              data-product-id="<%- product._id %>"
-                              data-count="1"
-                              data-price="<%- product.originalPrice %>"
-                            >
-                              <i class="fa fa-shopping-cart"></i>
-                            </a>
-                          </li>
-
-                          <li>
-                            <a
-                              href=""
-                              class="add-to-wishlist-link"
-                              data-product-id="<%- product._id %>"
-                            >
-                              <i class="fa fa-heart"></i>
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div
-                        class="toast"
-                        role="alert"
-                        style="display: none"
-                        aria-live="assertive"
-                        aria-atomic="true"
-                        data-product-id="<%- product._id %>-cart"
-                      >
-                        <div
-                          class="toast-body"
-                          style="background-color: green; color: white"
-                        >
-                          Product added to cart!
-                        </div>
-                      </div>
-                      <div
-                        class="toast"
-                        role="alert"
-                        style="display: none"
-                        aria-live="assertive"
-                        aria-atomic="true"
-                        data-product-id="<%- product._id %>-wishlist"
-                      >
-                        <div
-                          class="toast-body"
-                          style="background-color: green; color: white"
-                        >
-                          Product added to wishlist!
-                        </div>
-                      </div>
-                      <div class="content mt-2">
-                        <div class="product__review ul_li_center">
-                          <ul class="rating-star ul_li mr-10">
-                            <% for (let i = 1; i <= 5; i++) { %> <% if (i <= 3)
-                            { %>
-                            <li>
-                              <i style="color: orange" class="fa fa-star"></i>
-                            </li>
-                            <% } else { %>
-                            <li><i class="fa fa-star"></i></li>
-                            <% } %> <% } %>
-                          </ul>
-                          <span>(2)</span>
-                        </div>
-                        <h3 class="title">
-                          <a href="#"><%- product.name %></a>
-                        </h3>
-                        <span class="price">
-                          ₹<%- product.originalPrice %>
-                          <span class="old-price">₹<%- product.mrp %></span>
-                        </span>
-                      </div>
-                    </div>
-
-                    <% }) %>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% }); %>
-
-  <!-- brand start -->
-
-  <div class="brand pt-70 pb-90">
-    <div class="container mxw_1530">
-      <div class="brand__active">
-        <% brandData.forEach((brand)=>{ %>
-
-        <div class="brand__item">
-          <a href="#!">
-            <img
-              src="/<%- brand.image  %>"
-              alt=""
-              style="height: 100px; width: 100px"
-            />
-          </a>
-        </div>
-        <input id="brandId" type="hidden" value="<%- brand._id %>" />
+      <button id="prevBtn" class="absolute left-8 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 p-2 rounded-full shadow-md z-20 transition-all duration-300 hover:scale-110">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button id="nextBtn" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 p-2 rounded-full shadow-md z-20 transition-all duration-300 hover:scale-110">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+  
+      <div class="absolute bottom-4 w-full flex justify-center gap-2 z-20">
+        <% bannerData.forEach((_, index) => { %>
+          <button class="carousel-dot w-3 h-3 rounded-full transition-all duration-300 <%= index === 0 ? 'bg-white w-6' : 'bg-white/50' %> cursor-pointer hover:bg-white hover:w-4" data-dot-index="<%= index %>"></button>
         <% }) %>
       </div>
     </div>
   </div>
-</main>
+  <div class="container mx-auto px-4">
+
+    <!-- TOP CATEGORIES -->
+    <div class="my-10">
+      <h2 class="text-2xl font-semibold text-center mb-6">Top Categories</h2>
+      <div class="categories-grid">
+        <% categoryData.forEach(category => { %>
+          <div class="category-card" onclick="window.location.href='/products?categoryId=<%= category._id %>'">
+            <%- include('../layouts/partials/category-card', { category }) %>
+          </div>
+        <% }) %>
+      </div>
+    </div>    
+
+    <!-- NEW ARRIVALS -->
+    <div class="mb-10">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-semibold">New Arrivals</h2>
+        <a href="/products?sort=newest" class="text-black hover:underline">View All</a>
+      </div>
+      <div class="products-scroll">
+        <% newArrivals.forEach(product => { %>
+          <%- include('../layouts/partials/product-card', { product }) %>
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- BEST SELLERS -->
+    <div class="mb-10">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-semibold">Best Sellers</h2>
+        <a href="/products?sort=popular" class="text-black hover:underline">View All</a>
+      </div>
+      <div class="products-scroll">
+        <% bestSellers.forEach(product => { %>
+          <%- include('../layouts/partials/product-card', { product }) %>
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- TOP BRANDS -->
+    <div class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4">Top Brands</h2>
+      <div class="brand-container py-4">
+        <div class="brand-track">
+          <% brandData.concat(brandData).forEach(brand => { %>
+            <div class="brand-logo w-24 h-24 flex items-center justify-center rounded-full overflow-hidden">
+              <img src="/<%- brand.logo %>" alt="<%- brand.name %>" class="w-3/5 h-3/5 object-contain">
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    // For "Add to Cart" action
-    const handleAddToCart = async (productId, count, price) => {
-      try {
-        const response = await fetch(
-          `/users/add-to-cart/${productId}/${count}/${price}`
-        );
-        if (response.ok) {
-          const toastEl = document.querySelector(
-            `.toast[data-product-id="${productId}-cart"]`
-          );
-          const toast = new bootstrap.Toast(toastEl);
-          toastEl.style.display = "block";
+    let currentSlide = 0;
+    let autoSlideInterval;
+    const slides = document.querySelectorAll(".carousel-slide");
+    const dots = document.querySelectorAll(".carousel-dot");
+    const totalSlides = slides.length;
+    const slideDuration = 5000; 
 
-          toast.show();
-          setTimeout(() => {
-            toastEl.style.display = "none"; // Set display property back to 'none' after 3 seconds
-          }, 3000);
-        } else {
-          console.error("Failed to add product to cart");
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
+    function showSlide(index) {
+      if (index >= totalSlides) index = 0;
+      if (index < 0) index = totalSlides - 1;
 
-    // For "Add to Wishlist" action
-    const handleAddToWishlist = async (productId) => {
-      try {
-        const response = await fetch(`/users/add-to-wishlist/${productId}`);
-        if (response.ok) {
-          const toastEl = document.querySelector(
-            `.toast[data-product-id="${productId}-wishlist"]`
-          );
-          const toast = new bootstrap.Toast(toastEl);
-          toastEl.style.display = "block";
-
-          toast.show();
-          setTimeout(() => {
-            toastEl.style.display = "none"; // Set display property back to 'none' after 3 seconds
-          }, 3000);
-        } else {
-          console.error("Failed to add product to wishlist");
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
-
-    // Rest of the JavaScript code remains unchanged as provided earlier
-
-    const handleProductActions = (link, actionHandler) => {
-      link.addEventListener("click", async (e) => {
-        e.preventDefault();
-        const productId = link.getAttribute("data-product-id");
-        if (actionHandler) {
-          actionHandler(productId);
-        }
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("opacity-100", i === index);
+        slide.classList.toggle("z-10", i === index);
+        slide.classList.toggle("opacity-0", i !== index);
+        slide.classList.toggle("z-0", i !== index);
       });
-    };
 
-    const addToCartLinks = document.querySelectorAll(".add-to-cart-link");
-    const addToWishlistLinks = document.querySelectorAll(
-      ".add-to-wishlist-link"
-    );
-
-    addToCartLinks.forEach((link) => {
-      handleProductActions(link, (productId) => {
-        const count = link.getAttribute("data-count");
-        const price = link.getAttribute("data-price");
-        handleAddToCart(productId, count, price);
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("bg-white", i === index);
+        dot.classList.toggle("bg-white/50", i !== index);
+        dot.classList.toggle("w-6", i === index);
+        dot.classList.toggle("w-3", i !== index);
       });
-    });
 
-    addToWishlistLinks.forEach((link) => {
-      handleProductActions(link, handleAddToWishlist);
-    });
-    const stock = document.querySelectorAll(".thumb");
-    const products = document.querySelectorAll(".tx-product");
-    //  const categories = document.querySelectorAll(".rd-tab-product");
-
-    for (let i = 0; i < stock.length; i++) {
-      if (stock[i].getAttribute("data-stock") == 0) {
-        products[i].style.opacity = "0.5";
-        products[
-          i
-        ].innerHTML += `<div style="color:red" class="out-of-stock-message">Out of Stock</div>`;
-      }
+      currentSlide = index;
     }
+
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    function startAutoSlide() {
+      autoSlideInterval = setInterval(nextSlide, slideDuration);
+    }
+
+    function stopAutoSlide() {
+      clearInterval(autoSlideInterval);
+    }
+
+    function initCarousel() {
+      showSlide(0);
+      startAutoSlide();
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+
+      dots.forEach(dot => {
+        dot.addEventListener("click", () => {
+          const index = parseInt(dot.dataset.dotIndex);
+          showSlide(index);
+          stopAutoSlide();
+          startAutoSlide();
+        });
+      });
+
+      const carouselContainer = document.querySelector(".relative.w-full.overflow-hidden");
+      carouselContainer.addEventListener("mouseenter", stopAutoSlide);
+      carouselContainer.addEventListener("mouseleave", startAutoSlide);
+    }
+
+    initCarousel();
   });
 </script>

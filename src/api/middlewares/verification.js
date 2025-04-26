@@ -1,46 +1,31 @@
-const User = require("../models/user-model");
-const Cart = require("../models/cart-model");
-const Wishlist = require("../models/wishlist-model");
-// Admin Midleware
-const isAdminAuthenticated = (req, res, next) => {
-  if (req.session.admin) {
-    next();
-  } else {
-    return res.redirect("/admin/login");
-  }
-};
+const User = require("../models/user");
 
-// User Middleware
-const isUserAuthenticated = async(req, res, next) => {
-  console.log(req.session.user);
-  if (req.session.user) {
-    const user = await User.findOne({ email: req.session.user.email });
-    if (!user.blocked) {
-      console.log("user  is authenticated");
-      next();
-    } else {
-      console.log("user  is blocked");
-      req.session.user = null;
-      res.render("client/login", {
-        layout: "layouts/user-layout",
-        user: false,
-        message: "Your account has been blocked",
-        cartCount:"",
-        wishlistCount:"",
-      });
+exports.authenticateSession = async (req, res, next) => {
+  const sessionUser = req.session?.user;
+
+  if (!sessionUser) {
+    if (req.originalUrl.startsWith("/admin")) {
+      return res.redirect("/admin/login");
     }
-  } else {
-    res.render("client/login", {
-      layout: "layouts/user-layout",
-      user: false,
-      message: "",
-      cartCount:"",
-      wishlistCount:"",
-    });
-  }    
-};
+    return res.render("client/login", { layout: "layouts/user-layout", user: false, message: "" });
+  }
 
-module.exports = {
-  isAdminAuthenticated,
-  isUserAuthenticated,
+  try {
+    const user = await User.findOne({ email: sessionUser.email });
+
+    if (!user || user.isBlocked) {
+      req.session.user = null;
+      return res.render("client/login", { layout: "layouts/user-layout", user: false, message: "Your account has been blocked" });
+    }
+
+    if (req.originalUrl.startsWith("/admin") && !user.isAdmin) {
+      return res.redirect("/");
+    }
+
+    req.session.user = user;
+    next();
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal Server Error");
+  }
 };

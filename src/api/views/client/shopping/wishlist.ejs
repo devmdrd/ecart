@@ -1,0 +1,168 @@
+<section class="py-8">
+  <div class="max-w-6xl mx-auto px-4">
+    <% if (!user) { %>
+      <div class="text-center py-24">
+        <div class="mb-6">
+          <i class="fas fa-heart mx-auto text-6xl text-black"></i>
+        </div>
+        <h2 class="text-2xl font-semibold text-black">You're not logged in</h2>
+        <p class="text-gray-500 mt-2">Sign in to view and manage your wishlist.</p>
+        <a href="/login" class="mt-6 inline-block border border-black text-black px-6 py-2 rounded hover:bg-black hover:text-white transition">
+          Log In
+        </a>
+      </div>
+    <% } else if (wishlistData.length === 0) { %>
+      <div class="text-center py-24 border border-dashed border-gray-300 rounded">
+        <div class="mb-6">
+          <i class="fas fa-box-open mx-auto text-6xl text-gray-300"></i>
+        </div>
+        <h2 class="text-2xl font-semibold">Your wishlist is empty</h2>
+        <p class="text-gray-500 mt-2">Add items you love to find them easily later.</p>
+        <a href="/" class="mt-6 inline-block border border-black text-black px-6 py-2 rounded hover:bg-black hover:text-white transition">
+          Start Shopping
+        </a>
+      </div>
+    <% } else { %>
+      <h1 class="text-3xl font-bold mb-8 border-b pb-3 text-black">My Wishlist</h1>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-gray-800">
+          <thead class="bg-black text-white text-xs uppercase">
+            <tr>
+              <th class="px-6 py-4 text-left">Product</th>
+              <th class="px-6 py-4 text-left">Brand</th>
+              <th class="px-6 py-4 text-left">Price</th>
+              <th class="px-6 py-4 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <% wishlistData.forEach(item => { %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4">
+                  <div class="flex items-center space-x-4">
+                    <img src="/<%= item.product.images[0] %>" alt="<%= item.product.name %>" class="w-16 h-20 object-cover rounded" />
+                    <span class="font-medium text-black"><%= item.product.name %></span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 align-middle"><%= item.product.brand.name %></td>
+                <td class="px-6 py-4 font-semibold align-middle">₹ <%= item.sku.price %></td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center space-x-8">
+                    <button class="text-xl text-black hover:text-gray-600 add-to-cart-btn" 
+                            data-product-id="<%= item.product._id %>" 
+                            data-sku-id="<%= item.sku._id %>" 
+                            data-tooltip="Add to Cart">
+                      <i class="fas fa-cart-plus"></i>
+                    </button>
+                    <button class="text-xl text-black hover:text-gray-600 remove-btn" 
+                            data-product-id="<%= item.product._id %>" 
+                            data-wishlist-id="<%= item._id %>" 
+                            data-tooltip="Remove from Wishlist">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>     
+    <% } %>
+  </div>
+</section>
+
+<style>
+  .tooltip {
+    position: absolute;
+    background-color: black;
+    color: white;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+  }
+
+  .tooltip-visible {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-tooltip]').forEach(button => {
+    const tooltip = document.createElement('div');
+    tooltip.classList.add('tooltip');
+    tooltip.innerText = button.getAttribute('data-tooltip');
+    document.body.appendChild(tooltip);
+
+    button.addEventListener('mouseenter', () => {
+      const rect = button.getBoundingClientRect();
+      tooltip.style.left = rect.left + window.scrollX + (button.offsetWidth / 2) - (tooltip.offsetWidth / 2) + 'px';
+      tooltip.style.top = rect.top + window.scrollY - tooltip.offsetHeight - 10 + 'px';
+      tooltip.classList.add('tooltip-visible');
+    });
+
+    button.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('tooltip-visible');
+    });
+  });
+
+  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', async () => {
+      const productId = button.dataset.productId;
+      const skuId = button.dataset.skuId;
+      await addToCart(productId, skuId);
+    });
+  });
+
+  document.querySelectorAll('.remove-btn').forEach(button => {
+    button.addEventListener('click', async () => {
+      const productId = button.dataset.productId;
+      const wishlistId = button.dataset.wishlistId;
+      await removeFromWishlist(productId, wishlistId);
+    });
+  });
+
+  async function addToCart(productId, skuId) {
+    try {
+      const response = await fetch("/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId, skuId, count: 1, wishlistThrough: true }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        location.reload(); 
+      } else {
+        console.error(result.message || "Failed to add product to cart");
+      }
+    } catch (err) {
+      console.error("Error adding product to cart:", err);
+    }
+  }
+
+  async function removeFromWishlist(productId, wishlistId) {
+    try {
+      const response = await fetch("/wishlist", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId, wishlistId }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        location.reload(); 
+      } else {
+        console.error(result.message || "Failed to remove product from wishlist");
+      }
+    } catch (err) {
+      console.error("Error removing product from wishlist:", err);
+    }
+  }
+</script>

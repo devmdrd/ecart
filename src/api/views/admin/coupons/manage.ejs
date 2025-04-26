@@ -1,0 +1,110 @@
+<div class="mt-4 w-1/3 mx-auto border border-gray-300 p-6 rounded-lg shadow-lg">
+  <h4 class="font-bold text-2xl mb-4 text-center"><%= coupon ? 'Edit Coupon' : 'Add Coupon' %></h4>
+
+  <form id="couponForm" enctype="multipart/form-data">
+    <% if (coupon) { %>
+      <input type="hidden" name="couponId" value="<%= coupon._id %>">
+    <% } %>
+
+    <!-- Code -->
+    <div class="mb-4">
+      <label for="couponCode" class="block text-lg font-semibold text-gray-700">Coupon Code</label>
+      <input type="text"
+             id="couponCode"
+             name="code"
+             value="<%= coupon?.code || '' %>"
+             class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+             required>
+    </div>
+
+    <!-- Discount -->
+    <div class="mb-4">
+      <label for="couponDiscount" class="block text-lg font-semibold text-gray-700">Discount Percentage</label>
+      <input type="number"
+             id="couponDiscount"
+             name="discount"
+             value="<%= coupon?.discount || '' %>"
+             min="0"
+             class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+             required>
+    </div>
+
+    <!-- Expiry Date -->
+    <div class="mb-4">
+      <label for="couponExpiryDate" class="block text-lg font-semibold text-gray-700">Expiry Date</label>
+      <input type="date"
+             id="couponExpiryDate"
+             name="expiryDate"
+             value="<%= coupon?.expiryDate ? coupon.expiryDate: '' %>"
+             class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+             required>
+    </div>
+
+    <button type="submit"
+            class="w-full py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      Save Coupon
+    </button>
+  </form>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-6 right-6 bg-gray-800 text-white py-3 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 pointer-events-none"></div>
+
+<script>
+  const toast = document.getElementById("toast");
+
+  function showToast(message, isSuccess = true) {
+    toast.textContent = message;
+    toast.classList.remove("opacity-0");
+    toast.classList.add("opacity-100");
+    toast.classList.add(isSuccess ? "bg-green-600" : "bg-red-600");
+
+    setTimeout(() => {
+      toast.classList.remove("opacity-100");
+      toast.classList.add("opacity-0");
+    }, 2500);
+  }
+
+  document.getElementById("couponForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = {
+      code: form.code.value,
+      discount: form.discount.value,
+      expiryDate: form.expiryDate.value,
+    };
+
+    const isEdit = form.couponId?.value;
+    if (isEdit) {
+      formData.couponId = isEdit;
+    }
+
+    const endpoint = "/admin/coupons";
+    const method = isEdit ? "PUT" : "POST";
+
+    try {
+      const response = await fetch(endpoint, {
+        method,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showToast(result.message, true);
+        setTimeout(() => {
+          window.location.href = "/admin/coupons";
+        }, 2000);
+      } else {
+        showToast(result.message, false);
+      }
+    } catch (err) {
+      console.error("Error submitting form:", err);
+      showToast("Something went wrong!", false);
+    }
+  });
+</script>

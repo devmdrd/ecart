@@ -1,398 +1,92 @@
-<!-- Sale & Revenue Start -->
-<div class="container-fluid pt-4 px-4">
-  <!-- <div class="row g-4">
-    <div class="col-sm-6 col-xl-3">
-      <div
-        class="bg-secondary rounded d-flex align-items-center justify-content-between p-4"
-      >
-        <i class="fa fa-chart-line fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Today Sale</p>
-          <h6 id="todayOrders" class="mb-0"></h6>
-        </div>
-      </div>
+<div class="container mx-auto p-4">
+  <!-- Stats Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <!-- Total Sales Card -->
+    <div class="bg-blue-600 text-white p-4 rounded-lg shadow-lg text-center">
+      <i class="bi bi-cart-check text-4xl"></i>
+      <h6 class="text-sm mt-2">Total Sales</h6>
+      <h3 class="text-2xl font-semibold">$12,340</h3>
     </div>
-    <div class="col-sm-6 col-xl-3">
-      <div
-        class="bg-secondary rounded d-flex align-items-center justify-content-between p-4"
-      >
-        <i class="fa fa-chart-bar fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total Sale</p>
-          <h6 class="mb-0">$1234</h6>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div
-        class="bg-secondary rounded d-flex align-items-center justify-content-between p-4"
-      >
-        <i class="fa fa-chart-area fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Today Revenue</p>
-          <h6 id="todayRevenue" class="mb-0"></h6>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div
-        class="bg-secondary rounded d-flex align-items-center justify-content-between p-4"
-      >
-        <i class="fa fa-chart-pie fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total Revenue</p>
-          <h6 class="mb-0">$1234</h6>
-        </div>
-      </div>
-    </div>
-  </div> -->
-</div>
-<!-- Sale & Revenue End -->
 
-<!-- Sales Chart Start -->
-<div class="container-fluid pt-4 px-4">
-  <div class="row g-4">
-    <div class="col-sm-12 col-xl-6">
-      <div class="bg-secondary text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <h6 class="mb-0">Daily Sales and Revenue Report</h6>
-          <!-- <a href="">Show All</a> -->
-        </div>
-        <canvas id="dailyChart"></canvas>
-      </div>
+    <!-- Total Orders Card -->
+    <div class="bg-green-600 text-white p-4 rounded-lg shadow-lg text-center">
+      <i class="bi bi-boxes text-4xl"></i>
+      <h6 class="text-sm mt-2">Total Orders</h6>
+      <h3 class="text-2xl font-semibold">1,245</h3>
     </div>
-    <div class="col-sm-12 col-xl-6">
-      <div class="bg-secondary text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <h6 class="mb-0">Weekly Sales and Revenue Report</h6>
-          <!-- <a href="">Show All</a> -->
-        </div>
-        <canvas id="weeklyChart"></canvas>
-      </div>
+
+    <!-- Average Revenue Card -->
+    <div class="bg-yellow-400 text-gray-800 p-4 rounded-lg shadow-lg text-center">
+      <i class="bi bi-cash text-4xl"></i>
+      <h6 class="text-sm mt-2">Average Revenue</h6>
+      <h3 class="text-2xl font-semibold">$49.20</h3>
+    </div>
+
+    <!-- Returning Customers Card -->
+    <div class="bg-teal-500 text-white p-4 rounded-lg shadow-lg text-center">
+      <i class="bi bi-person-check text-4xl"></i>
+      <h6 class="text-sm mt-2">Returning Customers</h6>
+      <h3 class="text-2xl font-semibold">321</h3>
     </div>
   </div>
-</div>
 
-<div class="container-fluid pt-4 px-4">
-  <div class="row g-4">
-    <div class="col-sm-12 col-xl-6">
-      <div class="bg-secondary text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <h6 class="mb-0">Monthly Sales and Revenue Report</h6>
-          <!-- <a href="">Show All</a> -->
-        </div>
-        <canvas id="monthlyChart"></canvas>
-      </div>
+  <!-- Sales & Revenue Report Section -->
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-4">
+      <h6 class="text-lg font-semibold">Sales & Revenue Report</h6>
+      <select id="chartTypeSelect" class="form-select border border-gray-300 rounded-md py-2 px-4 text-sm">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
     </div>
-    <div class="col-sm-12 col-xl-6">
-      <div class="bg-secondary text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <h6 class="mb-0">Yearly Sales and Revenue Report</h6>
-          <!-- <a href="">Show All</a> -->
-        </div>
-        <canvas id="yearlyChart"></canvas>
-      </div>
-    </div>
+    <canvas id="mainChart" height="300"></canvas>
   </div>
 </div>
-
-<!-- Sales Chart End -->
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  async function getSalesData(aggregationType) {
-    console.log(aggregationType);
-    const response = await fetch(
-      `/admin/sales-revenue-report?aggregation=${aggregationType}`
-    );
-    console.log(response);
-    const data = await response.json();
-    console.log(data);
-    return data;
+  async function fetchData(type) {
+    const res = await fetch(`/admin/sales-revenue-report?aggregation=${type}`);
+    return await res.json();
   }
 
-  document.addEventListener("DOMContentLoaded", async function () {
-    const [dailySales, weeklySales, monthlySales, yearlySales] =
-      await Promise.all([
-        getSalesData("daily"),
-        getSalesData("weekly"),
-        getSalesData("monthly"),
-        getSalesData("yearly"),
-      ]);
-
-    renderDailyChart("dailyChart", "Daily Sales", dailySales);
-    renderWeeklyChart("weeklyChart", "Weekly Sales", weeklySales);
-    renderMonthlyChart("monthlyChart", "Monthly Sales", monthlySales);
-    renderYearlyChart("yearlyChart", "Yearly Sales", yearlySales);
-  });
-
-  function renderDailyChart(chartId, chartLabel, data) {
-    const ctx = document.getElementById(chartId).getContext("2d");
-
-    const labels = Array.from({ length: 31 }, (_, i) => String(i + 1));
-    const orders = new Array(31).fill(0); // Create an array with zeros for orders
-    const revenue = new Array(31).fill(0); // Create an array with zeros for revenue
-
-    data.forEach((item) => {
-      const day = item._id;
-      orders[day - 1] = item.totalOrders; // Subtract 1 to align with array index
-      revenue[day - 1] = item.totalRevenue; // Subtract 1 to align with array index
-    });
-
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Total Orders",
-            data: orders,
-            backgroundColor: "blue",
-            yAxisID: "orders",
-          },
-          {
-            label: "Total Revenue",
-            data: revenue,
-            backgroundColor: "green",
-            yAxisID: "revenue",
-          },
-        ],
-      },
-      options: {
-        scales: {
-          orders: {
-            position: "left",
-            title: {
-              display: true,
-              text: "Total Orders",
-              color: "blue",
-            },
-          },
-          revenue: {
-            position: "right",
-            title: {
-              display: true,
-              text: "Total Revenue",
-              color: "green",
-            },
-            grid: {
-              drawOnChartArea: true,
-            },
-          },
-        },
-        plugins: {
-          title: {
-            display: true,
-            text: chartLabel,
-          },
-        },
-      },
-    });
-  }
-
-  function renderWeeklyChart(chartId, chartLabel, monthData) {
-    const ctx = document.getElementById(chartId).getContext("2d");
-
-    const labels = monthData.map((week, index) => `Week ${index + 1}`);
-    const orders = monthData.map((week) => week.totalOrders || 0);
-    const revenue = monthData.map((week) => week.totalRevenue || 0);
-
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Total Orders",
-            data: orders,
-            backgroundColor: "blue",
-            yAxisID: "orders",
-          },
-          {
-            label: "Total Revenue",
-            data: revenue,
-            backgroundColor: "green",
-            yAxisID: "revenue",
-          },
-        ],
-      },
-      options: {
-        scales: {
-          orders: {
-            position: "left",
-            title: {
-              display: true,
-              text: "Total Orders",
-              color: "blue",
-            },
-          },
-          revenue: {
-            position: "right",
-            title: {
-              display: true,
-              text: "Total Revenue",
-              color: "green",
-            },
-            grid: {
-              drawOnChartArea: false,
-            },
-          },
-        },
-        plugins: {
-          title: {
-            display: true,
-            text: chartLabel,
-          },
-        },
-      },
-    });
-  }
-
-  function renderMonthlyChart(chartId, chartLabel, data) {
-    const ctx = document.getElementById(chartId).getContext("2d");
-
-    const labels = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const orders = new Array(12).fill(0);
-    const revenue = new Array(12).fill(0);
-
-    data.forEach((item) => {
-      const monthIndex = item._id - 1; // Assuming _id represents the month (1 to 12)
-      orders[monthIndex] = item.totalOrders || 0;
-      revenue[monthIndex] = item.totalRevenue || 0;
-    });
+  function renderChart(canvasId, data) {
+    const ctx = document.getElementById(canvasId).getContext("2d");
+    const labels = data.map(item => item._id?.toString() || `Week ${item._id}`);
+    const values = data.map(item => item.totalRevenue || 0);
 
     new Chart(ctx, {
       type: "line",
       data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Total Orders",
-            data: orders,
-            backgroundColor: "blue",
-            yAxisID: "orders",
-          },
-          {
-            label: "Total Revenue",
-            data: revenue,
-            backgroundColor: "green",
-            yAxisID: "revenue",
-          },
-        ],
+        labels,
+        datasets: [{
+          label: "Total Revenue",
+          data: values,
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 2,
+          fill: true
+        }]
       },
       options: {
+        responsive: true,
         scales: {
-          orders: {
-            position: "left",
-            title: {
-              display: true,
-              text: "Total Orders",
-              color: "blue",
-            },
-          },
-          revenue: {
-            position: "right",
-            title: {
-              display: true,
-              text: "Total Revenue",
-              color: "green",
-            },
-            grid: {
-              drawOnChartArea: true,
-            },
-          },
-        },
-        plugins: {
-          title: {
-            display: true,
-            text: chartLabel,
-          },
-        },
-      },
-    });
-  }
-
-  function renderYearlyChart(chartId, chartLabel, data) {
-    const ctx = document.getElementById(chartId).getContext("2d");
-
-    const currentYear = new Date().getFullYear();
-    const labels = Array.from({ length: 10 }, (_, i) =>
-      String(currentYear - i)
-    );
-
-    const orders = new Array(10).fill(0);
-    const revenue = new Array(10).fill(0);
-
-    data.forEach((item) => {
-      const yearIndex = labels.indexOf(String(item._id));
-      if (yearIndex !== -1) {
-        orders[yearIndex] = item.totalOrders || 0;
-        revenue[yearIndex] = item.totalRevenue || 0;
+          y: { beginAtZero: true }
+        }
       }
     });
-
-    new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Total Orders",
-            data: orders,
-            backgroundColor: "blue",
-            yAxisID: "orders",
-          },
-          {
-            label: "Total Revenue",
-            data: revenue,
-            backgroundColor: "green",
-            yAxisID: "revenue",
-          },
-        ],
-      },
-      options: {
-        scales: {
-          orders: {
-            position: "left",
-            title: {
-              display: true,
-              text: "Total Orders",
-              color: "blue",
-            },
-          },
-          revenue: {
-            position: "right",
-            title: {
-              display: true,
-              text: "Total Revenue",
-              color: "green",
-            },
-            grid: {
-              drawOnChartArea: true,
-            },
-          },
-        },
-        plugins: {
-          title: {
-            display: true,
-            text: chartLabel,
-          },
-        },
-      },
-    });
   }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const defaultType = "daily";
+    const data = await fetchData(defaultType);
+    renderChart("mainChart", data);
+  });
+
+  document.getElementById("chartTypeSelect").addEventListener("change", async (e) => {
+    const type = e.target.value;
+    const data = await fetchData(type);
+    renderChart("mainChart", data);
+  });
 </script>

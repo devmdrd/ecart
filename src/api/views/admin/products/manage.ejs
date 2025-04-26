@@ -1,0 +1,582 @@
+<div class="container mx-auto p-4 max-w-4xl">
+  <div class="bg-white rounded-xl shadow-md overflow-hidden">
+    <!-- Header -->
+    <div class="bg-gray-50 px-6 py-4 border-b">
+      <h1 class="text-2xl font-bold text-gray-800"><%- product ? 'Edit' : 'Add New' %> Product</h1>
+    </div>
+
+    <!-- Form -->
+    <form id="productForm" class="p-6" onsubmit="handleFormSubmit(event)">
+      <!-- Basic Information -->
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">Basic Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select id="category" name="category" class="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="updateBrandsAndVariants()" required <%= product ? 'disabled' : '' %>>>
+              <option value="">Select Category</option>
+              <% categories.forEach(category => { %>
+                <option value="<%= category._id %>" <%= product && product.category._id.equals(category._id) ? 'selected' : '' %>>
+                  <%= category.name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+            <select id="brand" name="brand" class="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required <%= product ? 'disabled' : '' %>>>
+              <option value="">Select Brand</option>
+              <% brands.forEach(brand => { %>
+                <option value="<%= brand._id %>" <%= product && product.brand._id.equals(brand._id) ? 'selected' : '' %>>
+                  <%= brand.name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+            <input type="text" name="name" value="<%= product ? product.name : '' %>" required class="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea name="description" class="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="4" placeholder="Enter a detailed product description"><%= product ? product.description : '' %></textarea>
+          </div>          
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Features</label>
+            <textarea name="features" class="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="2" placeholder="e.g. Fast charging, Face ID, Water resistant"><%= product ? product.features : '' %></textarea>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Specifications</label>
+            <textarea name="specifications" class="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="e.g. Display:6.1-inch, Camera:12MP, Battery:3095mAh"><%= product ? product.specifications : '' %></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Images -->
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">Product Images</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4" id="image-boxes-container"></div>
+        <p class="text-xs text-gray-500 mt-2">Upload high-quality images (Recommended: 800x800 pixels, JPG/JPEG/PNG)</p>
+      </div>
+
+      <!-- Product Variants -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+          <h2 class="text-xl font-semibold text-gray-700">Product Variants</h2>
+          <button type="button" onclick="addVariant()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Add Variant
+          </button>
+        </div>
+        <div id="variant-tabs" class="flex flex-wrap gap-2 mb-4 border-b border-gray-200"></div>
+        <div id="variant-contents"></div>
+      </div>
+
+      <!-- Submit -->
+      <div class="flex justify-end pt-4 border-t">
+        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Save Product
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+.variant-tab {
+  position: relative;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem 0.375rem 0 0;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.variant-tab:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.variant-tab.active {
+  color: #1d4ed8;
+  background-color: #eff6ff;
+  border-bottom-color: #1d4ed8;
+}
+
+.variant-tab .remove-btn {
+  margin-left: 0.5rem;
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+
+.variant-tab .remove-btn:hover {
+  color: #ef4444;
+}
+
+.image-upload-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #f9fafb;
+  overflow: hidden;
+}
+
+.image-upload-box:hover {
+  border-color: #3b82f6;
+  background-color: #f0f9ff;
+}
+
+.image-upload-box img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-upload-icon {
+  color: #9ca3af;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.image-upload-text {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.image-remove-btn {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  background-color: rgba(239, 68, 68, 0.8);
+  color: white;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.image-upload-box:hover .image-remove-btn {
+  opacity: 1;
+}
+</style>
+
+<script>
+let variantAttributes = [];
+let brands = [];
+let variants = [];
+let activeVariant = null;
+let product = <%- JSON.stringify(product || null) %>;
+
+document.addEventListener('DOMContentLoaded', () => {
+  variantAttributes = <%- JSON.stringify(variantAttributes || []) %>;
+  
+  renderImageBoxes(5);
+  
+  if (product) {
+    loadProductVariants();
+  } else {
+    addVariant();
+  }
+});
+
+async function updateBrandsAndVariants() {
+  const categoryId = document.getElementById('category').value;
+  if (!categoryId) return;
+
+  try {
+    const response = await fetch(`/admin/products/attributes?category=${categoryId}`);
+    const data = await response.json();
+    
+    if (data.success) {
+      variantAttributes = data.variantAttributes;
+      brands = data.brands;
+      
+      const brandSelect = document.getElementById('brand');
+      brandSelect.innerHTML = '<option value="">Select Brand</option>';
+      brands.forEach(brand => {
+        brandSelect.innerHTML += `<option value="${brand._id}">${brand.name}</option>`;
+      });
+      
+      const existingIds = [...variants];
+      document.getElementById('variant-tabs').innerHTML = '';
+      document.getElementById('variant-contents').innerHTML = '';
+      variants = [];
+      
+      existingIds.forEach(id => {
+        variants.push(id);
+        createVariantTab(id);
+        createVariantContent(id);
+      });
+      
+      if (variants.length === 0) {
+        addVariant();
+      } else {
+        activeVariant = variants[0];
+        updateVariantTabs();
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching attributes:', error);
+  }
+}
+
+function loadProductVariants() {
+  if (!product || !product.skus) return;
+  
+  product.skus.forEach((sku, index) => {
+    const id = sku._id || `variant-${index}-${Date.now()}`;
+    variants.push(id);
+    createVariantTab(id);
+    createVariantContent(id, sku);
+  });
+  
+  activeVariant = variants[0];
+  updateVariantTabs();
+}
+
+function renderImageBoxes(count) {
+  const container = document.getElementById('image-boxes-container');
+  container.innerHTML = '';
+
+  for (let i = 0; i < count; i++) {
+    const inputId = `image${i + 1}`;
+    const box = document.createElement('div');
+    box.className = 'relative';
+    
+    const label = document.createElement('label');
+    label.htmlFor = inputId;
+    label.className = 'image-upload-box';
+    
+    if (product && product.images && product.images[i]) {
+      label.innerHTML = `
+        <img src="/${product.images[i]}" alt="Product Image ${i + 1}">
+        <button type="button" class="image-remove-btn" onclick="removeImage('${inputId}')">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      `;
+    } else {
+      label.innerHTML = `
+        <div class="image-upload-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <span class="image-upload-text">Image ${i + 1}</span>
+      `;
+    }
+    
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.id = inputId;
+    input.name = inputId;
+    input.className = 'hidden';
+    input.accept = 'image/*';
+    input.onchange = (e) => previewImage(e, inputId);
+    
+    // Add a hidden input to preserve existing image paths
+    if (product && product.images && product.images[i]) {
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = `existingImages[${i}]`;
+      hiddenInput.value = product.images[i];
+      box.appendChild(hiddenInput);
+    }
+    
+    box.appendChild(label);
+    box.appendChild(input);
+    container.appendChild(box);
+  }
+}
+
+function previewImage(event, inputId) {
+  const input = document.getElementById(inputId);
+  const box = input.previousElementSibling;
+  
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      box.innerHTML = `
+        <img src="${e.target.result}" alt="Preview">
+        <button type="button" class="image-remove-btn" onclick="removeImage('${inputId}')">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      `;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function removeImage(inputId) {
+  const input = document.getElementById(inputId);
+  const box = input.previousElementSibling;
+  
+  // Remove any hidden input for existing image
+  const hiddenInput = box.parentElement.querySelector(`input[name^="existingImages"]`);
+  if (hiddenInput) {
+    hiddenInput.remove();
+  }
+  
+  input.value = '';
+  box.innerHTML = `
+    <div class="image-upload-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    </div>
+    <span class="image-upload-text">Image ${inputId.replace('image', '')}</span>
+  `;
+  
+  event.stopPropagation();
+}
+
+function addVariant() {
+  const id = `variant-${Date.now()}`;
+  variants.push(id);
+  activeVariant = id;
+  createVariantTab(id);
+  createVariantContent(id);
+  updateVariantTabs();
+}
+
+function createVariantTab(id) {
+  const container = document.getElementById('variant-tabs');
+  const index = variants.indexOf(id) + 1;
+  const tab = document.createElement('button');
+  tab.type = 'button';
+  tab.className = 'variant-tab';
+  tab.dataset.id = id;
+  const isExistingSku = product && product.skus && product.skus.some(sku => 
+    (sku._id && id === sku._id) || (id.includes('variant-') && variants.indexOf(id) < product.skus.length)
+  );
+  
+  tab.innerHTML = `
+    Variant ${index}
+    ${variants.length > 1 && !isExistingSku ? `<span class="remove-btn" onclick="removeVariant('${id}'); event.stopPropagation()">&times;</span>` : ''}
+  `;
+  tab.onclick = () => switchVariant(id);
+  container.appendChild(tab);
+}
+
+function createVariantContent(id, skuData = null) {
+  const container = document.getElementById('variant-contents');
+  
+  const content = document.createElement('div');
+  content.className = 'variant-content hidden p-4 bg-gray-50 rounded-b-lg rounded-tr-lg';
+  content.dataset.id = id;
+  
+  let html = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+
+  if (skuData && skuData._id) {
+    html += `<input type="hidden" name="variants[${id}][_id]" value="${skuData._id}">`;
+  }
+  
+  variantAttributes.forEach(attr => {
+    let selectedValue = '';
+    let selectedOptionId = '';
+    
+    if (skuData && skuData.attributes) {
+      const matchingAttr = skuData.attributes.find(a => a.attributeId === attr.id);
+      if (matchingAttr) {
+        selectedOptionId = matchingAttr.valueId;
+        const selectedOption = attr.options.find(o => o.id === matchingAttr.valueId);
+        if (selectedOption) {
+          selectedValue = selectedOption.value;
+        }
+      }
+    }
+    
+    html += `
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">${attr.label}</label>
+        <select name="variants[${id}][attributes][${attr.id}]" class="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" ${skuData ? 'disabled' : ''} required>
+          <option value="">Select ${attr.label}</option>
+          ${attr.options.map(option => {
+            const color = option.value;
+            const textColor = (parseInt(color.replace('#', ''), 16) > 0x888888) ? 'black' : '';
+            
+            return `
+              <option value="${option.id}" ${selectedOptionId === option.id ? 'selected' : ''} 
+                style="background-color: ${color}; color: ${textColor};">
+                ${option.value}
+              </option>
+            `;
+          }).join('')}
+        </select>
+        ${skuData ? `<input type="hidden" name="variants[${id}][attributes][${attr.id}]" value="${selectedOptionId}">` : ''}
+      </div>
+    `;
+  });
+  
+  html += `
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+      <div class="relative rounded-md shadow-sm">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <span class="text-gray-500 sm:text-sm">₹</span>
+        </div>
+        <input name="variants[${id}][price]" type="number" min="0" value="${skuData ? skuData.price || '' : ''}" class="block w-full pl-7 pr-12 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
+      <div class="relative rounded-md shadow-sm">
+        <input name="variants[${id}][discount]" type="number" min="0" max="100" value="${skuData ? skuData.discount || '' : ''}" class="block w-full pl-3 pr-12 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+          <span class="text-gray-500 sm:text-sm">%</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Discount Price</label>
+      <div class="relative rounded-md shadow-sm">
+        <input name="variants[${id}][discountPrice]" type="number" min="0" value="${skuData ? skuData.discountPrice || '' : ''}" class="block w-full pl-3 pr-12 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+          <span class="text-gray-500 sm:text-sm">₹</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+      <input name="variants[${id}][stock]" type="number" min="0" value="${skuData ? skuData.stock || '' : ''}" class="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+    </div>
+  </div>`;
+  
+  content.innerHTML = html;
+  container.appendChild(content);
+}
+
+function switchVariant(id) {
+  activeVariant = id;
+  updateVariantTabs();
+}
+
+function updateVariantTabs() {
+  document.querySelectorAll('.variant-tab').forEach(tab => {
+    const isActive = tab.dataset.id === activeVariant;
+    tab.classList.toggle('active', isActive);
+  });
+  
+  document.querySelectorAll('.variant-content').forEach(content => {
+    content.classList.toggle('hidden', content.dataset.id !== activeVariant);
+  });
+}
+
+function removeVariant(id) {
+  if (variants.length === 1) return alert('At least one variant is required.');
+  
+  variants = variants.filter(v => v !== id);
+  
+  document.querySelector(`.variant-tab[data-id="${id}"]`)?.remove();
+  document.querySelector(`.variant-content[data-id="${id}"]`)?.remove();
+  
+  activeVariant = variants[0];
+  updateVariantTabs();
+}
+
+async function handleFormSubmit(e) {
+  e.preventDefault();
+
+  const form = document.getElementById('productForm');
+  const formData = new FormData(form);
+
+  const data = {
+    name: formData.get('name'),
+    category: formData.get('category') || product?.category,
+    brand: formData.get('brand') || product?.brand,
+    description: formData.get('description'),
+    features: formData.get('features'),
+    specifications: formData.get('specifications'),
+    variants: [],
+    existingImages: []
+  };
+
+  const imageInputs = document.querySelectorAll('input[name^="existingImages"]');
+  imageInputs.forEach(input => {
+    data.existingImages.push(input.value);
+  });
+
+  variants.forEach(id => {
+    const variant = {
+      attributes: [],
+      price: parseFloat(formData.get(`variants[${id}][price]`)),
+      discount: parseFloat(formData.get(`variants[${id}][discount]`)) || 0,
+      discountPrice: parseFloat(formData.get(`variants[${id}][discountPrice]`)) || 0,
+      stock: parseInt(formData.get(`variants[${id}][stock]`)) || 0
+    };
+
+    const variantId = formData.get(`variants[${id}][_id]`);
+    if (variantId) variant._id = variantId;
+
+    variantAttributes.forEach(attr => {
+      const valueId = formData.get(`variants[${id}][attributes][${attr.id}]`);
+      if (valueId) {
+        variant.attributes.push({
+          attributeId: attr.id,
+          valueId: valueId
+        });
+      }
+    });
+
+    data.variants.push(variant);
+  });
+
+  if (product) {
+   data.productId = product._id;
+  }
+
+  const uploadFormData = new FormData();
+  for (let i = 0; i < 5; i++) {
+    const fileInput = document.getElementById(`image${i + 1}`);
+    if (fileInput?.files[0]) {
+      uploadFormData.append('images', fileInput.files[0]);
+    }
+  }
+
+  uploadFormData.append('data', JSON.stringify(data));
+
+  try {
+    const response = await fetch('/admin/products', {
+      method: product ? 'PUT' : 'POST',
+      body: uploadFormData
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      window.location.href = '/admin/products';
+    } else {
+      alert(result.message || 'Error saving product');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred while saving the product');
+  }
+}
+</script>

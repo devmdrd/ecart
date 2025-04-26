@@ -1,0 +1,164 @@
+<div class="mt-4 w-1/3 mx-auto border border-gray-300 p-6 rounded-lg shadow-lg">
+  <h4 class="font-bold text-2xl mb-4 text-center"><%= attribute ? 'Edit Attribute' : 'Add Attribute' %></h4>
+
+  <form id="attributeForm">
+    <% if (attribute) { %>
+      <input type="hidden" name="attributeId" value="<%= attribute._id %>">
+    <% } %>
+
+    <!-- Attribute Name -->
+    <div class="mb-4">
+      <label for="attributeName" class="block text-lg font-semibold text-gray-700">Attribute Name</label>
+      <input type="text"
+             id="attributeName"
+             name="name"
+             value="<%= attribute?.name || '' %>"
+             class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+             required>
+    </div>
+
+    <!-- Is Color Checkbox -->
+    <div class="mb-2 flex items-center gap-2">
+      <input type="checkbox" id="isColor" name="isColor" value="true" class="h-4 w-4 text-indigo-600">
+      <label for="isColor" class="text-gray-700 text-sm">I'm adding color values (e.g., case color, band color)</label>
+    </div>
+
+    <!-- Attribute Values -->
+    <div class="mb-4 relative">
+      <label for="attributeValues" class="block text-lg font-semibold text-gray-700">Attribute Values</label>
+      <input type="text"
+             id="attributeValues"
+             name="values"
+             value="<%= attribute?.values?.map(v => v.value).join(', ') || '' %>"
+             placeholder="e.g. 4GB, 256GB SSD, NVIDIA GTX 1650, etc..."
+             class="mt-2 w-full py-2 pl-14 border border-gray-300 rounded-lg text-sm placeholder:text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+             required>
+
+      <!-- Color Picker Icon -->
+      <input type="color"
+         id="colorPicker"
+         class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded border-none cursor-pointer hidden"
+         value="#000000">
+    </div>
+
+    <!-- Category Selection -->
+    <div class="mb-4">
+      <label for="categorySelect" class="block text-lg font-semibold text-gray-700">Select Category</label>
+      <select id="categorySelect"
+              name="categoryId"
+              class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required>
+        <option value="">-- Select Category --</option>
+        <% categories.forEach(category => { %>
+          <option value="<%= category._id %>" <%= attribute?.categoryId?.toString() === category._id.toString() ? 'selected' : '' %> >
+            <%= category.name %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit"
+            class="w-full py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      Save
+    </button>
+  </form>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-6 right-6 bg-gray-800 text-white py-3 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 pointer-events-none"></div>
+
+<script>
+  const isColorCheckbox = document.getElementById("isColor");
+  const colorPicker = document.getElementById("colorPicker");
+  const attributeValuesInput = document.getElementById("attributeValues");
+  const toast = document.getElementById("toast");
+
+  isColorCheckbox.addEventListener("change", () => {
+    if (isColorCheckbox.checked) {
+      colorPicker.classList.remove("hidden");
+      colorPicker.value = attributeValuesInput.value || "#000000";
+      attributeValuesInput.value = colorPicker.value;
+      attributeValuesInput.placeholder = "Pick colors, separate with commas";
+    } else {
+      colorPicker.classList.add("hidden");
+      attributeValuesInput.value = "";
+      attributeValuesInput.placeholder = "e.g. 4GB, 256GB SSD, NVIDIA GTX 1650 etc...";
+    }
+  });
+
+  // Sync input with color picker
+  colorPicker.addEventListener("input", () => {
+    const currentValues = attributeValuesInput.value.trim();
+    if (currentValues) {
+      attributeValuesInput.value = currentValues + ', ' + colorPicker.value;
+    } else {
+      attributeValuesInput.value = colorPicker.value;
+    }
+  });
+
+  function showToast(message, isSuccess = true) {
+    toast.textContent = message;
+    toast.classList.remove("opacity-0", "bg-red-600", "bg-green-600");
+    toast.classList.add("opacity-100", isSuccess ? "bg-green-600" : "bg-red-600");
+
+    setTimeout(() => {
+      toast.classList.remove("opacity-100");
+      toast.classList.add("opacity-0");
+    }, 2500);
+  }
+
+  document.getElementById("attributeForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const isEdit = formData.get("attributeId");
+    const isColor = isColorCheckbox.checked;
+    const rawValue = attributeValuesInput.value;
+
+    formData.delete("values");
+
+    if (isColor) {
+      rawValue.split(',').map(v => v.trim()).forEach(color => {
+        formData.append("values[]", color);  
+      });
+    } else {
+      rawValue.split(',').map(v => v.trim()).filter(Boolean).forEach(v => {
+        formData.append("values[]", v);  
+      });
+    }
+
+    try {
+      const response = await fetch("/admin/attributes", {
+        method: isEdit ? "PUT" : "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showToast(result.message, true);
+        setTimeout(() => {
+          window.location.href = "/admin/attributes";
+        }, 2000);
+      } else {
+        showToast(result.message || "Failed to save", false);
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      showToast("Something went wrong!", false);
+    }
+  });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const currentValue = attributeValuesInput.value.trim();
+    const isHexColor = /^#[0-9A-Fa-f]{6}$/.test(currentValue);
+    if (isHexColor) {
+      isColorCheckbox.checked = true;
+      colorPicker.classList.remove("hidden");
+      colorPicker.value = currentValue;
+      attributeValuesInput.placeholder = "Pick colors, separate with commas";
+    }
+  });
+</script>

@@ -1,0 +1,875 @@
+<section class="py-10">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-wrap -mx-4">
+      <!-- Product Images - Enhanced Gallery -->
+      <div class="w-full md:w-1/2 px-4 mb-6">
+        <!-- Thumbnail Navigation -->
+        <div class="mb-6">
+          <div class="flex space-x-2 overflow-x-auto pb-2" id="thumbnail-container">
+            <!-- Thumbnails will be dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Main Image with Zoom Container -->
+        <div class="relative overflow-hidden group" id="zoom-container">
+          <div class="block">
+            <div class="relative">
+              <!-- Main Image -->
+              <img
+                id="main-product-image"
+                src=""
+                alt=""
+                class="w-full object-cover transition-transform duration-300 cursor-zoom-in image-fade"
+                onmousemove="zoomImage(event)"
+                onmouseenter="showZoom()"
+                onmouseleave="hideZoom()"
+              />
+
+              <!-- Zoomed Image (hidden by default) -->
+              <div
+                id="zoomed-image"
+                class="hidden absolute top-0 left-full ml-4 w-full h-full bg-white border border-gray-200 overflow-hidden z-10"
+              >
+                <img
+                  id="zoomed-image-content"
+                  src=""
+                  class="absolute origin-top-left"
+                  style="transform: scale(2)"
+                />
+              </div>
+
+              <!-- Wishlist Button -->
+              <button
+                onclick="addToWishlistDetails()"
+                class="absolute top-2 right-2 bg-white p-2 border border-black text-black hover:bg-black hover:text-white transition-colors duration-200"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+
+              <!-- Discount Badge -->
+              <div
+                id="discount-badge"
+                class="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 text-sm font-bold"
+              >
+                <!-- Discount will be populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Navigation Arrows (for mobile) -->
+        <div class="flex justify-between mt-4 md:hidden">
+          <button
+            onclick="navigateImage(-1)"
+            class="bg-black text-white px-4 py-2 rounded"
+          >
+            <i class="fas fa-chevron-left"></i> Previous
+          </button>
+          <button
+            onclick="navigateImage(1)"
+            class="bg-black text-white px-4 py-2 rounded"
+          >
+            Next <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="w-full md:w-1/2 px-4">
+        <div class="mb-4">
+          <h1 id="product-name" class="text-3xl font-bold text-black mb-2"></h1>
+          <h6 class="text-lg text-gray-600 mb-2">
+            Brand: <span id="product-brand" class="text-black font-medium"></span>
+          </h6>
+          <div id="product-rating" class="flex items-center text-yellow-500 mb-4">
+            <!-- Rating stars will be populated -->
+          </div>
+
+          <div class="flex items-center space-x-4 mb-4">
+            <span id="product-price" class="text-2xl font-bold text-black"></span>
+            <span id="original-price" class="line-through text-gray-500"></span>
+            <span id="discount-percentage" class="text-red-600 font-medium"></span>
+            <span id="stock-status" class="text-sm text-green-600 font-medium"></span>
+          </div>
+
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold text-black mb-2">Description</h3>
+            <p id="product-description" class="text-gray-700"></p>
+          </div>
+
+          <!-- Variant Selection -->
+          <div class="mb-6">
+            <div class="mb-4">
+              <label class="block mb-2 text-sm font-medium text-black">Color:</label>
+              <div class="flex flex-wrap gap-2" id="color-variants">
+                <!-- Color variants will be populated -->
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block mb-2 text-sm font-medium text-black">Size:</label>
+              <div class="flex flex-wrap gap-2" id="size-variants">
+                <!-- Size variants will be populated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantity and Action Buttons -->
+          <div class="flex items-center mb-6">
+            <div class="flex items-center border border-black mr-6">
+              <button
+                onclick="decrementCount()"
+                class="w-10 h-10 bg-black text-white text-lg hover:bg-gray-800"
+              >
+                -
+              </button>
+              <span
+                id="count"
+                class="w-10 h-10 flex justify-center items-center text-lg border-l border-r border-black"
+                >1</span
+              >
+              <button
+                onclick="incrementCount()"
+                class="w-10 h-10 bg-black text-white text-lg hover:bg-gray-800"
+              >
+                +
+              </button>
+            </div>
+            <div class="flex">
+              <button
+                onclick="addToCartDetails()"
+                class="border border-black px-6 py-2 text-black hover:bg-black hover:text-white transition-colors duration-200"
+              >
+                <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+              </button>
+              <button
+                onclick="buyNow()"
+                class="ml-4 bg-black px-6 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
+              >
+                Buy Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details Tabs -->
+    <div class="mt-12 border-b border-gray-200">
+      <nav class="flex space-x-8">
+        <button
+          class="tab-btn py-2 px-1 border-b-2 font-medium text-sm border-black text-black"
+          data-tab="details"
+          onclick="switchTab('details')"
+        >
+          Product Details
+        </button>
+        <button
+          class="tab-btn py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-black"
+          data-tab="specifications"
+          onclick="switchTab('specifications')"
+        >
+          Specifications
+        </button>
+        <button
+          class="tab-btn py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-black"
+          data-tab="reviews"
+          id="reviews-tab"
+          onclick="switchTab('reviews')"
+        >
+          Reviews (<span id="review-count">0</span>)
+        </button>
+      </nav>
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="py-8">
+      <!-- Product Details Tab -->
+      <div id="details-tab" class="tab-content">
+        <h3 class="text-xl font-semibold text-black mb-4">About this item</h3>
+        <ul id="product-features" class="list-disc pl-5 space-y-2 text-gray-700">
+          <!-- Features will be populated -->
+        </ul>
+      </div>
+
+      <!-- Specifications Tab (hidden by default) -->
+      <div id="specifications-tab" class="tab-content hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <tbody id="specifications-list" class="bg-white divide-y divide-gray-200">
+              <!-- Specifications will be populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reviews Tab (hidden by default) -->
+      <div id="reviews-tab" class="tab-content hidden">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <h3 class="text-xl font-semibold text-black mb-4 md:mb-0">
+            Customer Reviews (<span id="total-reviews">0</span>)
+          </h3>
+          <button
+            onclick="showReviewForm()"
+            class="bg-black text-white px-4 py-2 text-sm hover:bg-gray-800 transition-colors duration-200"
+          >
+            Write a Review
+          </button>
+        </div>
+
+        <!-- Rating Summary -->
+        <div class="bg-gray-50 p-4 rounded-lg mb-8">
+          <div class="flex flex-col md:flex-row items-center">
+            <div class="text-center mb-4 md:mb-0 md:mr-8">
+              <div id="average-rating" class="text-4xl font-bold text-black"></div>
+              <div id="average-rating-stars" class="flex justify-center text-yellow-500 my-1">
+                <!-- Stars will be populated -->
+              </div>
+              <div class="text-sm text-gray-600"><span id="total-ratings">0</span> Ratings</div>
+            </div>
+            <div class="flex-1 w-full" id="rating-distribution">
+              <!-- Rating distribution bars will be populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="space-y-6" id="reviews-list">
+          <!-- Reviews will be populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Similar Products Section -->
+<section class="py-10 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-2xl font-bold text-black mb-6">Similar Products</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="similar-products">
+      <!-- Similar products will be dynamically populated -->
+    </div>
+  </div>
+</section>
+
+<script>
+  // Fetch product data from API
+  async function fetchProductData(productId) {
+    try {
+      // Mock data since we don't have a real API endpoint
+      const data = {
+        "status": "success",
+        "data": {
+          "product": {
+            "_id": "60a1b2c3d4e5f6a1b2c3d4e5",
+            "name": "Nike Air Max 270",
+            "brand": "Nike",
+            "description": "The Nike Air Max 270 delivers a lightweight, bouncy ride with Max Air cushioning underfoot. The design draws inspiration from Air Max icons for a fresh look that's as comfortable as it is stylish.",
+            "price": 10999,
+            "originalPrice": 12999,
+            "discountPercentage": 15,
+            "inStock": true,
+            "rating": 4.5,
+            "reviewCount": 24,
+            "ratingDistribution": {
+              "5": 17,
+              "4": 5,
+              "3": 1,
+              "2": 0,
+              "1": 1
+            },
+            "images": [
+              {
+                "url": "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/skwgyqrbfzhu6uyeh0gg/air-max-270-mens-shoes-KkLcGR.png",
+                "alt": "Nike Air Max 270 - View 1"
+              },
+              {
+                "url": "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/awjogtdhqgzekqdr6plo/air-max-270-mens-shoes-KkLcGR.png",
+                "alt": "Nike Air Max 270 - View 2"
+              },
+              {
+                "url": "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/awjogtdhqgzekqdr6plo/air-max-270-mens-shoes-KkLcGR.png",
+                "alt": "Nike Air Max 270 - View 3"
+              },
+              {
+                "url": "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/b7rfm0r5b1vqgvau7qj5/air-max-270-mens-shoes-KkLcGR.png",
+                "alt": "Nike Air Max 270 - View 4"
+              },
+              {
+                "url": "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/b7rfm0r5b1vqgvau7qj5/air-max-270-mens-shoes-KkLcGR.png",
+                "alt": "Nike Air Max 270 - View 5"
+              }
+            ],
+            "variants": {
+              "colors": ["Black", "White"],
+              "sizes": ["10", "11", "12"]
+            },
+            "features": [
+              "Max Air cushioning for all-day comfort",
+              "Breathable mesh upper provides ventilation",
+              "Rubber outsole offers durable traction",
+              "Lightweight foam midsole for responsive cushioning",
+              "Inspired by Air Max icons with a fresh, modern look",
+              "Available in multiple color options"
+            ],
+            "specifications": [
+              {
+                "name": "Brand",
+                "value": "Nike"
+              },
+              {
+                "name": "Model",
+                "value": "Air Max 270"
+              },
+              {
+                "name": "Color",
+                "value": "Black/White"
+              },
+              {
+                "name": "Material",
+                "value": "Mesh/Synthetic/Rubber"
+              },
+              {
+                "name": "Weight",
+                "value": "Approx. 300g (per shoe)"
+              },
+              {
+                "name": "Cushioning",
+                "value": "Max Air unit in heel"
+              },
+              {
+                "name": "Suitable For",
+                "value": "Running, Walking, Casual Wear"
+              },
+              {
+                "name": "Warranty",
+                "value": "2 years against manufacturing defects"
+              }
+            ],
+            "reviews": [
+              {
+                "id": "rev1",
+                "user": "John Doe",
+                "rating": 5,
+                "date": "2023-05-15",
+                "title": "Very comfortable shoes!",
+                "comment": "I've been using them for my morning runs and they provide excellent cushioning and support. True to size and look even better in person.",
+                "helpfulCount": 8
+              },
+              {
+                "id": "rev2",
+                "user": "Jane Smith",
+                "rating": 4,
+                "date": "2023-04-20",
+                "title": "Great shoes but a bit pricey",
+                "comment": "The comfort level is amazing and they look stylish. Only reason I'm not giving 5 stars is because of the price point.",
+                "helpfulCount": 5
+              }
+            ]
+          },
+          "similarProducts": [
+            {
+              "_id": "60a1b2c3d4e5f6a1b2c3d4e9",
+              "name": "Nike Air Max 90",
+              "price": 9999,
+              "originalPrice": 11999,
+              "discountPercentage": 17,
+              "image": "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/izqkqy3xbgjqjchzydrl/air-max-90-mens-shoes-6n3vKB.png",
+              "rating": 4.4,
+              "reviewCount": 142
+            }
+          ]
+        }
+      };
+      
+      renderProductData(data.data.product);
+      renderSimilarProducts(data.data.similarProducts);
+    } catch (error) {
+      console.error('Error fetching product data:', error);
+    }
+  }
+
+  // Render main product data
+  function renderProductData(product) {
+    // Basic product info
+    document.getElementById('product-name').textContent = product.name;
+    document.getElementById('product-brand').textContent = product.brand;
+    document.getElementById('product-description').textContent = product.description;
+    
+    // Pricing
+    document.getElementById('product-price').textContent = `₹${product.price.toLocaleString()}`;
+    document.getElementById('original-price').textContent = `₹${product.originalPrice.toLocaleString()}`;
+    document.getElementById('discount-percentage').textContent = `${product.discountPercentage}% OFF`;
+    document.getElementById('discount-badge').textContent = `${product.discountPercentage}% OFF`;
+    
+    // Stock status
+    document.getElementById('stock-status').textContent = product.inStock ? 'In Stock' : 'Out of Stock';
+    if (!product.inStock) {
+      document.getElementById('stock-status').classList.remove('text-green-600');
+      document.getElementById('stock-status').classList.add('text-red-600');
+    }
+    
+    // Rating
+    renderRatingStars('product-rating', product.rating);
+    const ratingContainer = document.getElementById('product-rating');
+    const reviewCountSpan = document.createElement('span');
+    reviewCountSpan.className = 'text-gray-600 text-sm ml-2';
+    reviewCountSpan.textContent = `(${product.reviewCount} reviews)`;
+    ratingContainer.appendChild(reviewCountSpan);
+    
+    // Images
+    renderProductImages(product.images);
+    
+    // Variants
+    renderVariants(product.variants);
+    
+    // Features
+    renderFeatures(product.features);
+    
+    // Specifications
+    renderSpecifications(product.specifications);
+    
+    // Reviews
+    document.getElementById('review-count').textContent = product.reviewCount;
+    document.getElementById('total-reviews').textContent = product.reviewCount;
+    document.getElementById('total-ratings').textContent = product.reviewCount;
+    document.getElementById('average-rating').textContent = product.rating.toFixed(1);
+    renderRatingStars('average-rating-stars', product.rating);
+    renderRatingDistribution(product.ratingDistribution);
+    renderReviews(product.reviews);
+  }
+
+  // Helper function to render rating stars
+  function renderRatingStars(elementId, rating) {
+    const container = document.getElementById(elementId);
+    container.innerHTML = '';
+    
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    
+    for (let i = 0; i < fullStars; i++) {
+      const star = document.createElement('i');
+      star.className = 'fas fa-star';
+      container.appendChild(star);
+    }
+    
+    if (hasHalfStar) {
+      const halfStar = document.createElement('i');
+      halfStar.className = 'fas fa-star-half-alt';
+      container.appendChild(halfStar);
+    }
+    
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    for (let i = 0; i < emptyStars; i++) {
+      const emptyStar = document.createElement('i');
+      emptyStar.className = 'far fa-star';
+      container.appendChild(emptyStar);
+    }
+  }
+
+  // Render product images
+  function renderProductImages(images) {
+    const thumbnailContainer = document.getElementById('thumbnail-container');
+    const mainImage = document.getElementById('main-product-image');
+    const zoomedImage = document.getElementById('zoomed-image-content');
+    
+    // Clear existing thumbnails
+    thumbnailContainer.innerHTML = '';
+    
+    // Add thumbnails
+    images.forEach((image, index) => {
+      const thumbnailBtn = document.createElement('button');
+      thumbnailBtn.className = `thumbnail-btn border border-gray-300 p-1 hover:border-black transition-all duration-200 ${index === 0 ? 'border-black' : ''}`;
+      thumbnailBtn.dataset.index = index;
+      thumbnailBtn.onclick = () => changeMainImage(index);
+      
+      const thumbnailImg = document.createElement('img');
+      thumbnailImg.src = image.url;
+      thumbnailImg.alt = image.alt;
+      thumbnailImg.className = 'h-20 w-20 object-cover';
+      
+      thumbnailBtn.appendChild(thumbnailImg);
+      thumbnailContainer.appendChild(thumbnailBtn);
+    });
+    
+    // Set main image
+    if (images.length > 0) {
+      mainImage.src = images[0].url;
+      mainImage.alt = images[0].alt;
+      zoomedImage.src = images[0].url;
+    }
+  }
+
+  // Change main image when thumbnail is clicked
+  function changeMainImage(index) {
+    const thumbnails = document.querySelectorAll('.thumbnail-btn');
+    const mainImage = document.getElementById('main-product-image');
+    const zoomedImage = document.getElementById('zoomed-image-content');
+    const images = document.querySelectorAll('.thumbnail-btn img');
+    
+    // Update active thumbnail
+    thumbnails.forEach(thumb => thumb.classList.remove('border-black'));
+    thumbnails[index].classList.add('border-black');
+    
+    // Update main image
+    mainImage.src = images[index].src;
+    mainImage.alt = images[index].alt;
+    zoomedImage.src = images[index].src;
+    
+    // Add fade effect
+    mainImage.classList.add('image-fade');
+    setTimeout(() => {
+      mainImage.classList.remove('image-fade');
+    }, 300);
+  }
+
+  // Render variants
+  function renderVariants(variants) {
+    const colorContainer = document.getElementById('color-variants');
+    const sizeContainer = document.getElementById('size-variants');
+    
+    // Clear existing variants
+    colorContainer.innerHTML = '';
+    sizeContainer.innerHTML = '';
+    
+    // Add color variants
+    variants.colors.forEach((color, index) => {
+      const colorBtn = document.createElement('button');
+      colorBtn.className = `variant-btn color-btn px-3 py-2 border border-gray-300 rounded text-sm text-left hover:bg-gray-100 ${index === 0 ? 'bg-black text-white' : ''}`;
+      colorBtn.dataset.color = color;
+      colorBtn.textContent = color;
+      colorBtn.onclick = () => selectVariant('color', colorBtn);
+      colorContainer.appendChild(colorBtn);
+    });
+    
+    // Add size variants
+    variants.sizes.forEach((size, index) => {
+      const sizeBtn = document.createElement('button');
+      sizeBtn.className = `variant-btn size-btn px-3 py-2 border border-gray-300 rounded text-sm text-left hover:bg-gray-100 ${index === 0 ? 'bg-black text-white' : ''}`;
+      sizeBtn.dataset.size = size;
+      sizeBtn.textContent = size;
+      sizeBtn.onclick = () => selectVariant('size', sizeBtn);
+      sizeContainer.appendChild(sizeBtn);
+    });
+  }
+
+  // Select variant (color or size)
+  function selectVariant(type, button) {
+    const buttons = document.querySelectorAll(`.${type}-btn`);
+    buttons.forEach(btn => {
+      btn.classList.remove('bg-black', 'text-white');
+      btn.classList.add('bg-white', 'text-black');
+    });
+    
+    button.classList.remove('bg-white', 'text-black');
+    button.classList.add('bg-black', 'text-white');
+  }
+
+  // Render features
+  function renderFeatures(features) {
+    const featuresContainer = document.getElementById('product-features');
+    featuresContainer.innerHTML = '';
+    
+    features.forEach(feature => {
+      const li = document.createElement('li');
+      li.textContent = feature;
+      featuresContainer.appendChild(li);
+    });
+  }
+
+  // Render specifications
+  function renderSpecifications(specs) {
+    const specsContainer = document.getElementById('specifications-list');
+    specsContainer.innerHTML = '';
+    
+    specs.forEach(spec => {
+      const row = document.createElement('tr');
+      
+      const nameCell = document.createElement('td');
+      nameCell.className = 'px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-700';
+      nameCell.textContent = spec.name;
+      
+      const valueCell = document.createElement('td');
+      valueCell.className = 'px-4 py-3 whitespace-nowrap text-sm text-gray-700';
+      valueCell.textContent = spec.value;
+      
+      row.appendChild(nameCell);
+      row.appendChild(valueCell);
+      specsContainer.appendChild(row);
+    });
+  }
+
+  // Render rating distribution
+  function renderRatingDistribution(distribution) {
+    const container = document.getElementById('rating-distribution');
+    container.innerHTML = '';
+    
+    const totalRatings = Object.values(distribution).reduce((a, b) => a + b, 0);
+    
+    for (let i = 5; i >= 1; i--) {
+      const count = distribution[i] || 0;
+      const percentage = totalRatings > 0 ? (count / totalRatings) * 100 : 0;
+      
+      const row = document.createElement('div');
+      row.className = 'flex items-center mb-2';
+      
+      const starLabel = document.createElement('span');
+      starLabel.className = 'text-sm font-medium text-gray-700 w-8';
+      starLabel.textContent = i;
+      
+      const barContainer = document.createElement('div');
+      barContainer.className = 'flex-1 mx-2';
+      
+      const barBackground = document.createElement('div');
+      barBackground.className = 'w-full bg-gray-200 rounded-full h-2';
+      
+      const barFill = document.createElement('div');
+      barFill.className = 'bg-yellow-500 h-2 rounded-full';
+      barFill.style.width = `${percentage}%`;
+      
+      barBackground.appendChild(barFill);
+      barContainer.appendChild(barBackground);
+      
+      const countLabel = document.createElement('span');
+      countLabel.className = 'text-sm text-gray-600 w-12';
+      countLabel.textContent = `${count} review${count !== 1 ? 's' : ''}`;
+      
+      row.appendChild(starLabel);
+      row.appendChild(barContainer);
+      row.appendChild(countLabel);
+      container.appendChild(row);
+    }
+  }
+
+  // Render reviews
+  function renderReviews(reviews) {
+    const container = document.getElementById('reviews-list');
+    container.innerHTML = '';
+    
+    if (reviews.length === 0) {
+      container.innerHTML = '<p class="text-gray-600">No reviews yet. Be the first to review!</p>';
+      return;
+    }
+    
+    reviews.forEach(review => {
+      const reviewElement = document.createElement('div');
+      reviewElement.className = 'border-b pb-6';
+      
+      const date = new Date(review.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      reviewElement.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <span class="font-semibold text-black">${review.user}</span>
+            <div class="flex text-yellow-500 text-sm my-1">
+              ${'<i class="fas fa-star"></i>'.repeat(Math.floor(review.rating))}
+              ${review.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+              ${'<i class="far fa-star"></i>'.repeat(5 - Math.ceil(review.rating))}
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">${date}</span>
+        </div>
+        <h4 class="font-medium text-black mb-1">${review.title}</h4>
+        <p class="text-gray-700 text-sm">${review.comment}</p>
+        <div class="flex mt-3">
+          <button class="text-sm text-gray-500 hover:text-black mr-4" onclick="markHelpful(this)">
+            <i class="far fa-thumbs-up mr-1"></i> Helpful (${review.helpfulCount})
+          </button>
+          <button class="text-sm text-gray-500 hover:text-black" onclick="toggleComment(this)">
+            <i class="far fa-comment mr-1"></i> Comment
+          </button>
+        </div>
+      `;
+      
+      container.appendChild(reviewElement);
+    });
+  }
+
+  // Render similar products
+  function renderSimilarProducts(products) {
+    const container = document.getElementById('similar-products');
+    container.innerHTML = '';
+    
+    if (products.length === 0) {
+      container.innerHTML = '<p class="text-gray-600 col-span-4 text-center">No similar products found.</p>';
+      return;
+    }
+    
+    products.forEach(product => {
+      const productCard = document.createElement('div');
+      productCard.className = 'bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 similar-product-card';
+      
+      productCard.innerHTML = `
+        <div class="relative">
+          <img
+            src="${product.image}"
+            alt="${product.name}"
+            class="w-full h-64 object-contain p-4"
+          />
+          <button
+            class="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
+            onclick="toggleWishlist(this)"
+          >
+            <i class="far fa-heart text-gray-600"></i>
+          </button>
+          <div class="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+            ${product.discountPercentage}% OFF
+          </div>
+        </div>
+        <div class="p-4">
+          <h3 class="font-medium text-black mb-1">${product.name}</h3>
+          <div class="flex items-center text-yellow-500 text-sm mb-2">
+            ${'<i class="fas fa-star"></i>'.repeat(Math.floor(product.rating))}
+            ${product.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+            ${'<i class="far fa-star"></i>'.repeat(5 - Math.ceil(product.rating))}
+            <span class="text-gray-500 text-xs ml-1">(${product.reviewCount})</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-lg font-bold text-black mr-2">₹${product.price.toLocaleString()}</span>
+            <span class="text-sm text-gray-500 line-through">₹${product.originalPrice.toLocaleString()}</span>
+          </div>
+          <button
+            class="w-full mt-3 bg-black text-white py-2 rounded hover:bg-gray-800 transition-colors"
+            onclick="addToCart('${product._id}')"
+          >
+            Add to Cart
+          </button>
+        </div>
+      `;
+      
+      container.appendChild(productCard);
+    });
+  }
+
+  // Image zoom functionality
+  function zoomImage(event) {
+    const zoomContainer = document.getElementById('zoom-container');
+    const mainImage = document.getElementById('main-product-image');
+    const zoomedImage = document.getElementById('zoomed-image-content');
+    
+    const { left, top, width, height } = zoomContainer.getBoundingClientRect();
+    const x = ((event.clientX - left) / width) * 100;
+    const y = ((event.clientY - top) / height) * 100;
+    
+    zoomedImage.style.transformOrigin = `${x}% ${y}%`;
+    zoomedImage.style.transform = 'scale(2)';
+  }
+
+  function showZoom() {
+    document.getElementById('zoomed-image').classList.remove('hidden');
+  }
+
+  function hideZoom() {
+    document.getElementById('zoomed-image').classList.add('hidden');
+  }
+
+  // Quantity controls
+  function incrementCount() {
+    const countElement = document.getElementById('count');
+    let count = parseInt(countElement.textContent);
+    countElement.textContent = count + 1;
+  }
+
+  function decrementCount() {
+    const countElement = document.getElementById('count');
+    let count = parseInt(countElement.textContent);
+    if (count > 1) {
+      countElement.textContent = count - 1;
+    }
+  }
+
+  // Tab switching
+  function switchTab(tabName) {
+    // Update active tab button
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('border-black', 'text-black');
+      btn.classList.add('border-transparent', 'text-gray-500');
+    });
+    
+    const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+    activeBtn.classList.remove('border-transparent', 'text-gray-500');
+    activeBtn.classList.add('border-black', 'text-black');
+    
+    // Update tab content visibility
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.add('hidden');
+    });
+    
+    document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+  }
+
+  // Initialize the page
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get product ID from URL or other source
+    const productId = getProductIdFromUrl();
+    fetchProductData(productId);
+    
+    // Initialize first tab as active
+    switchTab('details');
+  });
+
+  // Helper function to get product ID from URL
+  function getProductIdFromUrl() {
+    // In a real application, you would extract this from the URL
+    // For this demo, we'll use a fixed ID
+    return '60a1b2c3d4e5f6a1b2c3d4e5';
+  }
+
+  // Placeholder functions for other interactions
+  function addToCartDetails() {
+    alert('Added to cart!');
+  }
+
+  function buyNow() {
+    alert('Proceeding to checkout!');
+  }
+
+  function addToWishlistDetails() {
+    alert('Added to wishlist!');
+  }
+
+  function toggleWishlist(button) {
+    const icon = button.querySelector('i');
+    if (icon.classList.contains('far')) {
+      icon.classList.remove('far');
+      icon.classList.add('fas', 'text-red-500');
+    } else {
+      icon.classList.remove('fas', 'text-red-500');
+      icon.classList.add('far');
+    }
+  }
+
+  function markHelpful(button) {
+    const countText = button.textContent.match(/\((\d+)\)/);
+    if (countText) {
+      const count = parseInt(countText[1]) + 1;
+      button.innerHTML = button.innerHTML.replace(/\(\d+\)/, `(${count})`);
+    }
+  }
+
+  function toggleComment(button) {
+    alert('Comment functionality would be implemented here');
+  }
+
+  function showReviewForm() {
+    alert('Review form would be displayed here');
+  }
+
+  function navigateImage(direction) {
+    const thumbnails = document.querySelectorAll('.thumbnail-btn');
+    const currentIndex = Array.from(thumbnails).findIndex(thumb => 
+      thumb.classList.contains('border-black')
+    );
+    
+    let newIndex = currentIndex + direction;
+    if (newIndex < 0) newIndex = thumbnails.length - 1;
+    if (newIndex >= thumbnails.length) newIndex = 0;
+    
+    changeMainImage(newIndex);
+  }
+</script>

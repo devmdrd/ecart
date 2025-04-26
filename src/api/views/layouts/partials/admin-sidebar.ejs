@@ -1,0 +1,261 @@
+<aside class="lg:fixed inset-0 lg:flex lg:w-72 bg-black text-white z-10 shadow-xl">
+  <div class="w-full lg:w-72 h-full flex flex-col custom-scrollbar">
+    <!-- Sidebar Logo -->
+    <div class="flex items-center justify-center pt-4 pb-6 bg-black">
+      <img class="w-8 h-8 mr-2" src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="icon">
+      <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">E-Cart</span>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
+      <!-- Dashboard -->
+      <a href="/admin/dashboard" data-menu="dashboard" class="menu-item group flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-all duration-200">
+        <div class="flex items-center justify-center w-8 h-8 rounded-md bg-blue-500/10 text-blue-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+        </div>
+        <span class="text-sm font-medium">Dashboard</span>
+      </a>
+
+      <!-- Categories -->
+      <div class="menu-container">
+        <button data-toggle="categories" class="menu-item group w-full flex items-center justify-between p-3 text-left rounded-lg hover:bg-gray-800 transition-all duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-md bg-purple-500/10 text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+            </div>
+            <span class="text-sm font-medium">Categories</span>
+          </div>
+          <svg class="chevron-icon w-5 h-5 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div data-submenu="categories" class="submenu pl-11 mt-1 hidden">
+          <a href="/admin/categories/manage" data-menu="categories-add" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">Add Category</a>
+          <a href="/admin/categories" data-menu="categories-list" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">List Categories</a>
+        </div>
+      </div>
+
+      <!-- Brands -->
+      <div class="menu-container">
+        <button data-toggle="brands" class="menu-item group w-full flex items-center justify-between p-3 text-left rounded-lg hover:bg-gray-800 transition-all duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-md bg-purple-500/10 text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <span class="text-sm font-medium">Brands</span>
+          </div>
+          <svg class="chevron-icon w-5 h-5 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div data-submenu="brands" class="submenu pl-11 mt-1 hidden">
+          <a href="/admin/brands/manage" data-menu="brands-add" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">Add Brand</a>
+          <a href="/admin/brands" data-menu="brands-list" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">List Brands</a>
+        </div>
+      </div>
+      <div class="menu-container">
+        <button data-toggle="attributes" class="menu-item group w-full flex items-center justify-between p-3 text-left rounded-lg hover:bg-gray-800 transition-all duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-md bg-blue-500/10 text-blue-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <span class="text-sm font-medium">Attributes</span>
+          </div>
+          <svg class="chevron-icon w-5 h-5 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div data-submenu="attributes" class="submenu pl-11 mt-1 hidden">
+          <a href="/admin/attributes/manage" data-menu="attributes-add" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">Add Attribute</a>
+          <a href="/admin/attributes" data-menu="attributes-list" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">List Attributes</a>
+        </div>
+      </div>
+      <!-- Products -->
+      <div class="menu-container">
+        <button data-toggle="products" class="menu-item group w-full flex items-center justify-between p-3 text-left rounded-lg hover:bg-gray-800 transition-all duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-md bg-purple-500/10 text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <span class="text-sm font-medium">Products</span>
+          </div>
+          <svg class="chevron-icon w-5 h-5 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div data-submenu="products" class="submenu pl-11 mt-1 hidden">
+          <a href="/admin/products/manage" data-menu="products-add" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">Add Product</a>
+          <a href="/admin/products" data-menu="products-list" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">List Products</a>
+        </div>
+      </div>
+
+      <!-- Coupons -->
+      <div class="menu-container">
+        <button data-toggle="coupons" class="menu-item group w-full flex items-center justify-between p-3 text-left rounded-lg hover:bg-gray-800 transition-all duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-md bg-purple-500/10 text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+              </svg>
+            </div>
+            <span class="text-sm font-medium">Coupons</span>
+          </div>
+          <svg class="chevron-icon w-5 h-5 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div data-submenu="coupons" class="submenu pl-11 mt-1 hidden">
+          <a href="/admin/coupons/manage" data-menu="coupons-add" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">Add Coupon</a>
+          <a href="/admin/coupons" data-menu="coupons-list" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">List Coupons</a>
+        </div>
+      </div>
+
+      <!-- Banners -->
+      <div class="menu-container">
+        <button data-toggle="banners" class="menu-item group w-full flex items-center justify-between p-3 text-left rounded-lg hover:bg-gray-800 transition-all duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-md bg-purple-500/10 text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <span class="text-sm font-medium">Banners</span>
+          </div>
+          <svg class="chevron-icon w-5 h-5 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div data-submenu="banners" class="submenu pl-11 mt-1 hidden">
+          <a href="/admin/banners/manage" data-menu="banners-add" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">Add Banner</a>
+          <a href="/admin/banners" data-menu="banners-list" class="submenu-item block py-2 px-3 my-1 text-sm text-gray-300 rounded-md hover:bg-gray-800 transition-all duration-200">List Banners</a>
+        </div>
+      </div>
+
+      <!-- Orders -->
+      <div class="menu-container">
+        <a href="/admin/orders" class="menu-item group w-full flex items-center p-3 text-left rounded-lg hover:bg-gray-800 transition-all duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-md bg-purple-500/10 text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <span class="text-sm font-medium">Orders</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Reports -->
+      <div class="menu-container">
+        <a href="/admin/reports" class="menu-item group w-full flex items-center p-3 text-left rounded-lg hover:bg-gray-800 transition-all duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-md bg-purple-500/10 text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <span class="text-sm font-medium">Reports</span>
+          </div>
+        </a>
+      </div>
+    </nav>
+
+    <!-- User Profile -->
+    <div class="border-t border-gray-800 mt-2 pt-2 mx-4">
+      <div class="flex items-center p-3 mb-2">
+        <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold mr-3">AD</div>
+        <div>
+          <p class="text-sm font-medium">Admin User</p>
+          <p class="text-xs text-gray-400">admin@ecart.com</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="px-4 py-4">
+      <button class="w-full flex items-center justify-center space-x-2 p-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all duration-200 group">
+        <svg class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        <a href="/admin/logout" class="text-sm font-medium">Logout</a>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- JavaScript for submenu toggling -->
+<script>
+  document.querySelectorAll('[data-toggle]').forEach(toggleBtn => {
+    toggleBtn.addEventListener('click', () => {
+      const target = toggleBtn.getAttribute('data-toggle');
+      const submenu = document.querySelector(`[data-submenu="${target}"]`);
+      const chevron = toggleBtn.querySelector('.chevron-icon');
+      if (submenu) {
+        submenu.classList.toggle('hidden');
+        chevron.classList.toggle('rotate-90');
+      }
+    });
+  });
+
+  // Highlight current active menu based on URL
+  const currentPath = window.location.pathname;
+  document.querySelectorAll('[data-menu]').forEach(link => {
+    if (currentPath === link.getAttribute('href')) {
+      link.classList.add('active');
+      // If it's a submenu item, also open parent menu
+      const submenu = link.closest('.submenu');
+      if (submenu) {
+        submenu.classList.remove('hidden');
+        const parentContainer = submenu.closest('.menu-container');
+        const chevron = parentContainer.querySelector('.chevron-icon');
+        chevron.classList.add('rotate-90');
+      }
+    }
+  });
+</script>
+
+<!-- Custom Styles -->
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(75, 85, 99, 0.1);
+    border-radius: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(107, 114, 128, 0.5);
+    border-radius: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.7);
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 114, 128, 0.5) rgba(75, 85, 99, 0.1);
+  }
+
+  .menu-item.active,
+  .submenu-item.active {
+    background-color: rgba(55, 65, 81, 1);
+  }
+
+  .rotate-90 {
+    transform: rotate(90deg);
+  }
+</style>

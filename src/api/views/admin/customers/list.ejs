@@ -1,0 +1,53 @@
+<%- include('../../partials/admin-header') %>
+<div class="container-fluid mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold">Customers</h4>
+    <a href="/admin/customers/manage" class="btn btn-dark">
+      <i class="fas fa-plus"></i> Add Customer
+    </a>
+  </div>
+  <div class="table-responsive">
+    <table id="customersTable" class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% customers.forEach((customer, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= customer.name %></td>
+            <td><%= customer.email %></td>
+            <td><%= customer.phone %></td>
+            <td>
+              <span class="badge <%= customer.isActive ? 'bg-success' : 'bg-secondary' %>">
+                <%= customer.isActive ? 'Active' : 'Inactive' %>
+              </span>
+            </td>
+            <td>
+              <a href="/admin/customers/edit/<%= customer._id %>" class="btn btn-sm btn-primary">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="/admin/customers/delete/<%= customer._id %>" class="btn btn-sm btn-danger">
+                <i class="fas fa-trash"></i>
+              </a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/admin-footer') %>
+
+<script>
+  $(document).ready(function () {
+    $('#customersTable').DataTable();
+  });
+</script>

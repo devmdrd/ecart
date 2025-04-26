@@ -1,50 +1,36 @@
-const Admin = require("../models/admin-model");
 const User = require("../models/user-model");
-// const flash = require("express-flash");
 
-const getAdminDashboard = (req, res) => {
+exports.renderAdminDashboard = (req, res) => {
   res.render("admin/dashboard", { layout: "layouts/admin-layout" });
 };
 
-const getAdminLogin = (req, res) => {
-  if (req.session.admin) {
-    res.redirect("/admin/dashboard");
-  } else {
-    res.render("admin/login", {
-      layout: "layouts/user-layout",
-      errorMessage: "",
-      user: false,
-    });
-  }
+exports.renderAdminLogin = (req, res) => {
+  if (req.session.admin) return res.redirect("/admin/dashboard");
+
+  res.render("admin/login", {
+    layout: "layouts/user-layout",
+    message: "", 
+    user: false,
+  });
 };
 
-const adminLoginPost = async (req, res) => {
+exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
+    const adminData = await User.findOne({ username });
 
-    const adminData = await Admin.findOne({ username: username });
-    console.log(adminData);
-    if (adminData) {
-      if (password === adminData.password) {
-        req.session.admin = adminData;
-
-        res.redirect("/admin/dashboard");
-      } else {
-        res.render("admin/login", {
-          layout: "layouts/user-layout",
-          errorMessage: "Password is Incorrect",
-          user: false,
-        });
-      }
-    } else {
-      res.render("admin/login", {
+    if (!adminData || password !== adminData.password) {
+      return res.render("admin/login", {
         layout: "layouts/user-layout",
-        errorMessage: "Username not Found",
+        message: "Invalid username or password",
         user: false,
       });
     }
+
+    req.session.admin = adminData;
+    res.redirect("/admin/dashboard");
   } catch (error) {
-    res.status(500).send(error.log);
+    res.status(500).send("Something went wrong");
   }
 };
 
@@ -114,22 +100,15 @@ const searchUsers = async (req, res) => {
   }
 };
 
-const adminLogout = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Error destroying session:", err);
-    }
+exports.logout = (req, res) => {
+  req.session.destroy(() => {
     res.redirect("/admin/login");
   });
 };
 
 module.exports = {
-  getAdminDashboard,
-  getAdminLogin,
-  adminLoginPost,
   blockUser,
   unblockUser,
   getUserLists,
-  searchUsers,
-  adminLogout,
+  searchUsers
 };
