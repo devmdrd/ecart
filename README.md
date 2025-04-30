@@ -55,20 +55,44 @@ To set up the project locally, follow these steps:
 ## 📂 Project Structure  
 ```
 /ecart
-│── /src              # Source code directory
-│   │── /api          # API-related files
-│   │   │── /controllers  # Route controllers
-│   │   │── /middlewares  # Custom middleware
-│   │   │── /models       # Database models
-│   │   │── /public/assets # Static assets (CSS, JS, images)
-│   │   │── /routes       # Application routes
-│   │   │── /views        # EJS templates
-│   │── /config       # Configuration files
-│── .gitignore        # Git ignore file
-│── README.md        # Project documentation
-│── package.json      # Dependencies and scripts
-│── package-lock.json # Lockfile for npm dependencies
-│── server.js         # Main server file
+│── /src                      # Source code directory
+│   │── /api                  # API-related files
+│   │   │── /controllers      # Route controllers
+│   │   │   │── admin         # Admin controllers
+│   │   │   │── customer      # Customer controllers
+│   │   │── /middlewares      # Custom middlewares
+│   │   │── /models           # Database models
+│   │   │── /routes           # Application routes
+│   │   │── /views            # EJS templates for rendering views
+│   │   │   │── /admin        # Admin views
+│   │   │   │   │── attributes    # Admin attributes views
+│   │   │   │   │── banners       # Admin banners views
+│   │   │   │   │── brands        # Admin brands views
+│   │   │   │   │── categories    # Admin categories views
+│   │   │   │   │── coupons       # Admin coupons views
+│   │   │   │   │── customers     # Admin customers views
+│   │   │   │   │── products      # Admin products views
+│   │   │   │── /client           # Client views
+│   │   │   │   │── accounts      # Client accounts views
+│   │   │   │   │── auth          # Client authentication views
+│   │   │   │   │── orders        # Client orders views
+│   │   │   │   │── products      # Client products views
+│   │   │   │   │── shopping      # Client shopping views
+│   │   │   │── /layouts          # Layouts and partials for views
+│   │   │   │   │── partials      # Shared partials (header, footer, etc.)
+│   │   │   │   └── error.ejs     # Shared error view
+│   │   │── /public               # Public folder for images
+│   │── /config               # Configuration files
+│   │   │── db.js             # Database configuration
+│   │   │── passport.js       # Passport authentication config
+│── .env                      # Environment variables file 
+│── .env.example              # Example environment variable file
+│── .gitignore                # Git ignore file to exclude sensitive files
+│── README.md                 # Project documentation
+│── package.json              # Project dependencies and scripts
+│── package-lock.json         # Lock file for npm dependencies
+│── server.js                 # Main entry point for the server
+
 ```  
 
 ## 🤝 Contributing  
