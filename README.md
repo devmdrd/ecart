@@ -35,9 +35,37 @@ To set up the project locally, follow these steps:
 4. **Set up environment variables:**  
    Create a `.env` file in the root directory and configure the necessary environment variables. Example:  
    ```sh
-   PORT=5000
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
+  **Set up environment variables:**  
+   Create a `.env` file in the root directory and configure the necessary environment variables. Example:  
+   ```sh
+   # Google OAuth credentials
+   GOOGLE_CLIENT_ID=your-google-client-id-here
+   GOOGLE_CLIENT_SECRET=your-google-client-secret-here
+   
+   # MongoDB connection URI
+   MONGO_URI=mongodb://your-mongo-uri-here
+   
+   # Application Port
+   PORT=3000
+   
+   # Twilio credentials
+   TWILIO_ACCOUNT_SID=your-twilio-account-sid-here
+   TWILIO_AUTH_TOKEN=your-twilio-auth-token-here
+   TWILIO_PHONE_NUMBER=your-twilio-phone-number-here
+   
+   # Google OAuth callback URL
+   CALLBACK_URL=http://your-callback-url-here
+   
+   # Session secret
+   SESSION_SECRET=your-session-secret-here
+   
+   # Nodemailer Email Credentials
+   EMAIL_USER=your-email-user-here
+   EMAIL_PASS=your-email-password-here
+   
+   # Stripe API keys
+   STRIPE_SECRET_KEY=your-stripe-secret-key
+   STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key
    ```
 
 5. **Run the development server:**  
@@ -70,14 +98,6 @@ To set up the project locally, follow these steps:
 │── package-lock.json # Lockfile for npm dependencies
 │── server.js         # Main server file
 ```  
-
-## 🤝 Contributing  
-Contributions are welcome! Please follow these steps:  
-1. Fork the repository  
-2. Create a new branch (`feature-branch`)  
-3. Commit your changes  
-4. Push to your fork  
-5. Submit a pull request    
 
 ## 📞 Contact  
 For any inquiries or support, reach out to [Muhammed Rashid](mailto:muhammedrashid@gmail.com).  
