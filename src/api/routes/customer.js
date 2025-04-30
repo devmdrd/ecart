@@ -5,9 +5,13 @@ const passport = require("passport");
 const { renderDashboard } = require("../controllers/customer/dashboard");
 const { renderLogin, renderRegister, renderForgotPassword, login, register, verifyOtp, forgotPassword, googleAuthCallback, logout } = require("../controllers/customer/auth");
 const { renderProfile, updateProfile } = require("../controllers/customer/profile");
-const { renderProducts, singleProduct } = require("../controllers/customer/products");
+const { renderProducts, renderSingleProduct } = require("../controllers/customer/products");
 const { renderCart, addToCart, removeCartProduct } = require("../controllers/customer/cart");
 const { renderWishlist, addToWishlist, removeWishlistProduct } = require("../controllers/customer/wishlist");
+const { renderAddress, addAddress, getAddressById, updateAddress, deleteAddress } = require("../controllers/customer/address");
+const { renderCheckout } = require("../controllers/customer/checkout");
+const { createStripePaymentIntent, completeOrder, renderOrderSuccess } = require('../controllers/customer/payment');
+const { renderOrders } = require("../controllers/customer/orders");
 
 const { upload } = require("../middlewares/multer");
 const { authenticateSession } = require("../middlewares/verification");
@@ -32,18 +36,19 @@ router.get("/auth/google", passport.authenticate("google", { scope: ["profile", 
 router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/users/login" }), googleAuthCallback);
 
 // Profiles
-router.get("/profile", renderProfile);
+router.get("/accounts/profile", renderProfile);
 router.post("/profile", authenticateSession, upload.single("image"), updateProfile);
 
 // // Address
-// router.get("/address", authenticateSession, renderAddress);
-// router.post("/address", authenticateSession, addAddress);
-// router.patch("/address", authenticateSession, updateAddress);
-// router.delete("/address", authenticateSession, deleteAddress);
+router.get("/accounts/address", authenticateSession, renderAddress);
+router.get('/address/:id', authenticateSession, getAddressById);
+router.post("/address", authenticateSession, addAddress);
+router.patch("/address", authenticateSession, updateAddress);
+router.delete("/address", authenticateSession, deleteAddress);
 
 // // Products
 router.get("/products", renderProducts);
-router.get("/products/:productId/sku/:skuId", singleProduct);
+router.get("/products/:productId/sku/:skuId", renderSingleProduct);
 
 // Cart
 router.get("/cart", renderCart);
@@ -55,15 +60,16 @@ router.get("/wishlist", renderWishlist);
 router.post("/wishlist", addToWishlist);
 router.delete("/wishlist", removeWishlistProduct);
 
-// // Checkout
-// router.get("/checkout", renderCheckout);
+// Checkout
+router.get("/checkout", authenticateSession, renderCheckout);
 
 // // Orders
-// router.post("/order", createOrder);
-// router.get("/orders", renderOrders);
+router.get("/accounts/orders", renderOrders);
 
-// // Payment
-// router.post("/payment", confirmPayment);
+// Payment
+router.post('/create-payment-intent', createStripePaymentIntent);
+router.post('/complete-order', completeOrder);
+router.get('/order-success', renderOrderSuccess)
 
 // // Rating
 // router.post("/rating", addRating);

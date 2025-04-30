@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  address: { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true },
   items: [
     {
+      _id: false,
       product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
       sku: { type: mongoose.Schema.Types.ObjectId, ref: 'SKU', required: true }, 
       quantity: { type: Number, default: 1, min: 1 }
@@ -17,7 +19,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['Cash on Delivery', 'Credit Card', 'Debit Card', 'PayPal', 'UPI', 'Not specified'],
+    enum: ['COD', 'ONLINE', 'Not Specified'],
     default: 'Not specified'
   }
 }, { timestamps: true });

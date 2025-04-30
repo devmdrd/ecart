@@ -1,26 +1,48 @@
 const Address = require("../../models/address");
 const User = require("../../models/user");
+const Cart = require("../../models/cart");
+const Wishlist = require("../../models/wishlist");
 
-// List all addresses of a specific user
-exports.listAddresses = async (req, res) => {
-  const userId = req.params.userId;
-
+exports.renderAddress = async (req, res) => {
   try {
-    const user = await User.findById(userId).populate('addresses');
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
+    const user = await User.findById(req.session.user.id).populate('addresses').lean();
 
-    res.status(200).json({ success: true, addresses: user.addresses });
-  } catch (error) {
-    console.error("Error fetching addresses:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    const formatted = user.addresses.map(a => ({
+      id: a._id,
+      fullName: a.fullName,
+      houseNameOrNo: a.houseNameOrNo,
+      street: a.street,
+      city: a.city,
+      state: a.state,
+      postalCode: a.postalCode,
+      country: a.country,
+      phone: a.phone,
+    }));
+
+    console.log(formatted)
+    const cart = await Cart.findOne({ user: req.session.user.id });
+    const wishlistCount = await Wishlist.countDocuments({ user: req.session.user.id });
+
+    res.render("client/accounts/address", {
+      layout: "layouts/user-layout",
+      activeTab: 'addresses',
+      addresses: formatted,
+      user: true,
+      cartCount: cart?.products?.length || 0,
+      wishlistCount
+    });
+  } catch (err) {
+    console.error("Render Addresses Error:", err);
+    res.render("client/error", {
+      layout: "layouts/user-layout",
+      message: "Internal server error",
+      user: false
+    });
   }
 };
 
-// Add a new address
 exports.addAddress = async (req, res) => {
-  const userId = req.body.userId;
+  const userId = req.session.user.id;
   const addressData = req.body;
 
   try {
@@ -42,13 +64,38 @@ exports.addAddress = async (req, res) => {
   }
 };
 
-// Edit an address
-exports.updateAddress = async (req, res) => {
-  const addressId = req.params.addressId;
-  const updatedData = req.body;
+exports.getAddressById = async (req, res) => {
+  const userId = req.session.user.id;
+  const addressId = req.params.id;
 
   try {
-    const updatedAddress = await Address.findByIdAndUpdate(addressId, updatedData, { new: true });
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (!user.addresses.includes(addressId)) {
+      return res.status(403).json({ success: false, message: "Address does not belong to this user" });
+    }
+
+    const address = await Address.findById(addressId);
+    if (!address) {
+      return res.status(404).json({ success: false, message: "Address not found" });
+    }
+
+    res.status(200).json({ success: true, address });
+  } catch (error) {
+    console.error("Error fetching address:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch address" });
+  }
+};
+
+exports.updateAddress = async (req, res) => {
+  console.log(req.body)
+  const { _id, ...updatedData } = req.body;
+
+  try {
+    const updatedAddress = await Address.findByIdAndUpdate(_id, updatedData, { new: true });
     if (!updatedAddress) {
       return res.status(404).json({ success: false, message: "Address not found" });
     }
@@ -60,7 +107,6 @@ exports.updateAddress = async (req, res) => {
   }
 };
 
-// Delete an address
 exports.deleteAddress = async (req, res) => {
   const { addressId, userId } = req.params;
 
@@ -70,7 +116,6 @@ exports.deleteAddress = async (req, res) => {
       return res.status(404).json({ success: false, message: "Address not found" });
     }
 
-    // Remove address reference from user
     await User.findByIdAndUpdate(userId, {
       $pull: { addresses: addressId }
     });

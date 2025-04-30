@@ -33,9 +33,21 @@ exports.renderCart = async (req, res, next) => {
         model: 'Brand' 
       }
     })
-    .populate("products.sku");
+    .populate({
+      path: "products.sku",
+      populate: {
+        path: "attributes.attributeId",
+        select: "name values"
+      }
+    });
 
     const cartData = cart?.products || [];
+
+    cartData.forEach(item => {
+      item.sku.attributes.forEach(attr => {
+        attr.attributeId?.values?.find(v => v._id.toString() === attr.valueId.toString());
+      });
+    });
 
     const subtotal = cartData.length
       ? cartData.reduce((sum, item) => sum + item.sku.price * item.quantity, 0)

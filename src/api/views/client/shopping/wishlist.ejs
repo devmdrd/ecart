@@ -31,6 +31,7 @@
             <tr>
               <th class="px-6 py-4 text-left">Product</th>
               <th class="px-6 py-4 text-left">Brand</th>
+              <th class="px-6 py-4 text-left">Variant</th>
               <th class="px-6 py-4 text-left">Price</th>
               <th class="px-6 py-4 text-left">Actions</th>
             </tr>
@@ -45,6 +46,27 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 align-middle"><%= item.product.brand.name %></td>
+                <td class="px-6 py-4">
+                  <div class="flex flex-wrap gap-2">
+                    <% item.sku.attributes.forEach(attr => { %>
+                      <% if (attr.attributeId.name.toLowerCase().includes('color') && attr.valueId) { %>
+                        <div class="flex items-center space-x-1">
+                          <div class="w-5 h-5 rounded-full border border-gray-200" 
+                               style="background-color: <%= attr.attributeId.values.find(v => v._id.toString() === attr.valueId.toString())?.value %>;">
+                          </div>
+                        </div>
+                      <% } else { 
+                          const randomHue = Math.floor(Math.random() * 360);
+                          const value = attr.valueId ? attr.attributeId.values.find(v => v._id.toString() === attr.valueId.toString())?.value : 'N/A';
+                      %>
+                        <div class="px-2 py-1 rounded-full text-xs font-medium" 
+                             style="background-color: hsl(<%= randomHue %>, 80%, 90%); color: hsl(<%= randomHue %>, 60%, 30%);">
+                          <%= value %>
+                        </div>
+                      <% } %>
+                    <% }) %>
+                  </div>
+                </td>
                 <td class="px-6 py-4 font-semibold align-middle">₹ <%= item.sku.price %></td>
                 <td class="px-6 py-4">
                   <div class="flex items-center space-x-8">

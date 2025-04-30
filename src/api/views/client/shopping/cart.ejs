@@ -1,138 +1,168 @@
 <section class="py-8">
   <div class="max-w-6xl mx-auto px-4">
     <% if (user) { %>
-      <div class="bg-white p-8 rounded-xl shadow-xl">
-        <h1 class="text-3xl font-bold mb-8 border-b pb-3 text-black">My Cart</h1>
-
-        <div class="overflow-x-auto">
-          <table class="w-full table-auto text-sm text-gray-800">
-            <thead class="bg-black text-white">
-              <tr>
-                <th class="px-6 py-4 text-left">Product</th>
-                <th class="px-6 py-4 text-left">Brand</th>
-                <th class="px-6 py-4 text-left">Price</th>
-                <th class="px-6 py-4 text-left">Quantity</th>
-                <th class="px-6 py-4 text-left">Total</th>
-                <th class="px-6 py-4 text-left">Remove</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if (cartData && cartData.length > 0) { %>
-                <% cartData.forEach(item => { %>
-                  <tr class="border-t border-gray-200">
-                    <td class="px-6 py-4 flex items-center space-x-4">
-                      <img src="<%= item.product.images[0] %>" alt="<%= item.product.name %>" class="w-16 h-20 object-cover rounded" />
-                      <span class="font-medium text-black"><%= item.product.name %></span>
-                    </td>
-                    <td class="px-6 py-4"><%= item.product.brand.name %></td>
-                    <td class="px-6 py-4 text-gray-900 font-semibold">₹ <%= item.sku.price %></td>
-                    <td class="px-6 py-4">
-                      <div class="flex items-center space-x-2">
-                        <button class="bg-black text-white w-8 h-8 rounded-full flex justify-center items-center decrease-btn"
-                                data-product-id="<%= item.product._id %>" data-sku-id="<%= item.sku._id %>">-</button>
-                        <span><%= item.quantity %></span>
-                        <button class="bg-black text-white w-8 h-8 rounded-full flex justify-center items-center increase-btn"
-                                data-product-id="<%= item.product._id %>" data-sku-id="<%= item.sku._id %>">+</button>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-gray-900 font-semibold">₹ <%= item.sku.price * item.quantity %></td>
-                    <td class="px-6 py-4 text-black-600 cursor-pointer remove-btn"
-                        data-product-id="<%= item.product._id %>" data-sku-id="<%= item.sku._id %>">
-                      <i class="fas fa-trash-alt text-2xl"></i>
-                    </td>
-                  </tr>
-                <% }) %>
-              <% } else { %>
-                <tr>
-                  <td colspan="6" class="text-center py-10 text-gray-600">Your cart is empty. Add some products to your cart to proceed.</td>
-                </tr>
-              <% } %>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Order Summary & Coupon -->
-        <div class="flex justify-end mt-8">
-          <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-300 w-96">
-            <h3 class="text-lg font-semibold mb-4 text-black">Order Summary</h3>
-
-            <div class="flex justify-between text-sm py-2">
-              <span>Subtotal</span>
-              <span class="font-semibold">₹ <%= subtotal %></span>
-            </div>
-
-            <% if (appliedCoupon) { %>
-              <div class="flex justify-between text-sm py-2 text-green-600">
-                <span>Coupon (<%= appliedCoupon.code %>)</span>
-                <span>- ₹ <%= discount %></span>
-              </div>
-            <% } %>
-
-            <div class="flex justify-between text-sm py-2">
-              <span>Shipping</span>
-              <span class="font-semibold">Free</span>
-            </div>
-
-            <div class="flex justify-between text-xl font-bold py-4 border-t border-gray-200">
-              <span>Total</span>
-              <span>₹ <%= total %></span>
-            </div>
-
-            <!-- Coupon Form -->
-            <form method="GET" action="/cart">
-              <label for="coupon" class="text-sm font-medium text-black">Have a Coupon?</label>
-              <div class="flex space-x-4 items-center mt-2">
-                <input type="text" id="coupon" name="coupon" value="<%= appliedCoupon ? appliedCoupon.code : '' %>" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Enter Coupon Code" />
-                <button type="submit" class="bg-black text-white px-6 py-2 rounded-lg text-sm hover:bg-gray-800 transition duration-200">Apply</button>
-              </div>
-            </form>
-
-            <% if (availableCoupons && availableCoupons.length > 0) { %>
-              <div class="mt-6 border-t pt-4">
-                <h4 class="text-sm font-semibold mb-2 text-black">Available Coupons</h4>
-                <div class="max-h-60 overflow-y-auto">
-                  <ul class="space-y-2 text-sm text-gray-700">
-                    <% availableCoupons.forEach(coupon => { %>
-                      <li class="border p-3 rounded-md bg-white shadow-sm flex justify-between items-center">
-                        <div>
-                          <div class="font-semibold text-black"><%= coupon.code %></div>
-                          <div>Save ₹<%= coupon.discount %> — valid until <%= new Date(coupon.expiryDate).toLocaleDateString() %></div>
-                        </div>
-                        <form method="GET" action="/cart">
-                          <input type="hidden" name="coupon" value="<%= coupon.code %>">
-                          <button class="text-sm bg-black text-white px-4 py-1 rounded hover:bg-gray-800">Apply</button>
-                        </form>
-                      </li>
-                    <% }) %>
-                  </ul>
+    <div class="bg-white p-8 rounded-xl shadow-xl">
+      <h1 class="text-3xl font-bold mb-8 border-b pb-3 text-black">My Cart</h1>
+      <div class="overflow-x-auto">
+        <table class="w-full table-auto text-sm text-gray-800">
+          <thead class="bg-black text-white">
+            <tr>
+              <th class="px-6 py-4 text-left">Product</th>
+              <th class="px-6 py-4 text-left">Brand</th>
+              <th class="px-6 py-4 text-left">Variant</th>
+              <th class="px-6 py-4 text-left">Price</th>
+              <th class="px-6 py-4 text-left">Quantity</th>
+              <th class="px-6 py-4 text-left">Total</th>
+              <th class="px-6 py-4 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (cartData && cartData.length > 0) { %> <%
+            cartData.forEach(item => { %>
+            <tr class="border-t border-gray-200">
+              <td class="px-6 py-4 flex items-center space-x-4">
+                <img
+                  src="<%= item.product.images[0] %>"
+                  alt="<%= item.product.name %>"
+                  class="w-16 h-20 object-cover rounded"
+                />
+                <span class="font-medium text-black"
+                  ><%= item.product.name %></span
+                >
+              </td>
+              <td class="px-6 py-4"><%= item.product.brand.name %></td>
+              <td class="px-6 py-4">
+                <div class="flex flex-wrap gap-2">
+                  <% item.sku.attributes.forEach(attr => { %> <% if
+                  (attr.attributeId.name.toLowerCase().includes('color') &&
+                  attr.valueId) { %>
+                  <div class="flex items-center space-x-1">
+                    <div
+                      class="w-5 h-5 rounded-full border border-gray-200"
+                      style="
+                        background-color: <%=
+                          attr.attributeId.values.find(
+                            v => v._id.toString() === attr.valueId.toString()
+                          )
+                          ?.value %>;
+                      "
+                    ></div>
+                  </div>
+                  <% } else { const randomHue = Math.floor(Math.random() * 360);
+                  const value = attr.valueId ? attr.attributeId.values.find(v =>
+                  v._id.toString() === attr.valueId.toString())?.value : 'N/A';
+                  %>
+                  <div
+                    class="px-2 py-1 rounded-full text-xs font-medium"
+                    style="
+                      background-color: hsl(<%= randomHue %>, 80%, 90%);
+                      color: hsl(<%= randomHue %>, 60%, 30%);
+                    "
+                  >
+                    <%= value %>
+                  </div>
+                  <% } %> <% }) %>
                 </div>
-              </div>
+              </td>
+              <td class="px-6 py-4 text-gray-900 font-semibold">
+                ₹ <%= item.sku.price %>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center space-x-2">
+                  <button
+                    class="bg-black text-white w-8 h-8 rounded-full flex justify-center items-center decrease-btn"
+                    data-product-id="<%= item.product._id %>"
+                    data-sku-id="<%= item.sku._id %>"
+                  >
+                    -
+                  </button>
+                  <span><%= item.quantity %></span>
+                  <button
+                    class="bg-black text-white w-8 h-8 rounded-full flex justify-center items-center increase-btn"
+                    data-product-id="<%= item.product._id %>"
+                    data-sku-id="<%= item.sku._id %>"
+                  >
+                    +
+                  </button>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-gray-900 font-semibold">
+                ₹ <%= item.sku.price * item.quantity %>
+              </td>
+              <td
+                class="px-6 py-4 text-black-600 cursor-pointer remove-btn"
+                data-product-id="<%= item.product._id %>"
+                data-sku-id="<%= item.sku._id %>"
+              >
+                <i class="fas fa-trash-alt text-2xl"></i>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="6" class="text-center py-10 text-gray-600">
+                Your cart is empty. Add some products to your cart to proceed.
+              </td>
+            </tr>
             <% } %>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex justify-end mt-8">
+        <div class="p-6 border w-96">
+          <h3 class="text-lg font-semibold mb-4 text-black">Order Summary</h3>
 
+          <div class="flex justify-between text-sm py-2">
+            <span>Subtotal</span>
+            <span class="font-semibold">₹ <%= subtotal %></span>
+          </div>
+
+          <% if (appliedCoupon) { %>
+          <div class="flex justify-between text-sm py-2 text-green-600">
+            <span>Coupon (<%= appliedCoupon.code %>)</span>
+            <span>- ₹ <%= discount %></span>
+          </div>
+          <% } %>
+
+          <div class="flex justify-between text-sm py-2">
+            <span>Shipping</span>
+            <span class="font-semibold">Free</span>
+          </div>
+
+          <div
+            class="flex justify-between text-xl font-bold py-4 border-t border-gray-200"
+          >
+            <span>Total</span>
+            <span>₹ <%= total %></span>
+          </div>
+          <a href="/checkout">
             <button class="w-full bg-black text-white py-3 rounded-lg mt-6 hover:bg-gray-800 transition duration-200">
               Proceed to Checkout
             </button>
-          </div>
+          </a>
         </div>
       </div>
+    </div>
     <% } else { %>
-      <div class="text-center py-24">
-        <div class="mb-6">
-          <i class="fas fa-cart-plus mx-auto text-6xl text-black"></i>
-        </div>
-        <h2 class="text-2xl font-semibold text-black">You're not logged in</h2>
-        <p class="text-gray-500 mt-2">Sign in to view and manage your cart.</p>
-        <a href="/login" class="mt-6 inline-block border border-black text-black px-6 py-2 rounded hover:bg-black hover:text-white transition">
-          Log In
-        </a>
+    <div class="text-center py-24">
+      <div class="mb-6">
+        <i class="fas fa-cart-plus mx-auto text-6xl text-black"></i>
       </div>
+      <h2 class="text-2xl font-semibold text-black">You're not logged in</h2>
+      <p class="text-gray-500 mt-2">Sign in to view and manage your cart.</p>
+      <a
+        href="/login"
+        class="mt-6 inline-block border border-black text-black px-6 py-2 rounded hover:bg-black hover:text-white transition"
+      >
+        Log In
+      </a>
+    </div>
     <% } %>
   </div>
 </section>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".increase-btn").forEach(button => {
+    document.querySelectorAll(".increase-btn").forEach((button) => {
       button.addEventListener("click", async () => {
         const productId = button.dataset.productId;
         const skuId = button.dataset.skuId;
@@ -140,7 +170,7 @@
       });
     });
 
-    document.querySelectorAll(".decrease-btn").forEach(button => {
+    document.querySelectorAll(".decrease-btn").forEach((button) => {
       button.addEventListener("click", async () => {
         const productId = button.dataset.productId;
         const skuId = button.dataset.skuId;
@@ -148,7 +178,7 @@
       });
     });
 
-    document.querySelectorAll(".remove-btn").forEach(button => {
+    document.querySelectorAll(".remove-btn").forEach((button) => {
       button.addEventListener("click", async () => {
         const productId = button.dataset.productId;
         const skuId = button.dataset.skuId;
@@ -160,7 +190,7 @@
   async function updateCart(productId, skuId, count) {
     try {
       let response;
-      
+
       if (count === 0) {
         response = await fetch("/cart", {
           method: "DELETE",

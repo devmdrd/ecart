@@ -1,76 +1,28 @@
 const User = require('../../models/user');
-const Address = require("../../models/address")
 const Cart = require("../../models/cart");
 const Wishlist = require("../../models/wishlist");
-const Order = require("../../models/order");
 const path = require("path");
 
 exports.renderProfile = async (req, res) => {
-  if (!req.session?.user) return res.redirect("/login");
-
   try {
     const user = await User.findById(req.session.user.id).select("-password");
-    if (!user) return res.render("client/error", { layout: "layouts/user-layout", message: "User not found", user: false });
+    if (!user) {
+      return res.render("client/error", {
+        layout: "layouts/user-layout",
+        message: "User not found",
+        user: false,
+        cartCount: '',
+        wishlistCount: ''
+      });
+    }
 
-    const orders = await Order.find({ user: user._id })
-      .populate({ path: 'items.product', select: 'name images' })
-      .populate({ 
-        path: 'items.sku',
-        populate: { path: 'attributes.attributeId', select: 'name' } 
-      })
-      .sort({ createdAt: -1 })
-      .lean();
-
-    const formattedOrders = orders.map(o => ({
-      id: o._id.toString(),
-      date: o.createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-      status: o.status,
-      total: o.totalAmount,
-      paymentMethod: o.paymentMethod || 'Not specified',
-      tracking: {
-        placed: o.createdAt.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        processed: ['Shipped', 'Delivered'].includes(o.status) ? o.updatedAt.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null,
-        shipped: o.status === 'Shipped' ? o.updatedAt.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null,
-        delivered: o.status === 'Delivered' ? o.updatedAt.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null
-      },
-      shippingAddress: o.shippingAddress || {
-        fullName: user.name,
-        addressLine1: 'No address specified',
-        city: '', state: '', zipCode: '', phone: user.phone || ''
-      },
-      products: o.items.map(i => {
-        const variant = i.sku?.attributes?.map(attr => attr.attributeId?.name).filter(Boolean).join(", ") || 'No variant specified';
-        return {
-          id: i.product?._id?.toString() || 'unknown',
-          name: i.product?.name || 'Product not available',
-          variant,
-          quantity: i.quantity,
-          price: i.sku?.discountPrice ?? i.sku?.price ?? 0,
-          originalPrice: i.sku?.price ?? 0,
-          discountPrice: i.sku?.discountPrice ?? null,
-          image: i.product?.images?.[0] || ''
-        };
-      })
-    }));
-
-    const addresses = await Address.find({ user: user._id }).lean();
-    const formattedAddresses = addresses.map(a => ({
-      id: a._id.toString(),
-      fullName: a.fullName,
-      addressLine1: a.addressLine1,
-      addressLine2: a.addressLine2 || '',
-      city: a.city,
-      state: a.state,
-      zipCode: a.postalCode,
-      phone: a.phone,
-      isDefault: a.isDefault
-    }));
-
-    const cartCount = await Cart.countDocuments({ user: user._id });
+    const cart = await Cart.findOne({ user: user._id });
+    const cartCount = cart ? cart.products.length : 0;
     const wishlistCount = await Wishlist.countDocuments({ user: user._id });
 
-    res.render("client/profiles/account", {
+    res.render("client/accounts/profile", {
       layout: "layouts/user-layout",
+      activeTab: 'profile',
       userData: {
         id: user._id.toString(),
         name: user.name,
@@ -80,16 +32,17 @@ exports.renderProfile = async (req, res) => {
         profileImage: user.profileImage || '',
         memberSince: user.createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
       },
-      orders: formattedOrders,
-      addresses: formattedAddresses,
       user: true,
-      message: "",
       cartCount,
-      wishlistCount
+      wishlistCount,
     });
   } catch (err) {
-    console.error("Render Profile Error:", err);
-    res.render("client/error", { layout: "layouts/user-layout", message: "Internal server error", user: false });
+    console.error("Render User Profile Error:", err);
+    res.render("client/error", {
+      layout: "layouts/user-layout",
+      message: "Internal server error",
+      user: false
+    });
   }
 };
 

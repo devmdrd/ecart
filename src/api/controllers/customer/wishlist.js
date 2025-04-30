@@ -29,7 +29,15 @@ exports.renderWishlist = async (req, res, next) => {
         select: "name images brand",
         populate: { path: "brand", select: "name" },
       })
-      .populate({ path: "sku", select: "price discountPrice discountPercentage stock" });
+      .populate({
+        path: "sku",
+        select: "price discountPrice discountPercentage stock attributes",
+        populate: { path: "attributes.attributeId", select: "name values" }
+      });
+
+    wishlistData.forEach(item => item.sku.attributes.forEach(attr => 
+      attr.attributeId?.values?.find(v => v._id.toString() === attr.valueId.toString())
+    ));
 
     res.status(200).render("client/shopping/wishlist", {
       layout: "layouts/user-layout",

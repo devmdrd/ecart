@@ -1,684 +1,436 @@
 <style>
+  .scrollable-products {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scroll-behavior: smooth;
+  }
 
+  .scrollable-products::-webkit-scrollbar {
+    width: 6px;
+  }
 
+  .scrollable-products::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .scrollable-products::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+  }
+
+  .scrollable-products::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+
+  .StripeElement {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: white;
+  }
+
+  .StripeElement--focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    border-color: #000;
+  }
+
+  .StripeElement--invalid {
+    border-color: #ef4444;
+  }
+
+  .StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+  }
 </style>
-<!-- breadcrumb start -->
-<section class="breadcrumb-area">
-  <div class="container">
-    <div class="radios-breadcrumb breadcrumbs">
-      <ul class="list-unstyled d-flex align-items-center">
-        <li class="radiosbcrumb-item radiosbcrumb-begin">
-          <a href="index.html"><span>Home</span></a>
-        </li>
-        <li class="radiosbcrumb-item radiosbcrumb-end">
-          <span>Checkout</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-<!-- breadcrumb end -->
 
-<!--Content-->
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Complete your order</h1>
+  <div class="flex flex-col lg:flex-row gap-8">
+    <div class="lg:w-2/3">
+      <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+        <h2 class="text-xl font-semibold mb-4">Shipping Address</h2>
 
-<!-- start checkout-section -->
-<section class="checkout-section pb-80">
-  <div class="container">
-    <div class="row">
-      <div class="col col-xs-12">
-        <div class="woocommerce">
-          <div class="woocommerce-info"style="">
-            see all coupons?
-            <a href="#!" class="showcoupon">Click here to show all coupons</a>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="saved-addresses">Saved Addresses</label>
+          <select id="saved-addresses" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black">
+            <option value="">Select an address</option>
+            <% if (addresses && addresses.length > 0) { %> 
+              <% addresses.forEach(address => { %>
+                <option value="<%= address._id %>">
+                  <%= address.fullName %>: <%= address.houseNameOrNo %>, <%= address.street %>, <%= address.city %>
+                </option>
+              <% }) %> 
+            <% } else { %>
+              <option disabled>No saved addresses found.</option>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="full-name">Full Name</label>
+          <input type="text" id="full-name" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black" required />
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-gray-700 mb-2" for="phone">Phone</label>
+            <input type="tel" id="phone" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black" required />
           </div>
-
-          <form
-            name="coupon"
-            id="coupon"
-            class="checkout_coupon"
-            method="post"
-           
-          >
-            <p class="form-row form-row-first">
-              <input
-                type="text"
-                name="coupon_code"
-                class="input-text"
-                placeholder="Coupon code"
-                id="coupon_code"
-                value=""
-              />
-            </p>
-            <% coupons.forEach((coupon)=>{ %>
-            <div
-              class="modal-dialog modal-side modal-top-right modal-notify modal-danger text-white"
-              style=" background-color: orange"
-              role="document"
-            >
-              <!-- Content -->
-              <div class="modal-content" style="background-color: white">
-                <div class="modal-header p-0">
-                  <b style="color: orange"><%- coupon.code %></b
-                  ><span class="modal-title" style="color: black"
-                    ><strong> <%- coupon.discount %>% off </strong
-                    ><strong
-                      >&nbsp;&nbsp;&nbsp;min-spend: <%- coupon.minSpend
-                      %></strong
-                    ></span
-                  >
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true" class="white-text">&times;</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <% }) %>
-            <p
-              class="form-row form-row-last"
-             
-            >
-              <input
-                type="submit"
-                class="thm-btn thm-btn__2 br-0"
-                name="apply_coupon"
-                value="Apply Coupon"
-              />
-            </p>
-
-            <div class="clear"></div>
-          </form>
-
-          <div class="coll-2">
-            <div class="woocommerce-shipping-fields">
-              <div class="woocommerce-info">
-                Have a Address?
-                <a href="#!" id="ship-to-different-address"
-                  >Click to choose your Address</a
-                >
-              </div>
-
-              <div class="shipping_address">
-                <% address.address.forEach((address,i) => { %>
-
-                <div
-                  class="address-box"
-                  style="background-color: lightgoldenrodyellow"
-                >
-                  <label style="color: black">
-                    <input
-                      type="radio"
-                      name="selectedAddress"
-                      id="address<%= i %>"
-                      class="address"
-                      value="<%= address._id %>"
-                      required
-                    />
-                    <%= address.name %>, <%= address.address1 %>,<%=
-                    address.address2 %> <%= address.city %>, <%= address.state
-                    %>- <%= address.pincode %>, <%= address.mobile %>
-                  </label>
-                </div>
-                <% }) %>
-
-                <div class="clear"></div>
-              </div>
-            </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="house-name-or-no">House Name or Number</label>
+            <input type="text" id="house-name-or-no" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black" required />
           </div>
+        </div>
 
-          <form
-            name="address"
-            method="post"
-            class="checkout woocommerce-checkout"
-            action=""
-            id="address"
-          >
-            <div
-              class="col2-set"
-              id="customer_details"
-           
-            >
-              <div class="coll-1">
-                <div class="woocommerce-billing-fields">
-                  <h3>Add Different Address</h3>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="street">Street</label>
+          <input type="text" id="street" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black" required />
+        </div>
 
-                 
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-gray-700 mb-2" for="city">City</label>
+            <input type="text" id="city" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="state">State</label>
+            <input type="text" id="state" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black" required />
+          </div>
+        </div>
 
-                  <p
-                    class="form-row form-row form-row-last address-field validate-required validate-postcode"
-                    id="billing_postcode_field"
-                  >
-                    <label for="billing_postcode" class=""
-                      >Full Name
-                      <abbr class="required" title="required">*</abbr></label
-                    >
-                    <input
-                      type="text"
-                      class="input-text"
-                      name="name"
-                      id="checkout-name"
-                      placeholder=""
-                      autocomplete="postal-code"
-                      value=""
-                      required
-                    />
-                  </p>
-
-                  <p
-                    class="form-row form-row form-row-last address-field validate-required validate-postcode"
-                    id="billing_postcode_field"
-                  >
-                    <label for="billing_postcode" class=""
-                      >Address1
-                      <abbr class="required" title="required">*</abbr></label
-                    >
-                    <input
-                      type="text"
-                      class="input-text"
-                      name="address1"
-                      id="checkout-address1"
-                      placeholder=""
-                      autocomplete="postal-code"
-                      value=""
-                      required
-                    />
-                  </p>
-
-                  <div class="clear"></div>
-
-                  <p
-                    class="form-row form-row form-row-last address-field validate-required validate-postcode"
-                    id="billing_postcode_field"
-                  >
-                    <label for="billing_postcode" class=""
-                      >Address2
-                      <abbr class="required" title="required">*</abbr></label
-                    >
-                    <input
-                      type="text"
-                      class="input-text"
-                      name="address2"
-                      id="checkout-address2"
-                      placeholder=""
-                      autocomplete="postal-code"
-                      value=""
-                      required
-                    />
-                  </p>
-                  <p
-                    class="form-row form-row form-row-last address-field validate-required validate-postcode"
-                    id="billing_postcode_field"
-                  >
-                    <label for="billing_postcode" class=""
-                      >City
-                      <abbr class="required" title="required">*</abbr></label
-                    >
-                    <input
-                      type="text"
-                      class="input-text"
-                      name="city"
-                      id="checkout-city"
-                      placeholder=""
-                      autocomplete="postal-code"
-                      value=""
-                      required
-                    />
-                  </p>
-                  <p
-                    class="form-row form-row form-row-last address-field validate-required validate-postcode"
-                    id="billing_postcode_field"
-                  >
-                    <label for="billing_postcode" class=""
-                      >State
-                      <abbr class="required" title="required">*</abbr></label
-                    >
-                    <input
-                      type="text"
-                      class="input-text"
-                      name="state"
-                      id="checkout-state"
-                      placeholder=""
-                      autocomplete="postal-code"
-                      value=""
-                      required
-                    />
-                  </p>
-
-                  <p
-                    class="form-row form-row form-row-last validate-required validate-phone"
-                    id="billing_phone_field"
-                  >
-                    <label for="billing_phone" class=""
-                      >Phone
-                      <abbr class="required" title="required">*</abbr></label
-                    >
-                    <input
-                      type="tel"
-                      class="input-text"
-                      name="mobile"
-                      id="checkout-mobile"
-                      placeholder=""
-                      autocomplete="tel"
-                      value=""
-                      pattern="[0-9]{10}"
-                      required
-                    />
-                  </p>
-                  <div class="clear"></div>
-
-                  <p
-                    class="form-row form-row form-row-last address-field validate-required validate-postcode"
-                    id="billing_postcode_field"
-                  >
-                    <label for="billing_postcode" class=""
-                      >Postcode / ZIP
-                      <abbr class="required" title="required">*</abbr></label
-                    >
-                    <input
-                      type="text"
-                      class="input-text"
-                      name="pincode"
-                      id="checkout-pincode"
-                      placeholder=""
-                      autocomplete="postal-code"
-                      value=""
-                      required
-                    />
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  class="thm-btn thm-btn__2 no-icon br-0"
-                 
-                  id="checkout-address"
-                >
-                  <span class="btn-wrap">
-                    <span>Add Address</span>
-                    <span>Add Address</span>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </form>
-
-          <form
-            name="checkout"
-            class="checkout woocommerce-checkout style"
-            action=""
-            enctype="multipart/form-data"
-            onsubmit="return validateForm();"
-            id="checkout"
-          >
-            <div id="order_review" class="woocommerce-checkout-review-order">
-              <h3 id="order_review_heading">Your order</h3>
-              <table class="shop_table woocommerce-checkout-review-order-table">
-                <thead>
-                  <tr>
-                    <th class="product-name">Sections</th>
-                    <th class="product-total">Total</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-                <tfoot>
-                  <tr class="cart-subtotal">
-                    <th>Subtotal</th>
-                    <td>
-                      <span
-                        class="woocommerce-Price-amount amount"
-                        id="subtotal"
-                        ><span class="woocommerce-Price-currencySymbol">₹</span>
-                        <%- subtotal %></span
-                      >
-                    </td>
-                  </tr>
-                  <tr class="cart-subtotal">
-                    <th>Discount</th>
-                    <td>
-                      <span
-                        class="woocommerce-Price-amount amount"
-                        id="discount"
-                        ><span class="woocommerce-Price-currencySymbol">₹</span>
-                        0</span
-                      >
-                    </td>
-                  </tr>
-
-                  <!-- <tr class="shipping">
-                    <th>Shipping</th>
-                    <td data-title="Shipping">
-                      Free Shipping
-                      <input
-                        type="hidden"
-                        name="shipping_method[0]"
-                        data-index="0"
-                        id="shipping_method_0"
-                        value="free_shipping:1"
-                        class="shipping_method"
-                      />
-                    </td>
-                  </tr> -->
-
-                  <tr class="order-total">
-                    <th>Total</th>
-                    <td>
-                      <strong
-                        >&#8377; <b
-                          ><span
-                            class="woocommerce-Price-amount amount"
-                            id="total"
-                          >
-                            <%- total %></span
-                          ></b
-                        ></strong
-                      >
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-              <div id="payment" class="woocommerce-checkout-payment">
-                <ul class="wc_payment_methods payment_methods methods">
-                  <span class="grop-woo-radio-style" style="font-size: 25px"
-                    ><b>Check Payment Methods</b></span
-                  >
-
-                  <li class="wc_payment_method payment_method_paypal m-2">
-                    <input
-                      id="payment_method_paypal"
-                      type="radio"
-                      class="input-radio"
-                      name="payment_method"
-                      value="cards"
-                      data-order_button_text="Proceed to PayPal"
-                    />
-                    <!--grop add span for radio button style-->
-                    <span class="grop-woo-radio-style"></span>
-                    <!--custom change-->
-                    <label for="payment_method_paypal"> Wallet </label>
-
-                    <div
-                      class="payment_box payment_method_paypal"
-                      style="display: block"
-                    >
-                      Balance:<b>
-                        <span id="wallet-balance"
-                          ><%- balance.wallet.total %></span
-                        ></b
-                      >
-                    </div>
-                  </li>
-                  <li class="wc_payment_method payment_method_paypal m-2">
-                    <input
-                      id="payment_method_paypal"
-                      type="radio"
-                      class="input-radio"
-                      name="payment_method"
-                      value="razorpay"
-                      data-order_button_text="Proceed to PayPal"
-                    />
-                    <!--grop add span for radio button style-->
-                    <span class="grop-woo-radio-style"></span>
-                    <!--custom change-->
-                    <label for="payment_method_paypal"> Razorpay </label>
-                    <div
-                      class="payment_box payment_method_paypal"
-                      style="display: none"
-                    ></div>
-                  </li>
-                  <li class="wc_payment_method payment_method_paypal m-2">
-                    <input
-                      id="payment_method_paypal"
-                      type="radio"
-                      class="input-radio"
-                      name="payment_method"
-                      value="cod"
-                      data-order_button_text="Proceed to PayPal"
-                    />
-                    <!--grop add span for radio button style-->
-                    <span class="grop-woo-radio-style"></span>
-                    <!--custom change-->
-                    <label for="payment_method_paypal"> COD </label>
-                    <div
-                      class="payment_box payment_method_paypal"
-                      style="display: none"
-                    ></div>
-                  </li>
-                </ul>
-                <div class="form-row place-order mt-20">
-                  <button
-                    onclick="validateForm()"
-                    type="button"
-                    class="thm-btn thm-btn__2 no-icon br-0"
-                  >
-                    <span class="btn-wrap">
-                      <span>Place order</span>
-                      <span>Place order</span>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <input type="hidden" name="addressId" id="addressId" value="" />
-          </form>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-gray-700 mb-2" for="postal-code">Postal Code</label>
+            <input type="text" id="postal-code" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="country">Country</label>
+            <input type="text" id="country" class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black" required />
+          </div>
+        </div>
+        <div class="mb-4">
+          <button onclick="saveAddress()" class="bg-black text-white p-2 rounded hover:bg-gray-800">Save Address</button>
         </div>
       </div>
     </div>
+
+    <div class="lg:w-1/3">
+      <div class="bg-white p-6 rounded-lg shadow-sm sticky top-4">
+        <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+
+        <div class="scrollable-products mb-6">
+          <div class="space-y-3">
+            <% if (cartItems?.length) { %>
+              <% cartItems.forEach(item => { %>
+                <div class="flex items-start p-3 border rounded-lg hover:bg-gray-50 transition-colors">
+                  <div class="w-16 h-16 bg-gray-100 rounded-lg mr-3 flex items-center justify-center overflow-hidden">
+                    <% if (item.productImage) { %>
+                      <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="object-cover w-full h-full" />
+                    <% } else { %>
+                      <span class="text-xs text-gray-500">No Image</span>
+                    <% } %>
+                  </div>
+
+                  <div class="flex-1">
+                    <div class="flex justify-between items-start">
+                      <h3 class="font-medium text-sm"><%= item.productName %></h3>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2 mt-1">
+                      <% item.attributes.forEach(value => { 
+                          const isColor = /^#([0-9A-F]{3}){1,2}$/i.test(value) || /(red|blue|green|yellow|black|white|gray|grey|orange|pink)/i.test(value);
+                          if (isColor) { %>
+                        <div class="w-4 h-4 rounded-full border border-gray-200" style="background-color: <%= value %>" title="<%= value %>"></div>
+                      <% } else {
+                          const hue = Math.floor(Math.random() * 360); %>
+                        <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: hsl(<%= hue %>, 80%, 90%); border: 1px solid hsl(<%= hue %>, 80%, 70%);">
+                          <%= value %>
+                        </span>
+                      <% } %>
+                    <% }) %>
+                    </div>
+
+                    <p class="font-medium text-sm">₹<%= item.discountPrice.toFixed(2) %></p>
+                    <p class="text-xs text-gray-500 mt-1">Qty: <%= item.qty %></p>
+                  </div>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <p class="text-gray-500 text-sm py-4 text-center">Your cart is empty</p>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-2">Apply Coupon</h3>
+          <form id="couponForm" class="flex">
+            <input
+              name="coupon"
+              id="couponCode"
+              type="text"
+              placeholder="Enter coupon code"
+              class="flex-1 p-2 border border-gray-300 rounded-l focus:outline-none focus:ring-1 focus:ring-black"
+              value="<%= appliedCoupon ? appliedCoupon.code : '' %>"
+            />
+            <button type="button" id="applyCouponBtn" class="bg-black text-white px-4 rounded-r hover:bg-gray-800">Apply</button>
+          </form>
+          <% if (couponMessage) { %>
+            <div class="text-green-800 text-sm rounded"><%= couponMessage %></div>
+          <% } %> 
+          <% if (availableCoupons && availableCoupons.length > 0) { %>
+            <div class="flex flex-wrap gap-1 bg-gray-100 mt-2">
+              <% availableCoupons.forEach((coupon) => { %>
+                <span class="inline-flex items-center bg-blue-100 text-blue-700 px-1 text-[10px] font-medium rounded-full shadow-sm">
+                  <%= coupon.code %> - <%= coupon.discount %>₹ off
+                </span>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+
+        <div class="space-y-3 mb-6">
+          <div class="flex justify-between">
+            <span class="text-gray-600">Subtotal</span>
+            <span>₹<%= subtotal.toFixed(2) %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Shipping</span>
+            <span>₹0.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Discount</span>
+            <span class="text-green-600">- ₹<%= discount.toFixed(2) %></span>
+          </div>
+          <div class="flex justify-between border-t border-gray-200 pt-3 mt-3">
+            <span class="font-semibold">Total</span>
+            <span class="font-semibold">₹<%= total.toFixed(2) %></span>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-4">Payment Method</h3>
+          <div class="space-y-3 mb-4">
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
+              <input type="radio" name="payment" id="stripe" value="card" class="mr-3 h-5 w-5" checked />
+              <div class="flex items-center gap-2">
+                <i class="fas fa-credit-card text-blue-600 text-xl"></i>
+                <span>Credit/Debit Card</span>
+              </div>
+            </label>
+            
+            <div id="card-details" class="mt-4 pl-8">
+              <div id="card-element" class="StripeElement"></div>
+              <div id="card-errors" class="text-red-500 mt-2 text-sm" role="alert"></div>
+            </div>
+
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-green-500 transition-colors">
+              <input type="radio" name="payment" id="cod" value="cod" class="mr-3 h-5 w-5" />
+              <div class="flex items-center gap-2">
+                <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
+                <span>Cash on Delivery</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <button id="submit-button" class="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition duration-200">
+          Complete Order
+        </button>
+      </div>
+    </div>
   </div>
-  <form id="order-success" action="/users/order-success" method="POST">
-    <input type="hidden" name="orderCoupon" id="order-coupon" value="" />
-    <input type="hidden" name="orderTotal" id="order-total" value="" />
-    <input type="hidden" name="orderAddressId" id="order-addressId" value="" />
-    <input type="hidden" name="orderPayment" id="order-payment" value="" />
-    <input type="hidden" name="orderBalance" id="order-balance" value="" />
-    <button type="submit" id="order-success" style="display: none">
-      order-success
-    </button>
-  </form>
-  
-</section>
-<div id="error-message" class="error-message" style="display: none">
-  Please select an address and payment method.
 </div>
-<!--Modal: modalCoupon-->
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<div id="toast" class="fixed bottom-6 right-6 bg-gray-800 text-white py-3 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 pointer-events-none"></div>
+
+<script src="https://js.stripe.com/v3/"></script>
 <script>
-  async function validateForm() {
-    const selectedAddressElement = document.querySelector(
-      'input[name="selectedAddress"]:checked'
-    );
-    const selectedPaymentElement = document.querySelector(
-      'input[name="payment_method"]:checked'
-    );
+  const stripe = Stripe("<%= process.env.STRIPE_PUBLISHABLE_KEY %>");
+  const elements = stripe.elements();
+  let cardElement = null;
 
-    if (!selectedAddressElement || !selectedPaymentElement) {
-      alert("Please select an address and payment method.");
-      return false; // Prevent form submission
-    }
-
-    const payment = selectedPaymentElement.value;
-    const total = document.getElementById("total").textContent;
-    const addressId = selectedAddressElement.value;
-    const coupon = document.getElementById("order-coupon").value;
-
-    if (payment === "cod") {
-      handleCODPayment(payment, coupon, total, addressId);
-    } else if (payment === "razorpay") {
-      await handleRazorpayPayment(total, addressId, payment,coupon);
-    } else {
-      handleWalletPayment(payment, coupon, total, addressId);
+  function initializeStripeElements() {
+    if (!cardElement) {
+      cardElement = elements.create('card', {
+        style: {
+          base: {
+            fontSize: '16px',
+            color: '#424770',
+            '::placeholder': {
+              color: '#aab7c4',
+            },
+          },
+          invalid: {
+            color: '#ef4444',
+          },
+        },
+      });
+      cardElement.mount('#card-element');
+      
+      cardElement.addEventListener('change', ({error}) => {
+        const displayError = document.getElementById('card-errors');
+        displayError.textContent = error ? error.message : '';
+      });
     }
   }
 
-  function handleCODPayment(payment, coupon, total, addressId) {
-    document.getElementById("order-payment").value = payment;
-    document.getElementById("order-total").value = total;
-    document.getElementById("order-addressId").value = addressId;
-    document.getElementById("order-coupon").value = coupon;
-    document.getElementById("order-success").submit();
+  document.getElementById('stripe').addEventListener('change', function() {
+    if (this.checked) {
+      initializeStripeElements();
+      document.getElementById('card-details').classList.remove('hidden');
+    }
+  });
+
+  document.getElementById('cod').addEventListener('change', function() {
+    if (this.checked) {
+      document.getElementById('card-details').classList.add('hidden');
+    }
+  });
+
+  function showToast(message, isSuccess = true) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.className = `fixed bottom-6 right-6 ${isSuccess ? 'bg-green-600' : 'bg-red-600'} text-white py-3 px-6 rounded-lg shadow-lg opacity-100 transition-opacity duration-500 pointer-events-none`;
+
+    setTimeout(() => {
+      toast.classList.remove("opacity-100");
+      toast.classList.add("opacity-0");
+    }, 3000);
   }
 
-  async function handleRazorpayPayment(total, addressId, payment, coupon) {
-    console.log("entered in razorpay");
-
-    const razorpayResponse = await fetch(`/users/order-success1/${total.trim()}/${addressId.trim()}/${payment.trim()}`);
-
-    if (razorpayResponse.ok) {
-        const order = await razorpayResponse.json();
-        console.log(order);
-
-        const options = {
-            key: "rzp_test_JtgehPwYRDGdbi", // Replace with your actual Razorpay Key ID
-            amount: order.amount, // Amount is in currency subunits. Default currency is INR
-            currency: "INR",
-            name: "E-Cart",
-            payment_method: {
-                types: ["upi"],
-            },
-            description: "Test Transaction",
-            order_id: order.id,
-            handler: function (response) {
-                redirectToOrderSuccess(order.id, total, addressId, payment, coupon);
-            },
-            notes: {
-                address: "Razorpay Corporate Office",
-            },
-            theme: {
-                color: "#3399cc",
-            },
-        };
-
-        var rzp1 = new Razorpay(options);
-        rzp1.open();
+  document.getElementById('applyCouponBtn').addEventListener('click', function() {
+    const couponCode = document.getElementById('couponCode').value.trim();
+    if (couponCode) {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('coupon', couponCode);
+      window.location.href = currentUrl.toString();
     }
-}
+  });
 
-function redirectToOrderSuccess(orderId, total, addressId, payment, coupon) {
-  console.log(total, addressId, payment, coupon,orderId)
-  let couponParam = coupon.trim() || "null"; // Trim the coupon and set it to "null" if empty
+  async function saveAddress() {
+    const fullName = document.getElementById("full-name").value;
+    const houseNameOrNo = document.getElementById("house-name-or-no").value;
+    const street = document.getElementById("street").value;
+    const city = document.getElementById("city").value;
+    const state = document.getElementById("state").value;
+    const country = document.getElementById("country").value;
+    const postalCode = document.getElementById("postal-code").value;
+    const phone = document.getElementById("phone").value;
 
-const redirectURL = `/users/order-success2/${orderId.trim()}/${total.trim()}/${addressId.trim()}/${payment.trim()}/${couponParam}`;
-
-  window.location.href = redirectURL;
-}
-
-
-  function handleWalletPayment(payment, coupon, total, addressId) {
-    console.log("exrctvybunimo,")
-    const walletBalance = document.getElementById("wallet-balance").textContent;
-    
-    let balance = Number(total);
-    let totalBalance = Number(walletBalance);  
-    if (balance > totalBalance) {
-      alert("Insufficient Balance");
-      return false;
+    if (!fullName || !houseNameOrNo || !street || !city || !postalCode || !phone) {
+      showToast("Please fill in all required fields", false);
+      return;
     }
-    document.getElementById("order-addressId").value = addressId;
-    document.getElementById("order-total").value = total;
-    document.getElementById("order-payment").value = payment;
-    document.getElementById("order-coupon").value = coupon;
-    document.getElementById("order-balance").value = totalBalance;
-    document.getElementById("order-success").submit();
-  }
 
-  const couponForm = document.getElementById("coupon");
-  const discountElement = document.getElementById("discount");
-  const totalElement = document.getElementById("total");
-  const total = totalElement.textContent;
-  console.log(total);
-
-  couponForm.addEventListener("submit", async function (event) {
-    event.preventDefault();
-
-    // Get the coupon code from the form
-    const coupon = document.forms["coupon"]["coupon_code"].value;
-    document.getElementById("order-coupon").value = coupon;
     try {
-      const response = await fetch(`/admin/validate-coupon/${coupon}/${total}`);
+      const response = await fetch("/address", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, houseNameOrNo, street, city, state, postalCode, country, phone }),
+      });
 
       const data = await response.json();
-      console.log(data);
-
-      if (data.message) {
-        alert(data.message);
-        return;
-      } else if (data) {
-        console.log(data);
-        // Update the total and discount elements
-        const discount = data.maxAmount;
-
-        const subtotal = total.replace("₹", "");
-
-        totalElement.textContent = subtotal - discount;
-        console.log(totalElement.textContent);
-        discountElement.innerHTML = discount;
-        alert("Coupon Applied Successfully");
+      if (data.success) {
+        showToast("Address added successfully");
+        setTimeout(() => window.location.reload(), 1500);
       } else {
-        alert("Coupon is not valid");
+        showToast(data.message || "Failed to add address", false);
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      showToast("An error occurred while saving the address", false);
     }
-  });
+  }
 
+  document.getElementById('submit-button').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const addressId = document.getElementById("saved-addresses").value;
+    if (!addressId) {
+      showToast("Please select an address", false);
+      return;
+    }
 
-  // checkout-address
-  const checkoutAddress = document.getElementById("checkout-address");
-checkoutAddress.addEventListener("click", async () => {
-    const name = document.getElementById("checkout-name").value;
-    const address1 = document.getElementById("checkout-address1").value;
-    const address2 = document.getElementById("checkout-address2").value;
-    const city = document.getElementById("checkout-city").value;
-    const state = document.getElementById("checkout-state").value;
-    const mobile = document.getElementById("checkout-mobile").value;
-    const pincode = document.getElementById("checkout-pincode").value;
+    const paymentMethod = document.querySelector('input[name="payment"]:checked').id;
+    const totalAmount = <%= total.toFixed(2) %>;
+    const submitButton = document.getElementById('submit-button');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Processing...';
 
-    const checkout = {
-        name,
-        address1,
-        address2,
-        city,
-        state,
-        mobile,
-        pincode
-    };
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('productId');
+    const skuId = urlParams.get('skuId');
+    const quantity = urlParams.get('quantity');
 
     try {
-        const response = await fetch("/users/post-address?checkout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(checkout)
+      if (paymentMethod === 'cod') {
+        const response = await fetch('/complete-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            paymentMethod: 'COD',
+            amount: totalAmount,
+            addressId: addressId,
+            items: { productId, skuId, quantity }
+          }),
         });
 
-        if (response.ok) {
-            alert("Address Added Successfully");
-            window.location.reload();
+        const data = await response.json();
+        if (data.success) {
+          window.location.href = "/order-success";
         } else {
-            throw new Error('Failed to add the address');
+          showToast(data.message || "Failed to place order", false);
         }
+      } else {
+        initializeStripeElements();
+        const response = await fetch('/create-payment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: totalAmount }),
+        });
+        const { clientSecret } = await response.json();
+
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: document.getElementById('full-name').value,
+              phone: document.getElementById('phone').value,
+            }
+          }
+        });
+
+        if (error) {
+          showToast(error.message, false);
+        } else if (paymentIntent.status === 'succeeded') {
+          const orderResponse = await fetch('/complete-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              paymentMethod: 'ONLINE',
+              paymentIntentId: paymentIntent.id,
+              amount: totalAmount,
+              addressId,
+              items: { productId, skuId, quantity }
+            }),
+          });
+
+          const data = await orderResponse.json();
+          if (data.success) {
+            window.location.href = "/order-success";
+          } else {
+            showToast(data.message || "Failed to place order", false);
+          }
+        }
+      }
     } catch (error) {
-        console.error('Error:', error);
-        // Handle error - Show an error message or perform additional actions
-        alert("Failed to add the address. Please try again.");
+      showToast("Error processing payment", false);
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = 'Complete Order';
     }
-});
-
-
-
-
-
-
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  $(document).ready(function () {
-    $(".close").on("click", function () {
-      $(this).closest(".modal-dialog").remove();
-    });
   });
+
+  initializeStripeElements();
 </script>

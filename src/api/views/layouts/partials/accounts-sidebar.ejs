@@ -1,0 +1,35 @@
+<div class="w-full md:w-64">
+  <div
+    class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+  >
+    <div class="p-4 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">My Account</h3>
+    </div>
+    <nav class="space-y-1 p-2">
+      <a
+        href="/accounts/profile"
+        class="flex items-center w-full space-x-3 px-3 py-2 rounded-md <%= activeTab === 'profile' ? 'bg-gray-100 text-black font-medium' : 'text-gray-700 hover:bg-gray-50 hover:text-black' %>"
+      >
+        <i class="fas fa-user"></i><span>Profile</span>
+      </a>
+      <a
+        href="/accounts/orders"
+        class="flex items-center w-full space-x-3 px-3 py-2 rounded-md <%= activeTab === 'orders' ? 'bg-gray-100 text-black font-medium' : 'text-gray-700 hover:bg-gray-50 hover:text-black' %>"
+      >
+        <i class="fas fa-box"></i><span>Orders</span>
+      </a>
+      <a
+        href="/accounts/address"
+        class="flex items-center w-full space-x-3 px-3 py-2 rounded-md <%= activeTab === 'addresses' ? 'bg-gray-100 text-black font-medium' : 'text-gray-700 hover:bg-gray-50 hover:text-black' %>"
+      >
+        <i class="fas fa-map-marker-alt"></i><span>Addresses</span>
+      </a>
+      <a
+        href="/logout"
+        class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-50 hover:text-black rounded-md"
+      >
+        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+      </a>
+    </nav>
+  </div>
+</div>

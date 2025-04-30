@@ -1,4 +1,4 @@
-<a href="/products/<%- product._id %>/sku/<%- product.skuId %>" class="block">
+
   <div class="p-2">
     <div
       class="h-full bg-white rounded-lg shadow-md transition-opacity duration-300 <%= product.stock === 0 ? 'opacity-50' : '' %>"
@@ -12,13 +12,15 @@
           ></i>
         </div>
 
-        <div class="flex justify-center items-center mb-4 h-36">
-          <img
-            src="/<%- product.image %>"
-            class="h-full object-contain"
-            alt="<%- product.name %>"
-          />
-        </div>
+        <a href="/products/<%- product._id %>/sku/<%- product.skuId %>" class="block">
+          <div class="flex justify-center items-center mb-4 h-36">
+            <img
+              src="/<%- product.image %>"
+              class="h-full object-contain"
+              alt="<%- product.name %>"
+            />
+          </div>
+        </a>
 
         <h6 class="text-sm font-medium mb-2 h-10 overflow-hidden">
           <%- product.name %>
@@ -57,7 +59,6 @@
       </div>
     </div>
   </div>
-</a>
 <div
   id="toast"
   class="fixed bottom-6 right-6 bg-gray-800 text-white py-3 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 pointer-events-none z-50"

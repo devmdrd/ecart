@@ -78,69 +78,59 @@ exports.renderProducts = async (req, res) => {
   }
 };
 
-exports.singleProduct = async (req, res) => {
+exports.renderSingleProduct = async (req, res) => {
   try {
     const { productId, skuId } = req.params;
     const user = req.session.user;
 
-    const product = await Product.findById(productId)
-      .populate("brand category")
-      .populate("skus");
+    const product = await Product.findById(productId).populate("brand category skus");
 
     if (!product) {
       return res.status(404).render("error", {
         layout: "layouts/user-layout",
         message: "Product not found",
         user: !!user,
-        cartCount: "",
-        wishlistCount: ""
+        cartCount: 0,
+        wishlistCount: 0
       });
     }
 
-    const selectedSku = product.skus.find(s => s._id.toString() === skuId);
+    const selectedSku = skuId ? product.skus.find(s => s._id.toString() === skuId): product.skus[0];
+
     if (!selectedSku) {
       return res.status(404).render("error", {
         layout: "layouts/user-layout",
         message: "Variant not found",
         user: !!user,
-        cartCount: "",
-        wishlistCount: ""
+        cartCount: 0,
+        wishlistCount: 0
       });
     }
 
     const ratings = await Rating.find({ product: productId }).populate("user", "name");
-    const avgRating = ratings.length
-      ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
-      : null;
+    const avgRating = ratings.length ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1) : 0;
 
-    const similarProducts = await Product.find({
-      _id: { $ne: productId },
-      category: product.category._id
-    })
-      .limit(6)
-      .populate("brand category")
-      .populate("skus");
+    const similarProducts = await Product.find({ _id: { $ne: productId }, category: product.category._id }).limit(4).populate("brand category skus");
 
-    const formattedSimilarProducts = similarProducts
-      .filter(p => p.skus.length)
-      .map(p => {
-        const sku = p.skus[0];
-        return {
-          _id: p._id,
-          name: p.name,
-          image: p.images?.[0] || "",
-          price: sku.price,
-          discountPrice: sku.discountPrice,
-          discountPercentage: sku.discountPercentage || 0,
-          stock: sku.stock,
-          brand: p.brand?.name,
-          category: p.category?.name,
-          skuId: sku._id
-        };
-      });
+    const formattedSimilarProducts = similarProducts.filter(p => p.skus.length).map(p => {
+      const sku = p.skus[0];
+      return {
+        _id: p._id,
+        name: p.name,
+        image: p.images?.[0] || "",
+        price: sku.price,
+        discountPrice: sku.discountPrice,
+        discountPercentage: sku.discountPercentage || 0,
+        stock: sku.stock,
+        brand: p.brand?.name,
+        category: p.category?.name,
+        skuId: sku._id
+      }
+    });
 
     const variantList = await Promise.all(product.skus.map(async (sku) => {
       const variant = {
+        _id: sku._id,
         price: sku.price,
         discountPrice: sku.discountPrice,
         discountPercentage: sku.discountPercentage,
@@ -160,7 +150,7 @@ exports.singleProduct = async (req, res) => {
     }));
 
     let cartCount = 0, wishlistCount = 0;
-    if (user && user._id) {
+    if (user) {
       cartCount = await Cart.countDocuments({ user: user._id });
       wishlistCount = await Wishlist.countDocuments({ user: user._id });
     }
@@ -172,9 +162,11 @@ exports.singleProduct = async (req, res) => {
         _id: product._id,
         name: product.name,
         description: product.description,
+        features: product.features,
+        specifications: product.specifications,
         brand: product.brand?.name,
         category: product.category?.name,
-        image: product.images,
+        images: product.images,
         averageRating: avgRating,
         totalReviews: ratings.length
       },
@@ -192,6 +184,7 @@ exports.singleProduct = async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).render("error", {
       layout: "layouts/user-layout",
       message: "Server Error"
