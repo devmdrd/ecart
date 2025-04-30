@@ -22,17 +22,12 @@ To set up the project locally, follow these steps:
    git clone https://github.com/devmdrd/ecart.git
    ```
 
-2. **Navigate to the project directory:**  
-   ```sh
-   cd ecart
-   ```
-
-3. **Install dependencies:**  
+2. **Install dependencies:**  
    ```sh
    npm install
    ```
 
-4. **Set up environment variables:**  
+3. **Set up environment variables:**  
    Create a `.env` file in the root directory and configure the necessary environment variables. Example:  
    ```sh
    # Google OAuth credentials
@@ -65,17 +60,30 @@ To set up the project locally, follow these steps:
    STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key
    ```
 
-5. **Run the development server:**  
+4. **Run the development server:**  
    ```sh
-   npm start
+   npm run dev
    ```
 
-## 🔧 Technologies Used  
-- **Frontend:** EJS (Embedded JavaScript), Bootstrap  
-- **Backend:** Node.js, Express.js  
-- **Database:** MongoDB  
-- **Authentication:** JWT (JSON Web Token)  
-- **Payment Integration:** Razorpay  
+## 🔧 Technologies Used
+
+### 🖥️ Frontend
+- **EJS** – Embedded JavaScript templates for server-side rendering
+- **Tailwind CSS** – Utility-first CSS framework for modern UI design
+
+### 🛠️ Backend
+- **Node.js** – JavaScript runtime environment
+- **Express.js** – Lightweight web application framework
+
+### 🗄️ Database
+- **MongoDB** – NoSQL, document-based database for scalable data storage
+
+### 🔐 Authentication
+- **Google OAuth 2.0 (via Passport.js)** – Social login with Google
+- **Custom Email/Password Authentication** – Manually implemented user login and registration
+
+### 💳 Payment Integration
+- **Stripe API** – Secure and developer-friendly payment gateway
 
 ## 📂 Project Structure  
 ```
@@ -121,4 +129,4 @@ To set up the project locally, follow these steps:
 ```  
 
 ## 📞 Contact  
-For any inquiries or support, reach out to [Muhammed Rashid](mailto:muhammedrashid@gmail.com).  
+For any inquiries or support, reach out to [Muhammed Rashid](mailto:mdrd.muhammedrashid@gmail.com).  
