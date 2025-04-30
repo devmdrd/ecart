@@ -46,6 +46,24 @@
     scroll-snap-align: start;
   }
 
+  @media (max-width: 1200px) {
+    .products-scroll > * {
+      width: 33.33%;  
+    }
+  }
+
+  @media (max-width: 768px) {
+    .products-scroll > * {
+      width: 50%;  
+    }
+  }
+
+  @media (max-width: 480px) {
+    .products-scroll > * {
+      width: 100%;  
+    }
+  }
+
   @media (max-width: 768px) {
     .products-grid {
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
