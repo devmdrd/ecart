@@ -44,7 +44,7 @@ router.get("/accounts/address", authenticateSession, renderAddress);
 router.get('/address/:id', authenticateSession, getAddressById);
 router.post("/address", authenticateSession, addAddress);
 router.patch("/address", authenticateSession, updateAddress);
-router.delete("/address", authenticateSession, deleteAddress);
+router.delete("/address/:addressId", authenticateSession, deleteAddress);
 
 // // Products
 router.get("/products", renderProducts);

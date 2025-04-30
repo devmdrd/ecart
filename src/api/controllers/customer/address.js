@@ -19,7 +19,6 @@ exports.renderAddress = async (req, res) => {
       phone: a.phone,
     }));
 
-    console.log(formatted)
     const cart = await Cart.findOne({ user: req.session.user.id });
     const wishlistCount = await Wishlist.countDocuments({ user: req.session.user.id });
 
@@ -91,7 +90,6 @@ exports.getAddressById = async (req, res) => {
 };
 
 exports.updateAddress = async (req, res) => {
-  console.log(req.body)
   const { _id, ...updatedData } = req.body;
 
   try {
@@ -108,7 +106,8 @@ exports.updateAddress = async (req, res) => {
 };
 
 exports.deleteAddress = async (req, res) => {
-  const { addressId, userId } = req.params;
+  const userId = req.session.user.id;
+  const { addressId } = req.params;
 
   try {
     const address = await Address.findByIdAndDelete(addressId);
