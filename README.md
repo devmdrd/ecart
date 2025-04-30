@@ -35,9 +35,6 @@ To set up the project locally, follow these steps:
 4. **Set up environment variables:**  
    Create a `.env` file in the root directory and configure the necessary environment variables. Example:  
    ```sh
-  **Set up environment variables:**  
-   Create a `.env` file in the root directory and configure the necessary environment variables. Example:  
-   ```sh
    # Google OAuth credentials
    GOOGLE_CLIENT_ID=your-google-client-id-here
    GOOGLE_CLIENT_SECRET=your-google-client-secret-here
