@@ -134,5 +134,68 @@ To set up the project locally, follow these steps:
 
 ```  
 
+## 🖼️ Screenshots
+
+### 🏠 Home Page
+![Home](./screenshots/home.png)
+
+### 🔐 Login Page
+![Login](./screenshots/login.png)
+
+### 🛍️ Product Listing
+![Products List](./screenshots/products-list.png)
+
+### 📄 Product Details
+![Product Details](./screenshots/product-details.png)
+
+### 🛒 Cart
+![Cart](./screenshots/cart.png)
+
+### ❤️ Wishlist
+![Wishlist](./screenshots/wishlist.png)
+
+### 👤 Profile
+![Profile](./screenshots/profile.png)
+
+### 📦 Orders
+![Orders](./screenshots/orders.png)
+
+### 📍 Address Book
+![Address](./screenshots/address.png)
+
+### ➕ Add Address
+![Add Address](./screenshots/add-address.png)
+
+### 💳 Checkout
+![Checkout](./screenshots/checkout.png)
+
+### 📝 Register
+![Register](./screenshots/register.png)
+
+### 🔑 Forgot Password
+![Forgot Password](./screenshots/forgot-password.png)
+
+### 📊 Admin Dashboard
+![Admin Dashboard](./screenshots/admin-dashboard.png)
+
+### 🧾 Admin Order List
+![Admin Orders](./screenshots/admin-order-list-view.png)
+
+### 📋 Admin Reports
+![Admin Reports](./screenshots/admin-reports.png)
+
+### 🧩 Manage Attributes
+![Manage Attributes](./screenshots/attribute-manage.png)
+
+### 🗂️ Attributes List
+![Attributes List](./screenshots/admin-attributes-list.png)
+
+### ➕ Add Product
+![Add Product](./screenshots/add-product.png)
+
+### 📦 Products Admin List
+![Admin Product List](./screenshots/products-admin-list.png)
+
 ## 📞 Contact  
 For any inquiries or support, reach out to [Muhammed Rashid](mailto:mdrd.muhammedrashid@gmail.com).  
+
