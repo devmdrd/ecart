@@ -4,7 +4,27 @@ const Wishlist = require("../../models/wishlist");
 const Coupon = require("../../models/coupon"); 
 const Product = require("../../models/product");
 const SKU = require("../../models/sku");
-const { formatCartItem } = require("../../utils/cartFormatter");
+
+const formatCartItem = (item) => {
+  const product = item.product || item;
+  const sku = item.sku;
+
+  const attributes =
+    sku?.attributes?.map((attr) => {
+      const matchedValue = attr.attributeId?.values?.find(
+        (val) => val._id.toString() === attr.valueId.toString()
+      );
+      return matchedValue?.value || ""; 
+    }) || [];
+
+  return {
+    productName: product.name || "Unnamed Product",
+    productImage: product.images?.[0] || "",
+    attributes,
+    discountPrice: sku?.discountPrice || 0,
+    qty: item.quantity || 1,
+  };
+};
 
 exports.renderCheckout = async (req, res) => {
   try {
