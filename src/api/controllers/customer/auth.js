@@ -6,7 +6,6 @@ const { sendPasswordResetEmail } = require('../../services/emailService');
 
 const layout = "layouts/user-layout";
 
-// Render Pages
 exports.renderLogin = async (req, res) => {
   if (req.session.user) return res.redirect("/");
   res.render("client/auth/login", { layout: "layouts/user-layout", user: false, message: "" });
@@ -22,7 +21,6 @@ exports.renderForgotPassword = async (req, res) => {
   res.render("client/auth/forgot-password", { layout, user: false, message: "" });
 };
 
-// Authentication Handlers
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 

@@ -9,7 +9,14 @@ exports.renderOrders = async (req, res) => {
     const orders = await Order.find({ user: userId })
       .populate('address')
       .populate({ path: 'items.product', select: 'name images' })
-      .populate({ path: 'items.sku', populate: { path: 'attributes.attributeId', select: 'name' } })
+      .populate({
+        path: 'items.sku',
+        populate: {
+          path: 'attributes.attributeId',
+          select: 'name values',
+          model: 'Attribute'
+        }
+      })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -42,7 +49,13 @@ exports.renderOrders = async (req, res) => {
       products: order.items.map(item => ({
         id: item.product?._id?.toString() || 'unknown',
         name: item.product?.name || 'Product not available',
-        variant: item.sku?.attributes?.map(attr => attr.attributeId?.name).filter(Boolean).join(", ") || 'No variant specified',
+        variant: item.sku?.attributes?.map(attr => {
+          const matchedValue = attr.attributeId?.values?.find(
+            val => val._id.toString() === attr.valueId?.toString()
+          );
+          
+          return matchedValue ? `${matchedValue.value}` : null;
+        }).filter(Boolean).join(", ") || 'No variant specified',
         quantity: item.quantity,
         price: item.sku?.discountPrice ?? item.sku?.price ?? 0,
         originalPrice: item.sku?.price ?? 0,
