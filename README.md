@@ -85,6 +85,12 @@ To set up the project locally, follow these steps:
 ### 💳 Payment Integration
 - **Stripe API** – Secure and developer-friendly payment gateway
 
+### 📱 OTP Service
+- **Twilio** – OTP service for user registration verification
+
+### 📧 Email Service
+- **Nodemailer** – Email service for "Forgot Password" functionality
+
 ## 📂 Project Structure  
 ```
 /ecart
