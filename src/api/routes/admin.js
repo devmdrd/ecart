@@ -9,6 +9,8 @@ const { renderManageAttribute, renderAttributeList, createAttribute, updateAttri
 const { renderManageProduct, getProductAttributes, renderProductList, createProduct, updateProduct, deleteProduct } = require("../controllers/admin/product");
 const { renderManageCoupon, renderCouponList, createCoupon, updateCoupon, deleteCoupon } = require("../controllers/admin/coupon");
 const { renderManageBanner, renderBannerList, createBanner, updateBanner, deleteBanner } = require("../controllers/admin/banner");
+const { renderOrders, updateOrderStatus, getOrderDetails } = require("../controllers/admin/order");
+const { renderReports } = require("../controllers/admin/report");
 
 const { upload } = require("../middlewares/multer");
 const { authenticateSession  } = require("../middlewares/verification");
@@ -65,5 +67,13 @@ router.get("/banners", authenticateSession, renderBannerList);
 router.post("/banners", authenticateSession, upload.single("image"), createBanner);
 router.put("/banners", authenticateSession, upload.single("image"), updateBanner);
 router.delete("/banners/:bannerId", authenticateSession, deleteBanner);
+
+// Orders
+router.get("/orders", renderOrders);
+router.post("/orders/update-status/:orderId", updateOrderStatus);
+router.get("/orders/details/:orderId", getOrderDetails)
+
+// Reports
+router.get("/reports", renderReports)
 
 module.exports = router;

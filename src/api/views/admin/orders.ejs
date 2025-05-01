@@ -1,38 +1,39 @@
-<%- include('../../partials/admin-header') %>
-<div class="container-fluid mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold">Orders</h4>
-    <a href="/admin/orders/manage" class="btn btn-dark">
-      <i class="fas fa-plus"></i> Add Order
-    </a>
-  </div>
-  <div class="table-responsive">
-    <table id="ordersTable" class="table table-bordered table-striped table-hover">
-      <thead class="table-dark">
+<div class="container mt-10">
+  <h3 class="text-2xl font-semibold mb-6">Orders</h3>
+  <div class="overflow-x-auto">
+    <table id="example" class="min-w-full table-auto text-sm text-left">
+      <thead class="bg-gray-100">
         <tr>
-          <th>#</th>
-          <th>Customer</th>
-          <th>Order Status</th>
-          <th>Total Amount</th>
-          <th>Created At</th>
-          <th>Actions</th>
+          <th class="px-4 py-3 font-medium">No</th>
+          <th class="px-4 py-3 font-medium">Customer</th>
+          <th class="px-4 py-3 font-medium">Status</th>
+          <th class="px-4 py-3 font-medium">Amount</th>
+          <th class="px-4 py-3 font-medium">Date</th>
+          <th class="px-4 py-3 font-medium">Actions</th>
         </tr>
       </thead>
       <tbody>
         <% orders.forEach((order, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= order.customer.name %></td>
-            <td><%= order.status %></td>
-            <td><%= order.totalAmount %></td>
-            <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
-            <td>
-              <a href="/admin/orders/edit/<%= order._id %>" class="btn btn-sm btn-primary">
-                <i class="fas fa-edit"></i>
-              </a>
-              <a href="/admin/orders/delete/<%= order._id %>" class="btn btn-sm btn-danger">
-                <i class="fas fa-trash"></i>
-              </a>
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-3"><%= index + 1 %></td>
+            <td class="px-4 py-3"><%= order.user.name %></td>
+            <td class="px-4 py-3">
+              <span class="px-3 py-1 rounded-full text-white text-xs font-semibold cursor-pointer
+                <%= order.status === 'Pending' ? 'bg-yellow-500' :
+                     order.status === 'Shipped' ? 'bg-blue-500' :
+                     order.status === 'Delivered' ? 'bg-green-500' :
+                     order.status === 'Cancelled' ? 'bg-red-500' : 'bg-gray-400' %>"
+                onclick="openStatusModal('<%= order._id %>', '<%= order.status %>')">
+                <%= order.status %>
+              </span>
+            </td>
+            <td class="px-4 py-3">₹<%= order.totalAmount %></td>
+            <td class="px-4 py-3"><%= new Date(order.createdAt).toLocaleDateString() %></td>
+            <td class="px-4 py-3">
+              <button class="view-order-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs"
+                      data-order-id="<%= order._id %>">
+                <i class="fas fa-eye"></i> View
+              </button>
             </td>
           </tr>
         <% }) %>
@@ -40,10 +41,392 @@
     </table>
   </div>
 </div>
-<%- include('../../partials/admin-footer') %>
+
+<div id="orderDetailsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-70">
+  <div class="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+    <div class="flex justify-between items-center px-6 py-4 border-b sticky top-0 bg-white z-10">
+      <div class="flex items-center">
+        <i class="fas fa-shopping-bag text-blue-600 mr-3 text-xl"></i>
+        <h3 class="text-xl font-bold text-gray-800">Order Details</h3>
+      </div>
+      <button class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 transition" onclick="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="px-6 py-4 flex-grow overflow-y-auto custom-scrollbar" style="height: 500px;">
+      <div id="order-details-container" class="space-y-6"></div>
+    </div>
+    
+    <div class="px-6 py-4 border-t bg-gray-50 flex justify-end">
+      <button class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition flex items-center" onclick="closeModal()">
+        <i class="fas fa-times mr-2"></i> Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="statusModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h4 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+      <i class="fas fa-exchange-alt text-blue-600 mr-2"></i>
+      Update Status
+    </h4>
+    <select id="statusSelect" class="w-full border border-gray-300 p-2 rounded focus:ring focus:ring-blue-200 focus:border-blue-500 outline-none">
+      <option value="Pending">Pending</option>
+      <option value="Shipped">Shipped</option>
+      <option value="Delivered">Delivered</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+    <div class="mt-5 flex justify-end gap-3">
+      <button onclick="closeStatusModal()" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition flex items-center">
+        <i class="fas fa-times mr-2"></i> Cancel
+      </button>
+      <button onclick="submitStatus()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition flex items-center">
+        <i class="fas fa-check mr-2"></i> Update
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #c5c5c5;
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+  }
+
+  .products-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding: 0 12px;
+  }
+
+  .products-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .products-container::-webkit-scrollbar-track {
+    background: #f9fafb;
+    border-radius: 4px;
+  }
+
+  .products-container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+  }
+
+  .products-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .status-badge {
+    transition: all 0.3s ease;
+  }
+
+  .status-badge:hover {
+    animation: pulse 1s infinite;
+  }
+
+  .view-order-btn {
+    transition: all 0.2s ease;
+  }
+
+  .view-order-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+</style>
 
 <script>
-  $(document).ready(function () {
-    $('#ordersTable').DataTable();
+  let selectedOrderId = null;
+
+  function openModal() {
+    document.getElementById('orderDetailsModal').classList.remove('hidden');
+    document.getElementById('orderDetailsModal').classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('orderDetailsModal').classList.add('hidden');
+    document.getElementById('orderDetailsModal').classList.remove('flex');
+    document.body.style.overflow = 'auto';
+  }
+
+  function openStatusModal(orderId, currentStatus) {
+    selectedOrderId = orderId;
+    document.getElementById('statusSelect').value = currentStatus;
+    document.getElementById('statusModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeStatusModal() {
+    selectedOrderId = null;
+    document.getElementById('statusModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  function submitStatus() {
+    const newStatus = document.getElementById('statusSelect').value;
+    if (!selectedOrderId) return;
+
+    fetch(`/admin/orders/update-status/${selectedOrderId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus })
+    })
+    .then(res => res.json())
+    .then(data => data.success ? location.reload() : alert('Failed to update status'))
+    .catch(() => alert('Error updating status'));
+  }
+
+  function isColorValue(value) {
+    return /^#([0-9A-F]{3}){1,2}$/i.test(value) || 
+           /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/i.test(value) ||
+           /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/i.test(value);
+  }
+
+  function renderAttributeValue(value) {
+    return isColorValue(value)
+      ? `<span class="inline-block w-5 h-5 rounded-full border border-gray-300 mr-1" style="background-color: ${value}" title="${value}"></span>`
+      : `<span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full mr-1 mb-1">${value}</span>`;
+  }
+  
+  function getStatusIcon(status) {
+    const icons = {
+      'Pending': 'fa-clock text-yellow-500',
+      'Shipped': 'fa-shipping-fast text-blue-500',
+      'Delivered': 'fa-check-circle text-green-500',
+      'Cancelled': 'fa-times-circle text-red-500'
+    };
+    return `<i class="fas ${icons[status] || 'fa-question-circle text-gray-500'} mr-2"></i>`;
+  }
+  
+  function getPaymentIcon(method) {
+    const methodLower = method.toLowerCase();
+    const icons = {
+      'cod': 'fa-money-bill-wave text-green-500',
+      'online': 'fa-university text-gray-700'
+    };
+    return `<i class="fas ${icons[methodLower] || 'fa-wallet text-gray-500'} mr-2"></i>`;
+  }
+
+  document.querySelectorAll('.view-order-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const orderId = this.dataset.orderId;
+      fetch(`/admin/orders/details/${orderId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.success) throw new Error();
+          const order = data.order;
+          
+          const orderDate = new Date(order.createdAt);
+          const formattedDate = orderDate.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          });
+          const formattedTime = orderDate.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit'
+          });
+          
+          const useScrollContainer = order.items.length > 2;
+          
+          const itemsHTML = order.items.map(item => {
+            const attrs = item.sku.attributes.map(renderAttributeValue).join('');
+            return `
+              <div class="flex gap-4 py-3 border-b last:border-0">
+                <div class="flex-none">
+                  <div class="w-20 h-20 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                    <img src="/${item.product.images[0]}" class="w-full h-full object-contain" alt="${item.product.name}" />
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="font-semibold text-gray-800">${item.product.name}</div>
+                  <div class="flex flex-wrap items-center mt-1 text-xs text-gray-500">
+                    <span class="flex items-center mr-3"><i class="fas fa-tag mr-1"></i> ₹${item.sku.discountPrice}</span>
+                    <span class="flex items-center mr-3"><i class="fas fa-times mr-1"></i> ${item.quantity}</span>
+                  </div>
+                  <div class="flex items-center flex-wrap mt-2">${attrs}</div>
+                </div>
+              </div>`;
+          }).join('');
+
+          const html = `
+            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-start">
+                  <i class="fas fa-hashtag mt-1 text-blue-500 w-5"></i>
+                  <div class="ml-2">
+                    <div class="text-xs text-gray-500 font-medium">ORDER ID</div>
+                    <div class="font-mono">${order._id}</div>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <i class="far fa-calendar-alt mt-1 text-blue-500 w-5"></i>
+                  <div class="ml-2">
+                    <div class="text-xs text-gray-500 font-medium">ORDER DATE</div>
+                    <div>${formattedDate} at ${formattedTime}</div>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <i class="fas fa-info-circle mt-1 text-blue-500 w-5"></i>
+                  <div class="ml-2">
+                    <div class="text-xs text-gray-500 font-medium">STATUS</div>
+                    <div class="flex items-center">
+                      ${getStatusIcon(order.status)}
+                      <span class="status-badge px-3 py-1 rounded-full text-white text-xs font-semibold cursor-pointer
+                        ${order.status === 'Pending' ? 'bg-yellow-500' :
+                          order.status === 'Shipped' ? 'bg-blue-500' :
+                          order.status === 'Delivered' ? 'bg-green-500' :
+                          order.status === 'Cancelled' ? 'bg-red-500' : 'bg-gray-400'}"
+                        onclick="openStatusModal('${order._id}', '${order.status}')">
+                        ${order.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <i class="fas fa-coins mt-1 text-blue-500 w-5"></i>
+                  <div class="ml-2">
+                    <div class="text-xs text-gray-500 font-medium">TOTAL AMOUNT</div>
+                    <div class="font-semibold">₹${order.totalAmount}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div class="bg-white p-4 rounded-lg border border-gray-200">
+                <h4 class="font-semibold mb-3 pb-2 border-b text-gray-700 flex items-center">
+                  <i class="fas fa-user-circle text-blue-500 mr-2"></i> Customer Details
+                </h4>
+                <div class="space-y-2 text-sm">
+                  <div class="flex">
+                    <i class="fas fa-user text-gray-400 w-5 mt-1"></i>
+                    <span class="ml-2">${order.user.name}</span>
+                  </div>
+                  <div class="flex">
+                    <i class="fas fa-envelope text-gray-400 w-5 mt-1"></i>
+                    <span class="ml-2">${order.user.email}</span>
+                  </div>
+                  <div class="flex">
+                    <i class="fas fa-phone text-gray-400 w-5 mt-1"></i>
+                    <span class="ml-2">${order.user.phone || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white p-4 rounded-lg border border-gray-200">
+                <h4 class="font-semibold mb-3 pb-2 border-b text-gray-700 flex items-center">
+                  <i class="fas fa-credit-card text-blue-500 mr-2"></i> Payment Details
+                </h4>
+                <div class="space-y-2 text-sm">
+                  <div class="flex">
+                    <i class="fas fa-wallet text-gray-400 w-5 mt-1"></i>
+                    <div class="ml-2">
+                      <span class="text-xs text-gray-500 block">METHOD</span>
+                      <div class="flex items-center">
+                        ${getPaymentIcon(order.paymentMethod)}
+                        ${order.paymentMethod}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+              <h4 class="font-semibold mb-3 pb-2 border-b text-gray-700 flex items-center">
+                <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i> Shipping Address
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div class="flex">
+                  <i class="fas fa-home text-gray-400 w-5 mt-1"></i>
+                  <span class="ml-2">${order.address.houseNameOrNo}, ${order.address.street}</span>
+                </div>
+                <div class="flex">
+                  <i class="fas fa-city text-gray-400 w-5 mt-1"></i>
+                  <span class="ml-2">${order.address.city}, ${order.address.state}</span>
+                </div>
+                <div class="flex">
+                  <i class="fas fa-map-pin text-gray-400 w-5 mt-1"></i>
+                  <span class="ml-2">${order.address.postalCode}</span>
+                </div>
+                <div class="flex">
+                  <i class="fas fa-bookmark text-gray-400 w-5 mt-1"></i>
+                  <span class="ml-2">Landmark: ${order.address.landmark || 'N/A'}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg border border-gray-200">
+              <h4 class="font-semibold p-4 pb-3 border-b text-gray-700 flex items-center justify-between">
+                <div class="flex items-center">
+                  <i class="fas fa-shopping-basket text-blue-500 mr-2"></i> 
+                  Order Items <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">${order.items.length}</span>
+                </div>
+                <div class="text-sm text-gray-500 font-normal">Total: <span class="text-gray-800 font-semibold">₹${order.totalAmount}</span></div>
+              </h4>
+              <div class="${useScrollContainer ? 'products-container' : 'p-4'}">
+                ${itemsHTML}
+              </div>
+            </div>`;
+
+          document.getElementById('order-details-container').innerHTML = html;
+          openModal();
+        })
+        .catch(() => {
+          document.getElementById('order-details-container').innerHTML = `
+            <div class="text-center py-10 text-gray-500">
+              <i class="fas fa-exclamation-circle text-4xl mb-3"></i>
+              <p class="text-lg">Failed to load order details.</p>
+              <p class="text-sm mt-2">Please try again or contact support if the problem persists.</p>
+            </div>`;
+          openModal();
+        });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const tableRows = document.querySelectorAll('#example tbody tr');
+    tableRows.forEach(row => {
+      row.addEventListener('mouseenter', function() {
+        this.classList.add('bg-gray-50');
+      });
+      row.addEventListener('mouseleave', function() {
+        this.classList.remove('bg-gray-50');
+      });
+    });
+    
+    const buttons = document.querySelectorAll('.view-order-btn');
+    buttons.forEach(button => {
+      button.addEventListener('mousedown', function() {
+        this.style.transform = 'translateY(0)';
+      });
+      button.addEventListener('mouseup', function() {
+        this.style.transform = 'translateY(-1px)';
+      });
+    });
   });
 </script>

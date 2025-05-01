@@ -1,92 +1,223 @@
-<div class="container mx-auto p-4">
-  <!-- Stats Section -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <!-- Total Sales Card -->
-    <div class="bg-blue-600 text-white p-4 rounded-lg shadow-lg text-center">
-      <i class="bi bi-cart-check text-4xl"></i>
-      <h6 class="text-sm mt-2">Total Sales</h6>
-      <h3 class="text-2xl font-semibold">$12,340</h3>
+<div class="container mx-auto p-6 max-w-7xl">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:border-blue-500/20 hover:-translate-y-1">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Revenue</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-900 dark:text-white">₹<%= totalRevenue.toLocaleString() %></h3>
+        </div>
+        <div class="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+      <p class="text-xs text-green-500 mt-3 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+        12.5% from last week
+      </p>
     </div>
 
-    <!-- Total Orders Card -->
-    <div class="bg-green-600 text-white p-4 rounded-lg shadow-lg text-center">
-      <i class="bi bi-boxes text-4xl"></i>
-      <h6 class="text-sm mt-2">Total Orders</h6>
-      <h3 class="text-2xl font-semibold">1,245</h3>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:border-green-500/20 hover:-translate-y-1">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Orders</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-900 dark:text-white"><%= totalOrders %></h3>
+        </div>
+        <div class="p-2 rounded-lg bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+        </div>
+      </div>
+      <p class="text-xs text-green-500 mt-3 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+        8.3% from last week
+      </p>
     </div>
 
-    <!-- Average Revenue Card -->
-    <div class="bg-yellow-400 text-gray-800 p-4 rounded-lg shadow-lg text-center">
-      <i class="bi bi-cash text-4xl"></i>
-      <h6 class="text-sm mt-2">Average Revenue</h6>
-      <h3 class="text-2xl font-semibold">$49.20</h3>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:border-yellow-500/20 hover:-translate-y-1">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-900 dark:text-white"><%= totalUsers %></h3>
+        </div>
+        <div class="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </div>
+      </div>
+      <p class="text-xs text-green-500 mt-3 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+        5.2% from last week
+      </p>
     </div>
 
-    <!-- Returning Customers Card -->
-    <div class="bg-teal-500 text-white p-4 rounded-lg shadow-lg text-center">
-      <i class="bi bi-person-check text-4xl"></i>
-      <h6 class="text-sm mt-2">Returning Customers</h6>
-      <h3 class="text-2xl font-semibold">321</h3>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:border-pink-500/20 hover:-translate-y-1">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Products</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-900 dark:text-white"><%= totalProducts %></h3>
+        </div>
+        <div class="p-2 rounded-lg bg-pink-100 dark:bg-pink-900/50 text-pink-600 dark:text-pink-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
+      </div>
+      <p class="text-xs text-gray-500 mt-3 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+        No change
+      </p>
     </div>
   </div>
 
-  <!-- Sales & Revenue Report Section -->
-  <div class="bg-white p-6 rounded-lg shadow-md">
-    <div class="flex justify-between items-center mb-4">
-      <h6 class="text-lg font-semibold">Sales & Revenue Report</h6>
-      <select id="chartTypeSelect" class="form-select border border-gray-300 rounded-md py-2 px-4 text-sm">
-        <option value="daily">Daily</option>
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
-        <option value="yearly">Yearly</option>
-      </select>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 lg:col-span-2" style="height: 350px;">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Revenue & Orders</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Last 7 days performance</p>
+        </div>
+        <div class="flex space-x-2">
+          <button class="px-3 py-1 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg font-medium">Revenue</button>
+          <button class="px-3 py-1 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg font-medium">Orders</button>
+        </div>
+      </div>
+      <canvas id="revenueChart" height="300" width="900"></canvas>
     </div>
-    <canvas id="mainChart" height="300"></canvas>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Orders by Status</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Current order distribution</p>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <% Object.entries(orderStatusSummary).forEach(([status, count]) => { %>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <%
+                let statusColor = 'gray';
+                let statusBg = 'gray-100';
+                let statusDarkBg = 'gray-700';
+                if (status === 'Completed') {
+                  statusColor = 'green';
+                  statusBg = 'green-100';
+                  statusDarkBg = 'green-900/30';
+                } else if (status === 'Processing') {
+                  statusColor = 'blue';
+                  statusBg = 'blue-100';
+                  statusDarkBg = 'blue-900/30';
+                } else if (status === 'Cancelled') {
+                  statusColor = 'red';
+                  statusBg = 'red-100';
+                  statusDarkBg = 'red-900/30';
+                } else if (status === 'Pending') {
+                  statusColor = 'yellow';
+                  statusBg = 'yellow-100';
+                  statusDarkBg = 'yellow-900/30';
+                }
+              %>
+              <div class="p-2 rounded-lg bg-<%= statusBg %> dark:bg-<%= statusDarkBg %> text-<%= statusColor %>-600 dark:text-<%= statusColor %>-400 mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <% if (status === 'Completed') { %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  <% } else if (status === 'Processing') { %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <% } else if (status === 'Cancelled') { %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  <% } else { %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <% } %>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white"><%= status %></h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400"><%= ((count / totalOrders) * 100).toFixed(1) %>% of total</p>
+              </div>
+            </div>
+            <span class="text-sm font-medium text-gray-900 dark:text-white"><%= count %></span>
+          </div>
+        <% }); %>
+      </div>
+    </div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 <script>
-  async function fetchData(type) {
-    const res = await fetch(`/admin/sales-revenue-report?aggregation=${type}`);
-    return await res.json();
-  }
+  const chartData = <%- JSON.stringify(revenueChartData) %>;
+  const labels = chartData.map(item => item.date);
+  const revenue = chartData.map(item => item.revenue);
+  const orders = chartData.map(item => item.orders);
 
-  function renderChart(canvasId, data) {
-    const ctx = document.getElementById(canvasId).getContext("2d");
-    const labels = data.map(item => item._id?.toString() || `Week ${item._id}`);
-    const values = data.map(item => item.totalRevenue || 0);
-
-    new Chart(ctx, {
-      type: "line",
-      data: {
-        labels,
-        datasets: [{
-          label: "Total Revenue",
-          data: values,
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          borderColor: "rgba(75, 192, 192, 1)",
+  const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(revenueCtx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Revenue (₹)',
+          data: revenue,
+          backgroundColor: 'rgba(59, 130, 246, 0.05)',
+          borderColor: 'rgba(59, 130, 246, 1)',
           borderWidth: 2,
-          fill: true
-        }]
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: 'white',
+          pointBorderColor: 'rgba(59, 130, 246, 1)',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        },
+        {
+          label: 'Orders',
+          data: orders,
+          backgroundColor: 'rgba(34, 197, 94, 0.05)',
+          borderColor: 'rgba(34, 197, 94, 1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: 'white',
+          pointBorderColor: 'rgba(34, 197, 94, 1)',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        datalabels: {
+          display: false
+        },
       },
-      options: {
-        responsive: true,
-        scales: {
-          y: { beginAtZero: true }
+      scales: {
+        x: {
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 5,
+          }
+        },
+        y: {
+          beginAtZero: true
         }
       }
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    const defaultType = "daily";
-    const data = await fetchData(defaultType);
-    renderChart("mainChart", data);
-  });
-
-  document.getElementById("chartTypeSelect").addEventListener("change", async (e) => {
-    const type = e.target.value;
-    const data = await fetchData(type);
-    renderChart("mainChart", data);
+    }
   });
 </script>
