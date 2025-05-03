@@ -1,13 +1,10 @@
 <div class="container mx-auto p-4 max-w-4xl">
   <div class="bg-white rounded-xl shadow-md overflow-hidden">
-    <!-- Header -->
     <div class="bg-gray-50 px-6 py-4 border-b">
       <h1 class="text-2xl font-bold text-gray-800"><%- product ? 'Edit' : 'Add New' %> Product</h1>
     </div>
 
-    <!-- Form -->
     <form id="productForm" class="p-6" onsubmit="handleFormSubmit(event)">
-      <!-- Basic Information -->
       <div class="mb-8">
         <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">Basic Information</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -52,18 +49,16 @@
         </div>
       </div>
 
-      <!-- Product Images -->
       <div class="mb-8">
         <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">Product Images</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4" id="image-boxes-container"></div>
         <p class="text-xs text-gray-500 mt-2">Upload high-quality images (Recommended: 800x800 pixels, JPG/JPEG/PNG)</p>
       </div>
 
-      <!-- Product Variants -->
       <div class="mb-6">
         <div class="flex justify-between items-center mb-4 border-b pb-2">
           <h2 class="text-xl font-semibold text-gray-700">Product Variants</h2>
-          <button type="button" onclick="addVariant()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          <button type="button" onclick="addVariant()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-black hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
             <svg class="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>
@@ -74,9 +69,8 @@
         <div id="variant-contents"></div>
       </div>
 
-      <!-- Submit -->
       <div class="flex justify-end pt-4 border-t">
-        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-black hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
           <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
           </svg>
@@ -106,9 +100,9 @@
 }
 
 .variant-tab.active {
-  color: #1d4ed8;
+  color: black;
   background-color: #eff6ff;
-  border-bottom-color: #1d4ed8;
+  border-bottom-color: black;
 }
 
 .variant-tab .remove-btn {
@@ -297,7 +291,6 @@ function renderImageBoxes(count) {
     input.accept = 'image/*';
     input.onchange = (e) => previewImage(e, inputId);
     
-    // Add a hidden input to preserve existing image paths
     if (product && product.images && product.images[i]) {
       const hiddenInput = document.createElement('input');
       hiddenInput.type = 'hidden';
@@ -336,7 +329,6 @@ function removeImage(inputId) {
   const input = document.getElementById(inputId);
   const box = input.previousElementSibling;
   
-  // Remove any hidden input for existing image
   const hiddenInput = box.parentElement.querySelector(`input[name^="existingImages"]`);
   if (hiddenInput) {
     hiddenInput.remove();
