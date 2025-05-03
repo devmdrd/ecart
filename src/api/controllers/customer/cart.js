@@ -132,7 +132,7 @@ exports.addToCart = async (req, res) => {
 
     if(wishlistThrough) await Wishlist.findOneAndDelete({ user: userId, product: productId, sku: skuId });
 
-    res.status(201).json({ success: true, message: "Product added to cart successfully" });
+    res.status(201).json({ success: true, message: "Product added to cart" });
   } catch (err) {
     console.error("Add to cart error:", err);
     res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -152,7 +152,7 @@ exports.removeCartProduct = async (req, res) => {
     cart.products = cart.products.filter(p => !(p.product.toString() === productId && p.sku.toString() === skuId));
     await cart.save();
 
-    res.status(200).json({ success: true, message: "Product removed from cart successfully" });
+    res.status(200).json({ success: true, message: "Product removed from cart" });
   } catch (err) {
     console.error("Error:", err);
     res.status(500).json({ success: false, message: "Internal Server Error" });

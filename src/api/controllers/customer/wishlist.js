@@ -59,6 +59,7 @@ exports.addToWishlist = async (req, res) => {
   try {
     const { productId, skuId } = req.body;
     const userId = req.session.user.id;
+
     const product = await Product.findById(productId);
     const sku = await SKU.findById(skuId);
 
@@ -67,11 +68,13 @@ exports.addToWishlist = async (req, res) => {
     }
 
     const exists = await Wishlist.findOne({ user: userId, product: productId, sku: skuId });
-    if (!exists) {
-      await Wishlist.create({ product: productId, sku: skuId, user: userId });
+    if (exists) {
+      return res.status(200).json({ success: false, message: "This product is already in your wishlist." });
     }
 
-    res.status(201).json({ success: true, message: "Product added to wishlist successfully" });
+    await Wishlist.create({ product: productId, sku: skuId, user: userId });
+
+    res.status(201).json({ success: true, message: "Product added to wishlist" });
   } catch (err) {
     console.error("Error:", err);
     res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -84,7 +87,7 @@ exports.removeWishlistProduct = async (req, res) => {
 
   try {
     await Wishlist.findOneAndDelete({ _id: wishlistId, product: productId, user: userId });
-    res.status(200).json({ success: true, message: "Product removed from wishlist successfully" });
+    res.status(200).json({ success: true, message: "Product removed from wishlist" });
   } catch (err) {
     console.error("Error:", err);
     res.status(500).json({ success: false, message: "Internal Server Error" });

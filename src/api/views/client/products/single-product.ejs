@@ -1,37 +1,39 @@
 <style>
-.tab-content > div {
-  transition: opacity 0.3s ease-in-out;
-  opacity: 0;
-  visibility: hidden;
-}
+  .tab-content > div {
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+  }
 
-.tab-content > div:not(.hidden) {
-  opacity: 1;
-  visibility: visible;
-}
+  .tab-content > div:not(.hidden) {
+    opacity: 1;
+    visibility: visible;
+  }
 
-ul li:hover {
-  background-color: #f0f0f0;
-  border-color: #333;
-}
+  ul li:hover {
+    background-color: #f0f0f0;
+    border-color: #333;
+  }
 
-ul li[aria-selected="true"] {
-  background-color: #e0e0e0;
-}
+  ul li[aria-selected="true"] {
+    background-color: #e0e0e0;
+  }
 </style>
 
 <section class="py-6">
   <div class="container mx-auto px-4">
     <div class="bg-white overflow-hidden">
       <div class="flex flex-wrap">
-        
         <div class="w-full md:w-1/2 p-6">
           <div class="relative overflow-hidden rounded-lg mb-6 bg-white">
             <% product.images.forEach((img, i) => { %>
               <div id="mainImage<%= i %>" class="<%= i === 0 ? 'block' : 'hidden' %> relative group">
                 <img src="/<%= img %>" alt="<%= product.name %>" class="w-full h-96 object-cover transition group-hover:scale-105">
-                <button onclick="handleWishlist('<%= product._id %>')" class="absolute top-1 right-4 p-3 text-gray-600 hover:text-red-500">
-                  <i class="fa fa-heart"></i>
+                <button class="absolute top-1 right-4 p-3 text-gray-600 hover:text-red-500 add-to-wishlist-link" 
+                        data-product-id="<%= product._id %>" 
+                        data-sku-id="<%= variant._id %>"
+                        data-wishlist-id="<%= product.wishlistId || '' %>">
+                  <i class="fas fa-heart <%= product.isWishlisted ? 'text-red-500' : '' %>"></i>
                 </button>
               </div>
             <% }) %>
@@ -98,7 +100,11 @@ ul li[aria-selected="true"] {
                   <button onclick="adjustQty(1)" class="w-10 h-10 bg-black text-white">+</button>
                 </div>
                 <div class="ml-6 flex gap-2">
-                  <button onclick="handleCart('<%= variant._id %>')" class="border border-black px-4 py-2 hover:bg-black hover:text-white flex items-center">
+                  <button class="border border-black px-4 py-2 hover:bg-black hover:text-white flex items-center add-to-cart-link"
+                          data-product-id="<%= product._id %>"
+                          data-sku-id="<%= variant._id %>"
+                          data-count="1"
+                          data-price="<%= variant.price %>">
                     <i class="fa fa-shopping-cart mr-2"></i>Add to Cart
                   </button>
                   <button onclick="handleBuy('<%= variant._id %>')" class="bg-black px-4 py-2 text-white hover:bg-gray-800">Buy Now</button>
@@ -141,7 +147,7 @@ ul li[aria-selected="true"] {
 
         <div id="reviewsTabContent" class="hidden" role="tabpanel">
           <% if (reviews.length === 0) { %>
-            <p class="text-center text-gray-500">No reviews yet. Be the first!</p>
+            <p class="text-center text-gray-500">No reviews yet!</p>
           <% } else { %>
             <% reviews.forEach(r => { %>
               <div class="py-4 border-b">
@@ -211,14 +217,85 @@ ul li[aria-selected="true"] {
     qty.textContent = count;
   }
   
-  function handleCart(skuId) {
-    let count = parseInt(document.getElementById('qty').textContent);
-    showToast(`Added ${count} item(s) to cart`, 'green');
-  }
-  
-  function handleWishlist(productId) {
-    showToast('Added to Wishlist', 'yellow');
-  }
+  document.addEventListener("click", async (e) => {
+    if (isProcessing) return; 
+
+    if (e.target.closest(".add-to-cart-link")) {
+      const button = e.target.closest(".add-to-cart-link");
+      const productId = button.getAttribute("data-product-id");
+      const skuId = button.getAttribute("data-sku-id");
+      const count = document.getElementById('qty').textContent;
+
+      try {
+        isProcessing = true; 
+        const response = await fetch("/cart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId, skuId, count }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          showToast("Product added to cart", true);
+        } else {
+          showToast(result.message, false);
+        }
+      } catch (err) {
+        console.error("Error adding to cart:", err);
+        showToast("Something went wrong while adding to cart.", false);
+      } finally {
+        isProcessing = false; 
+      }
+    }
+
+    if (e.target.closest(".add-to-wishlist-link")) {
+      const button = e.target.closest(".add-to-wishlist-link");
+      const productId = button.getAttribute("data-product-id");
+      const skuId = button.getAttribute("data-sku-id");
+      const wishlistId = button.getAttribute("data-wishlist-id");
+      const icon = button.querySelector('i');
+
+      try {
+        isProcessing = true; 
+        let result;
+        if (wishlistId) {
+          const response = await fetch("/wishlist", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId, wishlistId }),
+          });
+          result = await response.json();
+        } else {
+          const response = await fetch("/wishlist", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId, skuId }),
+          });
+          result = await response.json();
+        }
+
+        if (result.success) {
+          showToast(result.message, true);
+          if (wishlistId) {
+            icon.classList.remove("fas", "text-red-500");
+            icon.classList.add("far");
+            button.setAttribute("data-wishlist-id", "");
+          } else {
+            icon.classList.remove("far");
+            icon.classList.add("fas", "text-red-500");
+            button.setAttribute("data-wishlist-id", result.wishlistId);
+          }
+        } else {
+          showToast(result.message, false);
+        }
+      } catch (err) {
+        console.error("Error updating wishlist:", err);
+        showToast("Something went wrong while updating wishlist.", false);
+      } finally {
+        isProcessing = false;
+      }
+    }
+  });
   
   function handleBuy(skuId) {
     let count = parseInt(document.getElementById('qty').textContent);
@@ -229,15 +306,6 @@ ul li[aria-selected="true"] {
   
   function changeVariant(productId, skuId) {
     window.location.href = `/products/${productId}/sku/${skuId}`;
-  }
-  
-  function showToast(msg, type) {
-    const colors = { green: 'bg-green-100 text-green-700', yellow: 'bg-yellow-100 text-yellow-700', red: 'bg-red-100 text-red-700' };
-    const div = document.createElement('div');
-    div.className = `fixed bottom-4 right-4 p-4 rounded shadow-lg z-50 ${colors[type]}`;
-    div.innerHTML = `<i class="fa fa-${type === 'green' ? 'check-circle' : type === 'yellow' ? 'heart' : 'exclamation-circle'} mr-2"></i> ${msg}`;
-    document.body.appendChild(div);
-    setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 500); }, 3000);
   }
   
   document.addEventListener('DOMContentLoaded', () => switchTab('features', 0));

@@ -51,9 +51,9 @@ router.get("/products", renderProducts);
 router.get("/products/:productId/sku/:skuId", renderSingleProduct);
 
 // Cart
-router.get("/cart", renderCart);
-router.post("/cart", addToCart);
-router.delete("/cart", removeCartProduct);
+router.get("/cart", authenticateSession, renderCart);
+router.post("/cart", authenticateSession, addToCart);
+router.delete("/cart", authenticateSession, removeCartProduct);
 
 // Wishlist
 router.get("/wishlist", renderWishlist);
