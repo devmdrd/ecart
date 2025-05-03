@@ -9,7 +9,7 @@ exports.renderManageBrand = async (req, res) => {
     const categories = await Category.find();
 
     if (!brandId) {
-      return res.render("admin/brands/manage", { brand: null, categories, message: "" });
+      return res.render("admin/brands/manage", { brand: null, categories });
     }
 
     const brand = await Brand.findById(brandId).populate("category");
@@ -18,7 +18,7 @@ exports.renderManageBrand = async (req, res) => {
       return res.status(404).json({ success: false, message: "Brand not found" });
     }
 
-    res.render("admin/brands/manage", { brand, categories, message: "" });
+    res.render("admin/brands/manage", { brand, categories });
   } catch (error) {
     console.error("Error in Render Manage Brand:", error);
     res.status(500).json({ success: false, message: "Error loading form" });
@@ -28,7 +28,7 @@ exports.renderManageBrand = async (req, res) => {
 exports.renderBrandList = async (req, res) => {
   try {
     const brands = await Brand.find().populate("category").sort({ createdAt: -1 });
-    res.render("admin/brands/list", { brands, message: "" });
+    res.render("admin/brands/list", { brands });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Failed to retrieve brands" });

@@ -9,7 +9,7 @@ exports.renderManageBanner = async (req, res) => {
     const categories = await Category.find();
 
     if (!bannerId) {
-      return res.render("admin/banners/manage", { banner: null, categories, message: "" });
+      return res.render("admin/banners/manage", { banner: null, categories });
     }
 
     const banner = await Banner.findById(bannerId);
@@ -17,7 +17,7 @@ exports.renderManageBanner = async (req, res) => {
       return res.status(404).json({ success: false, message: "Banner not found" });
     }
 
-    res.render("admin/banners/manage", { banner, categories, message: "" });
+    res.render("admin/banners/manage", { banner, categories });
   } catch (error) {
     console.error("Error in Render Manage Banner:", error);
     res.status(500).json({ success: false, message: "Error loading banner form" });
@@ -27,7 +27,7 @@ exports.renderManageBanner = async (req, res) => {
 exports.renderBannerList = async (req, res) => {
   try {
     const banners = await Banner.find().populate("categoryId").sort({ createdAt: -1 });
-    res.render("admin/banners/list", { bannerData: banners, message: "" });
+    res.render("admin/banners/list", { bannerData: banners });
   } catch (error) {
     console.error("Error retrieving banners:", error);
     res.status(500).json({ success: false, message: "Failed to retrieve banners" });

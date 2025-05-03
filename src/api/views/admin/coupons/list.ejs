@@ -24,7 +24,7 @@
                 <a href="/admin/coupons/manage/<%= coupon._id %>" class="px-3 py-1 rounded-md border" title="Edit">
                   <i class="fas fa-edit"></i>
                 </a>
-                <button class="px-3 py-1 rounded-md border text-red-600" title="Delete" onclick="openDeleteModal('<%= coupon._id %>')">
+                <button class="px-3 py-1 rounded-md border text-red-600" title="Delete" onclick="confirmDelete('<%= coupon._id %>')">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -36,67 +36,27 @@
   </div>
 </div>
 
-<!-- Confirmation Modal -->
-<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-  <div class="bg-white p-6 rounded-lg w-96">
-    <h4 class="text-xl font-semibold mb-4">Confirm Deletion</h4>
-    <p>Are you sure you want to delete this coupon?</p>
-    <div class="mt-4 flex justify-end gap-4">
-      <button id="cancelDelete" class="px-4 py-2 bg-gray-300 rounded-md">Cancel</button>
-      <button id="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-md">Delete</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast Notification -->
-<div id="toast" class="fixed bottom-6 right-6 bg-gray-800 text-white py-3 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 pointer-events-none"></div>
-
 <script>
-  let couponIdToDelete = null;
+  async function confirmDelete(couponId) {
+    sweetAlert(
+      'Are you sure?', 
+      'Do you want to delete this coupon?', 
+      async () => {
+        try {
+          const response = await fetch(`/admin/coupons/${couponId}`, { method: 'DELETE' });
+          const data = await response.json();
 
-  function openDeleteModal(couponId) {
-    couponIdToDelete = couponId;
-    document.getElementById("deleteModal").classList.remove("hidden");
-  }
-
-  document.getElementById("cancelDelete").addEventListener("click", () => {
-    document.getElementById("deleteModal").classList.add("hidden");
-  });
-
-  async function showToast(message, isSuccess = true) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.classList.remove("opacity-0");
-    toast.classList.add("opacity-100");
-    toast.classList.add(isSuccess ? "bg-green-600" : "bg-red-600");
-
-    setTimeout(() => {
-      toast.classList.remove("opacity-100");
-      toast.classList.add("opacity-0");
-    }, 2500);
-  }
-
-  document.getElementById("confirmDelete").addEventListener("click", async () => {
-    if (couponIdToDelete) {
-      try {
-        const response = await fetch(`/admin/coupons/${couponIdToDelete}`, {
-          method: 'DELETE',
-        });
-
-        const result = await response.json();
-        if (result.success) {
-          showToast(result.message, true); 
-          setTimeout(() => {
-            window.location.reload(); 
-          }, 2000);
-        } else {
-          showToast(result.message, false); 
+          if (data.success) {
+            showToast(data.message, true);
+            setTimeout(() => { window.location.reload(); }, 2000);
+          } else {
+            showToast(data.message, false);
+          }
+        } catch (error) {
+          console.error("Error deleting category:", error);
+          showToast("An error occurred while deleting the category.", false);
         }
-      } catch (error) {
-        console.error("Error deleting coupon:", error);
-        showToast("An error occurred while deleting the coupon.", false);
       }
-    }
-    document.getElementById("deleteModal").classList.add("hidden");
-  });
+    );
+  }
 </script>

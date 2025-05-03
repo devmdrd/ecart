@@ -117,7 +117,6 @@ exports.renderReports = async (req, res) => {
     ]);
 
     res.render('admin/reports', {
-      layout: 'layouts/admin-layout',
       revenueChartData,
       ordersPerDay,
       orderStatusSummary,
@@ -130,10 +129,7 @@ exports.renderReports = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Reports Error:', error);
-    res.render('admin/reports', {
-      layout: 'layouts/admin-layout',
-      error: 'Failed to load reports data'
-    });
+    console.error('Reports Error:', error);
+    res.status(500).json({ success: false, message: "An error occurred while loading the report." });
   }
 };

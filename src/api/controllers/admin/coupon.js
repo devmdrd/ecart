@@ -5,7 +5,7 @@ exports.renderManageCoupon = async (req, res) => {
 
   try {
     if (!couponId) {
-      return res.render("admin/coupons/manage", { coupon: null, message: "" });
+      return res.render("admin/coupons/manage", { coupon: null });
     }
 
     const coupon = await Coupon.findById(couponId);
@@ -13,7 +13,7 @@ exports.renderManageCoupon = async (req, res) => {
       return res.status(404).json({ success: false, message: "Coupon not found" });
     }
 
-    res.render("admin/coupons/manage", { coupon, message: "" });
+    res.render("admin/coupons/manage", { coupon });
   } catch (error) {
     console.error("Error in Render Manage Coupon:", error);
     res.status(500).json({ success: false, message: "Error loading form" });
@@ -23,7 +23,7 @@ exports.renderManageCoupon = async (req, res) => {
 exports.renderCouponList = async (req, res) => {
   try {
     const coupons = await Coupon.find().sort({ createdAt: -1 });
-    res.render("admin/coupons/list", { couponData: coupons, message: "" });
+    res.render("admin/coupons/list", { couponData: coupons });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Failed to retrieve coupons" });

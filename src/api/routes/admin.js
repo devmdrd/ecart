@@ -9,6 +9,7 @@ const { renderManageAttribute, renderAttributeList, createAttribute, updateAttri
 const { renderManageProduct, getProductAttributes, renderProductList, createProduct, updateProduct, deleteProduct } = require("../controllers/admin/product");
 const { renderManageCoupon, renderCouponList, createCoupon, updateCoupon, deleteCoupon } = require("../controllers/admin/coupon");
 const { renderManageBanner, renderBannerList, createBanner, updateBanner, deleteBanner } = require("../controllers/admin/banner");
+const { renderCustomerList, updateCustomer, deleteCustomer } = require("../controllers/admin/customer");
 const { renderOrders, updateOrderStatus, getOrderDetails } = require("../controllers/admin/order");
 const { renderReports } = require("../controllers/admin/report");
 
@@ -67,6 +68,11 @@ router.get("/banners", authenticateSession, renderBannerList);
 router.post("/banners", authenticateSession, upload.single("image"), createBanner);
 router.put("/banners", authenticateSession, upload.single("image"), updateBanner);
 router.delete("/banners/:bannerId", authenticateSession, deleteBanner);
+
+// Customer
+router.get("/customers", authenticateSession, renderCustomerList);                                           
+router.put("/customers", authenticateSession, updateCustomer);         
+router.delete("/customers/:customerId", authenticateSession, deleteCustomer);           
 
 // Orders
 router.get("/orders", renderOrders);

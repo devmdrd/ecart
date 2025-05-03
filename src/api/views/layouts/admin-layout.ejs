@@ -6,10 +6,11 @@
     <title>Admin Panel</title>
 
     <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" type="image/x-icon" />
-    
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.15/dist/sweetalert2.min.css">
 </head>
 <body class="bg-white text-black">
 
@@ -22,7 +23,7 @@
             <%- include('./partials/admin-header') %>
 
             <div class="flex-1 p-6 overflow-y-auto">
-                <%- body %> 
+                <%- body %>
             </div>
 
             <%- include('./partials/admin-footer') %>
@@ -31,11 +32,11 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script>
-      $(document).ready(function() {
-          $('#example').DataTable();
-      });
-  </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.15/dist/sweetalert2.min.js"></script>
+    <script src="/js/toastify.js"></script>
+    <script src="/js/sweetalert.js"></script>
+    <script src="/js/datatables.js"></script> 
 
 </body>
 </html>

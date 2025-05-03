@@ -11,7 +11,7 @@ exports.renderOrders = async (req, res) => {
       .populate('items.sku.attributes.attributeId', 'name values')  
       .populate('items.sku.attributes.valueId', 'value');  
 
-    res.render("admin/orders", { orders, message: "" });
+    res.render("admin/orders", { orders });
   } catch (error) {
     console.error("Error in Render Orders:", error);
     res.status(500).json({ success: false, message: "Error loading orders" });
@@ -31,7 +31,7 @@ exports.updateOrderStatus = async (req, res) => {
         order.status = status;
         await order.save();
   
-        res.json({ success: true, message: 'Order status updated successfully' });
+        res.status(200).json({ success: true, message: 'Order status updated successfully' });
     } catch (error) {
         console.error("Error updating order status:", error);
         res.status(500).json({ success: false, message: 'Error updating order status' });
@@ -66,7 +66,7 @@ exports.getOrderDetails = async (req, res) => {
       item.sku.attributes = await Promise.all(attributeValuePromises);
     }
 
-    res.json({ success: true, order: transformedOrder });
+    res.status(200).json({ success: true, order: transformedOrder });
   } catch (error) {
     console.error("Error fetching order details:", error);
     res.status(500).json({ success: false, message: 'Error fetching order details' });

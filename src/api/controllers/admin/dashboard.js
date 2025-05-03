@@ -51,7 +51,6 @@ exports.renderAdminDashboard = async (req, res) => {
     });
 
     res.render("admin/dashboard", {
-      layout: "layouts/admin-layout",
       totalUsers,
       totalProducts,
       totalCategories,
@@ -63,9 +62,6 @@ exports.renderAdminDashboard = async (req, res) => {
     });
   } catch (error) {
     console.error("Dashboard error:", error);
-    res.render("admin/dashboard", {
-      layout: "layouts/admin-layout",
-      error: "Failed to load dashboard data"
-    });
+    res.status(500).json({ success: false, message: "An error occurred while loading the dashboard data." });
   }
 };

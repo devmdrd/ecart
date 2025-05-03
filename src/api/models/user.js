@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false },
   isBlocked: { type: Boolean, default: false },
   profileImage: { type: String, default: '' },
-  addresses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address', default: [] }] 
+  addresses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address', default: [] }],
+  isDeleted: { type: Boolean, default: false },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

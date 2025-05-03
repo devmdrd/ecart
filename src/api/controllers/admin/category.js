@@ -6,7 +6,7 @@ exports.renderManageCategory = async (req, res) => {
 
   try {
     if (!categoryId) {
-      return res.render("admin/categories/manage", { category: null, message: "" });
+      return res.render("admin/categories/manage", { category: null });
     }
 
     const category = await Category.findById(categoryId);
@@ -14,7 +14,7 @@ exports.renderManageCategory = async (req, res) => {
       return res.status(404).json({ success: false, message: "Category not found" });
     }
 
-    res.render("admin/categories/manage", { category, message: "" });
+    res.render("admin/categories/manage", { category });
   } catch (error) {
     console.error("Error in Render Manage Category:", error);
     res.status(500).json({ success: false, message: "Error loading form" });
@@ -24,7 +24,7 @@ exports.renderManageCategory = async (req, res) => {
 exports.renderCategoryList = async (req, res) => {
   try {
     const categories = await Category.find().sort({ createdAt: -1 });
-    res.render("admin/categories/list", { categoryData: categories, message: "" });
+    res.render("admin/categories/list", { categoryData: categories });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Failed to retrieve categories" });

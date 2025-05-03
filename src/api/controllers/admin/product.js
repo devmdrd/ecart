@@ -12,7 +12,7 @@ exports.renderManageProduct = async (req, res) => {
     const categories = await Category.find();
     
     if (!productId) {
-      return res.render("admin/products/manage", { product: null, categories, brands: [], variantAttributes: [], message: "" });
+      return res.render("admin/products/manage", { product: null, categories, brands: [], variantAttributes: [] });
     }
 
     const product = await Product.findById(productId);
@@ -52,7 +52,7 @@ exports.renderManageProduct = async (req, res) => {
       skus: formattedSkus
     };
 
-    res.render("admin/products/manage", { product: formattedProduct, categories, brands, variantAttributes, message: "" });
+    res.render("admin/products/manage", { product: formattedProduct, categories, brands, variantAttributes });
     
   } catch (err) {
     res.status(500).json({ success: false, message: "An error occurred while loading the product." });
@@ -88,7 +88,7 @@ exports.getProductAttributes = async (req, res) => {
 exports.renderProductList = async (req, res) => {
   try {
     const products = await Product.find().populate("category").populate("brand").sort({ createdAt: -1 });
-    res.render("admin/products/list", { products, message: "" });
+    res.render("admin/products/list", { products });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Failed to retrieve products" });
@@ -150,7 +150,7 @@ exports.createProduct = async (req, res) => {
 
   } catch (err) {
     console.error("Error:", err);
-    res.status(500).json({ success: false, message: "Internal Server Error", error: err.message });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
@@ -216,7 +216,7 @@ exports.updateProduct = async (req, res) => {
 
   } catch (err) {
     console.error("Error in updateProduct:", err);
-    res.status(500).json({ success: false, message: "Internal server error", error: err.message });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 

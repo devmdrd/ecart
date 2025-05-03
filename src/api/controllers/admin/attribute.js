@@ -8,7 +8,7 @@ exports.renderManageAttribute = async (req, res) => {
     const categories = await Category.find();
 
     if (!attributeId) {
-      return res.render("admin/attributes/manage", { attribute: null, categories, message: "" });
+      return res.render("admin/attributes/manage", { attribute: null, categories });
     }
 
     const attribute = await Attribute.findById(attributeId).populate("categoryId");
@@ -17,7 +17,7 @@ exports.renderManageAttribute = async (req, res) => {
       return res.status(404).json({ success: false, message: "Attribute not found" });
     }
 
-    res.render("admin/attributes/manage", { attribute, categories, message: "" });
+    res.render("admin/attributes/manage", { attribute, categories });
   } catch (error) {
     console.error("Error in Render Manage Attribute:", error);
     res.status(500).json({ success: false, message: "Error loading form" });
@@ -27,7 +27,7 @@ exports.renderManageAttribute = async (req, res) => {
 exports.renderAttributeList = async (req, res) => {
   try {
     const attributes = await Attribute.find().populate("categoryId").sort({ createdAt: -1 });
-    res.render("admin/attributes/list", { attributes, message: "" });
+    res.render("admin/attributes/list", { attributes });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Failed to retrieve attributes" });
