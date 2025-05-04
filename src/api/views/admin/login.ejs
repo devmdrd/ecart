@@ -3,85 +3,62 @@
     <h4 class="text-3xl font-bold mb-6 text-center text-gray-800">Admin Login</h4>
 
     <form id="login-form" class="space-y-6">
-      <!-- Username -->
       <div>
         <label for="username" class="block text-base font-medium text-gray-700">Username</label>
-        <input type="text"
-               id="username"
-               name="username"
-               class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-               required>
+        <input 
+          type="text"
+          id="username"
+          name="username"
+          class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          required>
       </div>
 
-      <!-- Password -->
       <div>
         <label for="password" class="block text-base font-medium text-gray-700">Password</label>
-        <input type="password"
-               id="password"
-               name="password"
-               class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-               required>
+        <input 
+          type="password"
+          id="password"
+          name="password"
+          class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          required>
       </div>
 
-      <!-- Submit Button -->
-      <button type="submit"
-              class="w-full py-3 bg-black text-white text-lg font-semibold rounded-lg hover:bg-black transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400">
+      <button 
+        type="submit"
+        class="w-full py-3 bg-black text-white text-lg font-semibold rounded-lg hover:bg-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400">
         Sign In
       </button>
     </form>
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toast"
-       class="fixed bottom-6 right-6 bg-gray-800 text-white py-3 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 pointer-events-none z-50">
-  </div>
-</main>
+  <script>
+    document.getElementById("login-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-<script>
-  const toast = document.getElementById("toast");
+      const username = e.target.username.value.trim();
+      const password = e.target.password.value.trim();
 
-  function showToast(message, isSuccess = true) {
-    toast.textContent = message;
-    toast.classList.remove("opacity-0", "bg-gray-800");
-    toast.classList.add("opacity-100", isSuccess ? "bg-green-600" : "bg-red-600");
+      try {
+        const response = await fetch("/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
 
-    setTimeout(() => {
-      toast.classList.remove("opacity-100");
-      toast.classList.add("opacity-0");
-    }, 2500);
-  }
+        const result = await response.json();
 
-  document.getElementById("login-form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const formData = {
-      username: form.username.value.trim(),
-      password: form.password.value.trim()
-    };
-
-    try {
-      const response = await fetch("/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        showToast(result.message, true);
-        setTimeout(() => {
-          window.location.href = "/admin/dashboard";
-        }, 2000);
-      } else {
-        showToast(result.message, false);
+        if (result.success) {
+          showToast(result.message, true);
+          setTimeout(() => {
+            window.location.href = "/admin/dashboard";
+          }, 2000);
+        } else {
+          showToast(result.message, false);
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        showToast("An unexpected error occurred. Please try again.", false);
       }
-    } catch (err) {
-      console.error("Login error:", err);
-      showToast("An unexpected error occurred. Please try again.", false);
-    }
-  });
-</script>
+    });
+  </script>
+</main>
