@@ -135,7 +135,6 @@ To set up the project locally, follow these steps:
 ├── package.json
 ├── package-lock.json
 └── server.js
-
 ```  
 
 ## 📞 Contact  
