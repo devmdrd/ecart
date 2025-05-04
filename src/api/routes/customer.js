@@ -19,7 +19,7 @@ const { authenticateSession } = require("../middlewares/verification");
 router.use(express.urlencoded({ extended: false }));
 
 // Dashboard
-router.get("/", renderDashboard);
+router.get("/", authenticateSession({ required: false }), renderDashboard);
 
 // Auth
 router.get("/login", renderLogin);
@@ -31,40 +31,40 @@ router.post("/verify-otp", verifyOtp);
 router.post("/forgot-password", forgotPassword);
 router.get("/logout", logout);
 
-// Google Auth Routes
+// Google Auth
 router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/users/login" }), googleAuthCallback);
 
 // Profiles
-router.get("/accounts/profile", authenticateSession, renderProfile);
-router.post("/profile", authenticateSession, upload.single("image"), updateProfile);
+router.get("/accounts/profile", authenticateSession({ required: false }), renderProfile);
+router.post("/profile", authenticateSession(), upload.single("image"), updateProfile);
 
 // // Address
-router.get("/accounts/address", authenticateSession, renderAddress);
-router.get('/address/:id', authenticateSession, getAddressById);
-router.post("/address", authenticateSession, addAddress);
-router.patch("/address", authenticateSession, updateAddress);
-router.delete("/address/:addressId", authenticateSession, deleteAddress);
+router.get("/accounts/address", authenticateSession({ required: false }), renderAddress);
+router.get('/address/:id', authenticateSession(), getAddressById);
+router.post("/address", authenticateSession(), addAddress);
+router.patch("/address", authenticateSession(), updateAddress);
+router.delete("/address/:addressId", authenticateSession(), deleteAddress);
 
 // // Products
-router.get("/products", renderProducts);
-router.get("/products/:productId/sku/:skuId", renderSingleProduct);
+router.get("/products", authenticateSession({ required: false }), renderProducts);
+router.get("/products/:productId/sku/:skuId", authenticateSession({ required: false }), renderSingleProduct);
 
 // Cart
-router.get("/cart", renderCart);
-router.post("/cart", authenticateSession, addToCart);
-router.delete("/cart", authenticateSession, removeCartProduct);
+router.get("/cart", authenticateSession({ required: false }), renderCart);
+router.post("/cart", authenticateSession(), addToCart);
+router.delete("/cart", authenticateSession(), removeCartProduct);
 
 // Wishlist
-router.get("/wishlist", renderWishlist);
-router.post("/wishlist", authenticateSession, addToWishlist);
-router.delete("/wishlist", authenticateSession, removeWishlistProduct);
+router.get("/wishlist", authenticateSession({ required: false }), renderWishlist);
+router.post("/wishlist", authenticateSession(), addToWishlist);
+router.delete("/wishlist", authenticateSession(), removeWishlistProduct);
 
 // Checkout
-router.get("/checkout", authenticateSession, renderCheckout);
+router.get("/checkout", authenticateSession(), renderCheckout);
 
 // // Orders
-router.get("/accounts/orders", authenticateSession, renderOrders);
+router.get("/accounts/orders", authenticateSession(), renderOrders);
 
 // Payment
 router.post('/create-payment-intent', createStripePaymentIntent);

@@ -1,13 +1,13 @@
 const User = require("../models/user");
 
-exports.authenticateSession = async (req, res, next) => {
+exports.authenticateSession = ({ required = true } = {}) => async (req, res, next) => {
   const sessionUser = req.session?.user;
 
   if (!sessionUser) {
-    if (req.originalUrl.startsWith("/admin")) {
-      return res.redirect("/admin/login");
+    if (required) {
+      return res.redirect(req.originalUrl.startsWith("/admin") ? "/admin/login" : "/login");
     }
-    return res.render("client/login", { layout: "layouts/user-layout", user: false, message: "" });
+    return next();
   }
 
   try {
@@ -15,7 +15,10 @@ exports.authenticateSession = async (req, res, next) => {
 
     if (!user || user.isBlocked) {
       req.session.user = null;
-      return res.render("client/login", { layout: "layouts/user-layout", user: false, message: "Your account has been blocked" });
+      if (required) {
+        return res.redirect(req.originalUrl.startsWith("/admin") ? "/admin/login" : "/login");
+      }
+      return next();
     }
 
     if (req.originalUrl.startsWith("/admin") && !user.isAdmin) {
@@ -26,6 +29,6 @@ exports.authenticateSession = async (req, res, next) => {
     next();
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal Server Error");
+    res.status(500).send("Internal Server Error");
   }
 };

@@ -14,12 +14,12 @@ const { renderOrders, updateOrderStatus, getOrderDetails } = require("../control
 const { renderReports } = require("../controllers/admin/report");
 
 const { upload } = require("../middlewares/multer");
-const { authenticateSession  } = require("../middlewares/verification");
+const { authenticateSession } = require("../middlewares/verification");
 
 router.use(express.urlencoded({ extended: false }));
 
 // Dashboard
-router.get("/dashboard", authenticateSession , renderAdminDashboard);
+router.get("/dashboard", authenticateSession(), renderAdminDashboard);
 
 // Auth
 router.get("/login", renderLogin);
@@ -27,52 +27,52 @@ router.post("/login", login);
 router.get("/logout", logout);
 
 // Category 
-router.get("/categories/manage/:categoryId?", authenticateSession, renderManageCategory);
-router.get("/categories", authenticateSession, renderCategoryList); 
-router.post("/categories", authenticateSession, upload.single("image"), createCategory); 
-router.put("/categories", authenticateSession, upload.single("image"), updateCategory); 
-router.delete("/categories/:categoryId", authenticateSession, deleteCategory); 
+router.get("/categories/manage/:categoryId?", authenticateSession(), renderManageCategory);
+router.get("/categories", authenticateSession(), renderCategoryList); 
+router.post("/categories", authenticateSession(), upload.single("image"), createCategory); 
+router.put("/categories", authenticateSession(), upload.single("image"), updateCategory); 
+router.delete("/categories/:categoryId", authenticateSession(), deleteCategory); 
 
 // Brand
-router.get("/brands/manage/:brandId?", authenticateSession, renderManageBrand);
-router.get("/brands", authenticateSession, renderBrandList); 
-router.post("/brands", authenticateSession, upload.single("image"), createBrand); 
-router.put("/brands", authenticateSession, upload.single("image"), updateBrand); 
-router.delete("/brands/:brandId", authenticateSession, deleteBrand); 
+router.get("/brands/manage/:brandId?", authenticateSession(), renderManageBrand);
+router.get("/brands", authenticateSession(), renderBrandList); 
+router.post("/brands", authenticateSession(), upload.single("image"), createBrand); 
+router.put("/brands", authenticateSession(), upload.single("image"), updateBrand); 
+router.delete("/brands/:brandId", authenticateSession(), deleteBrand); 
 
 // Attribute
-router.get("/attributes/manage/:attributeId?", authenticateSession, renderManageAttribute);
-router.get("/attributes", authenticateSession, renderAttributeList); 
-router.post("/attributes", authenticateSession, upload.none(), createAttribute); 
-router.put("/attributes", authenticateSession, upload.none(), updateAttribute); 
-router.delete("/attributes/:attributeId/:attributeValueId", authenticateSession, deleteAttribute); 
+router.get("/attributes/manage/:attributeId?", authenticateSession(), renderManageAttribute);
+router.get("/attributes", authenticateSession(), renderAttributeList); 
+router.post("/attributes", authenticateSession(), upload.none(), createAttribute); 
+router.put("/attributes", authenticateSession(), upload.none(), updateAttribute); 
+router.delete("/attributes/:attributeId/:attributeValueId", authenticateSession(), deleteAttribute); 
 
 // Product
-router.get("/products/manage/:productId?", authenticateSession, renderManageProduct);
-router.get("/products/attributes", authenticateSession, getProductAttributes);
-router.get("/products", authenticateSession, renderProductList); 
-router.post("/products", authenticateSession, upload.array("images", 5), createProduct); 
-router.put("/products", authenticateSession, upload.array("images", 5), updateProduct); 
-router.delete("/products/:productId", authenticateSession, deleteProduct); 
+router.get("/products/manage/:productId?", authenticateSession(), renderManageProduct);
+router.get("/products/attributes", authenticateSession(), getProductAttributes);
+router.get("/products", authenticateSession(), renderProductList); 
+router.post("/products", authenticateSession(), upload.array("images", 5), createProduct); 
+router.put("/products", authenticateSession(), upload.array("images", 5), updateProduct); 
+router.delete("/products/:productId", authenticateSession(), deleteProduct); 
 
 // Coupon
-router.get("/coupons/manage/:couponId?", authenticateSession, renderManageCoupon); 
-router.get("/coupons", authenticateSession, renderCouponList); 
-router.post("/coupons", authenticateSession, createCoupon); 
-router.put("/coupons", authenticateSession, updateCoupon); 
-router.delete("/coupons/:couponId", authenticateSession, deleteCoupon);
+router.get("/coupons/manage/:couponId?", authenticateSession(), renderManageCoupon); 
+router.get("/coupons", authenticateSession(), renderCouponList); 
+router.post("/coupons", authenticateSession(), createCoupon); 
+router.put("/coupons", authenticateSession(), updateCoupon); 
+router.delete("/coupons/:couponId", authenticateSession(), deleteCoupon);
 
 // Banner
-router.get("/banners/manage/:bannerId?", authenticateSession, renderManageBanner);
-router.get("/banners", authenticateSession, renderBannerList);
-router.post("/banners", authenticateSession, upload.single("image"), createBanner);
-router.put("/banners", authenticateSession, upload.single("image"), updateBanner);
-router.delete("/banners/:bannerId", authenticateSession, deleteBanner);
+router.get("/banners/manage/:bannerId?", authenticateSession(), renderManageBanner);
+router.get("/banners", authenticateSession(), renderBannerList);
+router.post("/banners", authenticateSession(), upload.single("image"), createBanner);
+router.put("/banners", authenticateSession(), upload.single("image"), updateBanner);
+router.delete("/banners/:bannerId", authenticateSession(), deleteBanner);
 
 // Customer
-router.get("/customers", authenticateSession, renderCustomerList);                                           
-router.put("/customers", authenticateSession, updateCustomer);         
-router.delete("/customers/:customerId", authenticateSession, deleteCustomer);           
+router.get("/customers", authenticateSession(), renderCustomerList);                                           
+router.put("/customers", authenticateSession(), updateCustomer);         
+router.delete("/customers/:customerId", authenticateSession(), deleteCustomer);           
 
 // Orders
 router.get("/orders", renderOrders);
