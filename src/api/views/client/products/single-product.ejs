@@ -30,9 +30,10 @@
               <div id="mainImage<%= i %>" class="<%= i === 0 ? 'block' : 'hidden' %> relative group">
                 <img src="/<%= img %>" alt="<%= product.name %>" class="w-full h-96 object-cover transition group-hover:scale-105">
                 <button class="absolute top-1 right-4 p-3 text-gray-600 hover:text-red-500 add-to-wishlist-link" 
-                        data-product-id="<%= product._id %>" 
-                        data-sku-id="<%= variant._id %>"
-                        data-wishlist-id="<%= product.wishlistId || '' %>">
+                  data-product-id="<%= product._id %>" 
+                  data-sku-id="<%= variant._id %>"
+                  data-wishlist-id="<%= product.wishlistId || '' %>"
+                  <% if (!user) { %>style="pointer-events: none; cursor: default;"<% } %>>
                   <i class="fas fa-heart <%= product.isWishlisted ? 'text-red-500' : '' %>"></i>
                 </button>
               </div>
