@@ -19,7 +19,7 @@ const { authenticateSession } = require("../middlewares/verification");
 router.use(express.urlencoded({ extended: false }));
 
 // Dashboard
-router.get("/", authenticateSession, renderDashboard);
+router.get("/", renderDashboard);
 
 // Auth
 router.get("/login", renderLogin);
@@ -51,12 +51,12 @@ router.get("/products", renderProducts);
 router.get("/products/:productId/sku/:skuId", renderSingleProduct);
 
 // Cart
-router.get("/cart", authenticateSession, renderCart);
+router.get("/cart", renderCart);
 router.post("/cart", authenticateSession, addToCart);
 router.delete("/cart", authenticateSession, removeCartProduct);
 
 // Wishlist
-router.get("/wishlist", authenticateSession, renderWishlist);
+router.get("/wishlist", renderWishlist);
 router.post("/wishlist", authenticateSession, addToWishlist);
 router.delete("/wishlist", authenticateSession, removeWishlistProduct);
 

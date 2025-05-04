@@ -17,7 +17,7 @@ exports.renderDashboard = async (req, res) => {
       .populate({ path: "skus", select: "price discountPrice discountPercentage stock" })
       .sort({ createdAt: -1 });
 
-    const wishlistItems = req.session.user ? await Wishlist.find({ user: req.session.user.id }).select("_id product sku") : [];
+    const wishlistItems = req.session.user ? await Wishlist.find({ user: req.session.user._id }).select("_id product sku") : [];
 
     const processProduct = (product) => {
       const minSku = getMinSku(product.skus);
@@ -47,7 +47,7 @@ exports.renderDashboard = async (req, res) => {
     const newArrivals = products.slice(0, 8).map(processProduct);
     const bestSellers = products.sort(() => Math.random() - 0.5).slice(0, 8).map(processProduct);
 
-    const cart = req.session.user ? await Cart.findOne({ user: req.session.user?.id }) : null;
+    const cart = req.session.user ? await Cart.findOne({ user: req.session.user._id }) : null;
     const cartCount = cart ? cart.products.length : 0;
     const wishlistCount = wishlistItems.length;
 

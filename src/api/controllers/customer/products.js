@@ -50,8 +50,8 @@ exports.renderProducts = async (req, res) => {
       };
     });
 
-    const wishlistCount = await Wishlist.countDocuments({ user: user._id });
-    const cart = await Cart.findOne({ user: user._id });
+    const wishlistCount = await Wishlist.countDocuments({ user: user?._id });
+    const cart = await Cart.findOne({ user: user?._id });
     const cartCount = cart ? cart.products.length : 0; 
 
     res.render("client/products/products-list", {
@@ -147,8 +147,8 @@ exports.renderSingleProduct = async (req, res) => {
       return variant;
     }));
 
-    const wishlistCount = await Wishlist.countDocuments({ user: req.session.user._id });
-    const cart = await Cart.findOne({ user: req.session.user._id });
+    const wishlistCount = await Wishlist.countDocuments({ user: req.session.user?._id });
+    const cart = await Cart.findOne({ user: req.session.user?._id });
     const cartCount = cart ? cart.products.length : 0; 
 
     res.render("client/products/single-product", {
