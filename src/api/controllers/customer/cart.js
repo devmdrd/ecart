@@ -49,9 +49,8 @@ exports.renderCart = async (req, res, next) => {
       });
     });
 
-    const subtotal = cartData.length
-      ? cartData.reduce((sum, item) => sum + item.sku.price * item.quantity, 0)
-      : 0;
+    const subtotal = cartData.length ? cartData.reduce((sum, item) => sum + item.sku.price * item.quantity, 0) : 0;
+    const totalAmount = cartData.length ? cartData.reduce((sum, item) => sum + item.sku.discountPrice * item.quantity, 0) : 0;
 
     const cartCount = cartData.length;
     const wishlistCount = await Wishlist.countDocuments({ user: userId });
@@ -77,7 +76,7 @@ exports.renderCart = async (req, res, next) => {
       }
     }
 
-    const total = Math.max(subtotal - discount, 0); 
+    const total = Math.max(totalAmount - discount, 0); 
 
     res.render("client/shopping/cart", {
       layout: "layouts/user-layout",

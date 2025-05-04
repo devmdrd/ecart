@@ -50,11 +50,9 @@ exports.renderProducts = async (req, res) => {
       };
     });
 
-    let cartCount = 0, wishlistCount = 0;
-    if (user && user._id) {
-      cartCount = await Cart.countDocuments({ user: user._id });
-      wishlistCount = await Wishlist.countDocuments({ user: user._id });
-    }
+    const wishlistCount = await Wishlist.countDocuments({ user: user._id });
+    const cart = await Cart.findOne({ user: user._id });
+    const cartCount = cart ? cart.products.length : 0; 
 
     res.render("client/products/products-list", {
       layout: "layouts/user-layout",
@@ -149,11 +147,9 @@ exports.renderSingleProduct = async (req, res) => {
       return variant;
     }));
 
-    let cartCount = 0, wishlistCount = 0;
-    if (user) {
-      cartCount = await Cart.countDocuments({ user: user._id });
-      wishlistCount = await Wishlist.countDocuments({ user: user._id });
-    }
+    const wishlistCount = await Wishlist.countDocuments({ user: req.session.user._id });
+    const cart = await Cart.findOne({ user: req.session.user._id });
+    const cartCount = cart ? cart.products.length : 0; 
 
     res.render("client/products/single-product", {
       layout: "layouts/user-layout",

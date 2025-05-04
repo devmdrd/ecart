@@ -19,7 +19,7 @@ const { authenticateSession } = require("../middlewares/verification");
 router.use(express.urlencoded({ extended: false }));
 
 // Dashboard
-router.get("/", renderDashboard);
+router.get("/", authenticateSession, renderDashboard);
 
 // Auth
 router.get("/login", renderLogin);
@@ -36,7 +36,7 @@ router.get("/auth/google", passport.authenticate("google", { scope: ["profile", 
 router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/users/login" }), googleAuthCallback);
 
 // Profiles
-router.get("/accounts/profile", renderProfile);
+router.get("/accounts/profile", authenticateSession, renderProfile);
 router.post("/profile", authenticateSession, upload.single("image"), updateProfile);
 
 // // Address
@@ -56,15 +56,15 @@ router.post("/cart", authenticateSession, addToCart);
 router.delete("/cart", authenticateSession, removeCartProduct);
 
 // Wishlist
-router.get("/wishlist", renderWishlist);
-router.post("/wishlist", addToWishlist);
-router.delete("/wishlist", removeWishlistProduct);
+router.get("/wishlist", authenticateSession, renderWishlist);
+router.post("/wishlist", authenticateSession, addToWishlist);
+router.delete("/wishlist", authenticateSession, removeWishlistProduct);
 
 // Checkout
 router.get("/checkout", authenticateSession, renderCheckout);
 
 // // Orders
-router.get("/accounts/orders", renderOrders);
+router.get("/accounts/orders", authenticateSession, renderOrders);
 
 // Payment
 router.post('/create-payment-intent', createStripePaymentIntent);

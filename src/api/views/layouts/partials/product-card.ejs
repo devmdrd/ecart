@@ -1,22 +1,45 @@
 <div class="p-2">
-  <div class="h-full bg-white rounded-lg shadow-md transition-opacity duration-300 <%= product.stock === 0 ? 'opacity-50' : '' %>">
+  <div
+    class="h-full bg-white rounded-lg shadow-md transition-opacity duration-300 <%= product.stock === 0 ? 'opacity-50' : '' %>"
+  >
     <div class="relative p-4 h-full">
       <div class="absolute top-2 right-2">
-        <i class="<%= product.isWishlisted ? 'fas' : 'far' %> fa-heart add-to-wishlist-link <%= product.isWishlisted ? 'text-red-500' : 'text-gray-600' %> hover:text-red-500 cursor-pointer text-xl" data-product-id="<%- product._id %>" data-sku-id="<%- product.skuId %>" data-wishlist-id="<%- product.wishlistId || '' %>"></i>
+        <i
+          class="<%= product.isWishlisted ? 'fas' : 'far' %> fa-heart add-to-wishlist-link <%= product.isWishlisted ? 'text-red-500' : 'text-gray-600' %> hover:text-red-500 cursor-pointer text-xl
+          <%= !user ? 'pointer-events-none opacity-50' : '' %>" 
+          data-product-id="<%- product._id %>"
+          data-sku-id="<%- product.skuId %>"
+          data-wishlist-id="<%- product.wishlistId || '' %>"
+        ></i>
       </div>
 
-      <a href="/products/<%- product._id %>/sku/<%- product.skuId %>" class="block">
+      <a
+        href="/products/<%- product._id %>/sku/<%- product.skuId %>"
+        class="block"
+      >
         <div class="flex justify-center items-center mb-4 h-36">
-          <img src="/<%- product.image %>" class="h-full object-contain" alt="<%- product.name %>" />
+          <img
+            src="/<%- product.image %>"
+            class="h-full object-contain"
+            alt="<%- product.name %>"
+          />
         </div>
       </a>
 
-      <h6 class="text-sm font-medium mb-2 h-10 overflow-hidden"><%- product.name %></h6>
+      <h6 class="text-sm font-medium mb-2 h-10 overflow-hidden">
+        <%- product.name %>
+      </h6>
 
       <div class="mb-3 text-sm">
-        <span class="font-bold text-gray-800">₹<%- product.discountPrice %></span>
-        <span class="line-through text-gray-400 ml-2">₹<%- product.price %></span>
-        <span class="text-green-600 ml-2"><%- product.discountPercentage %>% off</span>
+        <span class="font-bold text-gray-800"
+          >₹<%- product.discountPrice %></span
+        >
+        <span class="line-through text-gray-400 ml-2"
+          >₹<%- product.price %></span
+        >
+        <span class="text-green-600 ml-2"
+          ><%- product.discountPercentage %>% off</span
+        >
       </div>
 
       <div class="flex justify-between items-center text-sm">
@@ -26,11 +49,14 @@
         <span class="text-green-600">In Stock</span>
         <% } %>
 
-        <button class="w-10 h-10 border border-gray-300 bg-white text-black hover:bg-gray-100 hover:text-black rounded-md flex items-center justify-center transition duration-200 ease-in-out add-to-cart-link shadow-sm"
-          data-product-id="<%- product._id %>" 
-          data-sku-id="<%- product.skuId %>" 
-          data-count="1" 
-          data-price="<%- product.price %>">
+        <button
+          class="w-10 h-10 border border-gray-300 bg-white text-black hover:bg-gray-100 hover:text-black rounded-md flex items-center justify-center transition duration-200 ease-in-out add-to-cart-link shadow-sm
+          <%= !user ? 'pointer-events-none opacity-50' : '' %>" 
+          data-product-id="<%- product._id %>"
+          data-sku-id="<%- product.skuId %>"
+          data-count="1"
+          data-price="<%- product.price %>"
+        >
           <i class="fas fa-shopping-cart text-base"></i>
         </button>
       </div>
@@ -39,10 +65,10 @@
 </div>
 
 <script>
-  let isProcessing = false; 
+  let isProcessing = false;
 
   document.addEventListener("click", async (e) => {
-    if (isProcessing) return; 
+    if (isProcessing) return;
 
     if (e.target.closest(".add-to-cart-link")) {
       const button = e.target.closest(".add-to-cart-link");
@@ -51,7 +77,7 @@
       const count = button.getAttribute("data-count");
 
       try {
-        isProcessing = true; 
+        isProcessing = true;
         const response = await fetch("/cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -69,7 +95,7 @@
         console.error("Error adding to cart:", err);
         showToast("Something went wrong while adding to cart.", false);
       } finally {
-        isProcessing = false; 
+        isProcessing = false;
       }
     }
 
@@ -80,7 +106,7 @@
       const wishlistId = button.getAttribute("data-wishlist-id");
 
       try {
-        isProcessing = true; 
+        isProcessing = true;
         let result;
         if (wishlistId) {
           const response = await fetch("/wishlist", {
