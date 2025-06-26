@@ -1,7 +1,7 @@
 # ecart  
 
 ## 🚀 Live Demo  
-🔗 [eCart Live](https://ecart.in.net/)  
+🔗 [ecart Live](https://ecart.in.net/)  
 
 ## 📌 Overview  
 **ecart** is a modern and user-friendly e-commerce application designed to streamline online shopping. It provides a seamless shopping experience with features like product browsing, cart management, and secure checkout.  
